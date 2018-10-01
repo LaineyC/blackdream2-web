@@ -12,7 +12,7 @@
             </el-form-item>
             <el-form-item label="模板语言" prop="engineType">
                 <el-select v-model="request.engineType">
-                    <el-option v-for="item in Constant.TemplateEngineTypeEnum" :value="item.value" :key="item.id" :label="item.label"></el-option>
+                    <el-option v-for="item in Constant.TemplateEngineTypeEnum" :value="item.value" :key="item.value" :label="item.label"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="描述" prop="description">

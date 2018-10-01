@@ -6,7 +6,7 @@
                     <el-button @click="$router.go(-1)" type="info" size="small">返回</el-button>
                 </el-menu-item>
                 <el-menu-item index="1">
-                    <el-button @click="create()" type="primary" size="small">添加</el-button>
+                    <el-button @click="create()" type="success" size="small">新建</el-button>
                 </el-menu-item>
                 <el-menu-item index="2">
                     <el-button type="danger" size="small" @click="deleteAll">删除</el-button>
@@ -16,18 +16,16 @@
         <div class="split-box">
             <Split v-model="split">
                 <div slot="left" class="left-split-pane">
-                    <div class="left-split-inner-pane">
-                        <div style="padding: 5px;"><el-input placeholder="输入关键字进行过滤" v-model="filterText" size="mini"></el-input></div>
-                        <el-tree ref="tree" :filter-node-method="filterNode" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
-                            <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">
-                                <strong v-if="!data.model">{{ node.label }}</strong>
-                                <span v-else>{{ node.label }}</span>
-                                <span>
-                                    <el-button v-if="!data.model" type="text" size="mini" @click.stop="create(data)">添加</el-button>
-                                </span>
-                            </div>
-                        </el-tree>
-                    </div>
+                    <div style="padding: 5px;"><el-input placeholder="输入关键字进行过滤" v-model="filterText" size="mini"></el-input></div>
+                    <el-tree ref="tree" :filter-node-method="filterNode" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
+                        <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">
+                            <strong v-if="!data.model">{{ node.label }}</strong>
+                            <span v-else>{{ node.label }}</span>
+                            <span>
+                                <el-button v-if="!data.model" type="text" size="mini" @click.stop="create(data)">添加</el-button>
+                            </span>
+                        </div>
+                    </el-tree>
                 </div>
                 <div slot="right" class="right-split-pane">
                     <el-tabs ref="tabs" type="card" @tab-click="clickTab">
@@ -38,7 +36,7 @@
                                 </el-form-item>
                                 <el-form-item label="模板语言" prop="engineType">
                                     <el-select v-model="item.model.engineType">
-                                        <el-option v-for="item in Constant.TemplateEngineTypeEnum" :value="item.value" :key="item.id" :label="item.label"></el-option>
+                                        <el-option v-for="item in Constant.TemplateEngineTypeEnum" :value="item.value" :key="item.value" :label="item.label"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="分组" prop="displayGroup">
@@ -48,7 +46,6 @@
                                         </el-select>
                                     </el-input>
                                 </el-form-item>
-
                             <el-card shadow="hover">
                                 <el-button-group slot="header">
                                     <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
@@ -140,7 +137,7 @@
                             item.isDirty = false;
                             this.removeFromTreeData(item);
                             this.addToTreeData(item);
-                            //this.$refs.tree.setCurrentKey(item.id);
+                            this.$refs.tree.setCurrentKey(item.id);
                         });
                     }
                 });
@@ -167,7 +164,6 @@
                 });
             },
             clickTab(tab){
-                //this.$refs.tree.setCurrentKey(tab.name);
                 let index = this.tabs.findIndex(item => item.id === tab.name);
                 if(index !== -1){
                     this.currentTabItem = this.tabs[index];
@@ -185,14 +181,14 @@
                 if(item.model == null){
                     return;
                 }
-                if(item.isLoadScript != null && item.isLoadScript){
+                if(item.isLoaded != null && item.isLoaded){
                     this.addToTab(item);
                     this.selectTab(item);
                     return;
                 }
                 this.Api.TemplateFile.get({id: item.model.id}).then((model) => {
                     item.model.script = model.script;
-                    item.isLoadScript = true;
+                    item.isLoaded = true;
                     this.addToTab(item);
                     this.selectTab(item);
                 });
@@ -207,7 +203,7 @@
             wrapToItem(model){
                 return {
                     isDirty:false,
-                    isLoadScript:false,
+                    isLoaded:false,
                     id: model.id,
                     name: model.name,
                     model: model,
@@ -340,18 +336,6 @@
             left: 0;
             width: 100%;
         }
- /*
-        .left-split-pane{
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            .left-split-inner-pane{
-                height: 100%;
-                margin-right: -18px;
-                overflow-y: auto;
-            }
-        }
-*/
         .left-split-pane{
             padding: 0;
             height: 100%;

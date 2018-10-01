@@ -56,6 +56,26 @@ class GeneratorGuideDocTypeEnum extends Enum{
     }
 }
 
+class DataModelAttributeDisplayTypeEnum extends Enum{
+    constructor(){
+        super();
+        this.DISPLAY_DEFAULT = new EnumItem(1, "默认显示");
+        this.HIDDEN_DEFAULT = new EnumItem(2, "默认隐藏");
+        this.DISPLAY_ONLY = new EnumItem(3, "强制显示");
+    }
+}
+
+class DataModelAttributeDataTypeEnum extends Enum{
+    constructor(){
+        super();
+            this.BOOLEAN = new EnumItem(1, "布尔型");
+            this.INTEGER = new EnumItem(2, "整型");
+            this.NUMBER = new EnumItem(3, "数字型");
+            this.STRING = new EnumItem(4, "字符串型");
+            this.MODEL_REF = new EnumItem(15, "数据模型");
+    }
+}
+
 export default Vue.prototype.Constant = {
     get UserTypeEnum(){
         return new UserTypeEnum();
@@ -71,5 +91,11 @@ export default Vue.prototype.Constant = {
     },
     get GeneratorGuideDocTypeEnum(){
         return new GeneratorGuideDocTypeEnum();
+    },
+    get DataModelAttributeDisplayTypeEnum(){
+        return new DataModelAttributeDisplayTypeEnum();
+    },
+    get DataModelAttributeDataTypeEnum(){
+        return new DataModelAttributeDataTypeEnum();
     },
 }

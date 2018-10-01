@@ -35,7 +35,7 @@
                             <el-form-item style="width: 120px;">
                                 <el-select v-model="searchRequest.engineType" placeholder="模板语言">
                                     <el-option value="">全部</el-option>
-                                    <el-option v-for="item in Constant.TemplateEngineTypeEnum" :key="item.id" :value="item.value" :label="item.label"></el-option>
+                                    <el-option v-for="item in Constant.TemplateEngineTypeEnum" :key="item.value" :value="item.value" :label="item.label"></el-option>
                                 </el-select>
                             </el-form-item>
                             <el-form-item>
