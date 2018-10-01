@@ -2,6 +2,7 @@
     <el-dialog
         title="新建生成器实例"
         :show-close="false"
+        @close="close"
         width="600px"
         :close-on-press-escape="false"
         :visible.sync="isShow">

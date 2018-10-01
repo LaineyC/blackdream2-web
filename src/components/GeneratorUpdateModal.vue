@@ -1,10 +1,11 @@
 <template>
     <el-dialog
-            title="编辑生成器"
-            :show-close="false"
-            width="600px"
-            :close-on-press-escape="false"
-            :visible.sync="isShow">
+        title="编辑生成器"
+        :show-close="false"
+        @close="close"
+        width="600px"
+        :close-on-press-escape="false"
+        :visible.sync="isShow">
         <el-form ref="form" :model="request" :rules="validRule" label-width="80px" size="small">
             <el-form-item label="名称" prop="name">
                 <el-input v-model="request.name" placeholder=""></el-input>

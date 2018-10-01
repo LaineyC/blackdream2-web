@@ -18,7 +18,7 @@
                 <div slot="left" class="left-split-pane">
                     <div class="left-split-inner-pane">
                         <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
-                            <div class="custom-tree-node" slot-scope="{ node, data }" @click.stop="()=>{}" @dblclick.stop="selectNode(data)">
+                            <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">
                                 <strong v-if="!data.model">{{ node.label }}</strong>
                                 <span v-else>{{ node.label }}</span>
                                 <span>
@@ -39,15 +39,18 @@
                                     <el-option v-for="item in Constant.CreationStrategyLanguageEnum" :value="item.value" :key="item.id" :label="item.label"></el-option>
                                 </el-select>
                             </el-form-item>
-                        </el-form>
+
                         <el-card shadow="hover">
                             <el-button-group slot="header">
                                 <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
                             </el-button-group>
                             <div class="code-box">
-                                <AceEditor v-model="item.model.script" lang="javascript" theme="chrome" width="100%" height="100%" @init="initAceEditor"/>
+                                <el-form-item prop="script">
+                                    <AceEditor v-model="item.model.script" lang="javascript" theme="chrome" width="100%" height="100%" @init="initAceEditor"/>
+                                </el-form-item>
                             </div>
                         </el-card>
+                        </el-form>
                     </div>
                 </div>
             </Split>
@@ -120,7 +123,6 @@
                             item.isDirty = false;
                             this.removeFromTreeData(item);
                             this.addToTreeData(item);
-                            //this.$refs.tree.setCurrentKey(item.id);
                         });
                     }
                 });
@@ -150,7 +152,6 @@
                 if(item.isLoadScript != null && item.isLoadScript){
                     this.addToTab(item);
                     this.selectTab(item);
-                    this.$refs.tree.setCurrentKey(item.id);
                     return;
                 }
                 this.Api.CreationStrategy.get({id: item.model.id}).then((model) => {
@@ -158,7 +159,6 @@
                     item.isLoadScript = true;
                     this.addToTab(item);
                     this.selectTab(item);
-                    this.$refs.tree.setCurrentKey(item.id);
                 });
             },
             selectTab(item){
@@ -298,6 +298,15 @@
                         right: 0;
                         overflow-x: hidden;
                         overflow-y: auto;
+                        .el-form-item{
+                            height: 100%;
+                            width: 100%;
+                            margin: 0;
+                            .el-form-item__content{
+                                height: 100%;
+                                width: 100%;
+                            }
+                        }
                     }
                 }
             }
