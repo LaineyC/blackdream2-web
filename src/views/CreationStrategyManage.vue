@@ -107,6 +107,7 @@
                     let item = this.wrapToItem(model);
                     this.addToTreeData(item);
                     this.selectNode(item);
+                    this.$message({type: 'success', message: '创建成功！'});
                 });
             },
             setDirty(item){
@@ -121,23 +122,33 @@
                             this.removeFromTreeData(item);
                             this.addToTreeData(item);
                             this.$refs.tree.setCurrentKey(item.id);
+                            this.$message({type: 'success', message: '保存成功！'});
                         });
                     }
                 });
             },
-            deleteAll(){/*
+            deleteAll(){
                 let ids = this.$refs.tree.getCheckedKeys(true);
-                let isCurrentIn = false;
-                ids.forEach(id => {
-                    this.$refs.tree.remove(id);
-                    this.removeFromTab(id);
-                    if(this.currentTabItem != null && this.currentTabItem.id === id && !isCurrentIn){
-                        isCurrentIn = true;
-                    }
+                if(!ids.length){
+                    return;
+                }
+                this.$confirm('确定删除所选？', {type: 'warning'})
+                .then(() => {
+                    this.Api.CreationStrategy.delete({idList:ids}).then((data) => {
+                        let isCurrentIn = false;
+                        ids.forEach(id => {
+                            this.$refs.tree.remove(id);
+                            this.removeFromTab(id);
+                            if(this.currentTabItem != null && this.currentTabItem.id === id && !isCurrentIn){
+                                isCurrentIn = true;
+                            }
+                        });
+                        if(isCurrentIn && this.tabs.length > 0){
+                            this.selectNode(this.tabs[0]);
+                        }
+                        this.$message({type: 'success', message: '删除成功！'});
+                    });
                 });
-                if(isCurrentIn && this.tabs.length > 0){
-                    this.selectNode(this.tabs[0]);
-                }*/
             },
             initAceEditor:function (editor) {
                 editor.setOptions({
@@ -168,6 +179,13 @@
                 });
                 if(result.length === 0){
                     this.tabs.push(item);
+                }
+            },
+            removeFromTab(item){
+                let index = -1;
+                index = this.tabs.indexOf(item);
+                if (index > -1) {
+                    this.tabs.splice(index, 1);
                 }
             },
             wrapToItem(model){

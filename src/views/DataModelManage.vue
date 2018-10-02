@@ -27,7 +27,7 @@
                     </el-tree>
                 </div>
                 <div slot="right" class="right-split-pane">
-                    <div v-for="item in tabs" :key="item.id" v-show="item===currentTabItem" class="tab-pane">
+                    <div v-for="item in tabs" :key="item.id" v-show="item===currentTabItem" class="tab-pane" :class="'tab-pane-' + item.id">
                         <el-form :ref="'form' + item.id" label-width="80px" :model="item.model" :rules="validRule" inline size="small">
                             <el-form-item label=" " label-width="20px">
                                 <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
@@ -384,6 +384,7 @@
                     let item = this.wrapToItem(model);
                     this.addToTreeData(item);
                     this.selectNode(item);
+                    this.$message({type: 'success', message: '创建成功！'});
                 });
             },
             setDirty(item){
@@ -398,23 +399,33 @@
                             this.removeFromTreeData(item);
                             this.addToTreeData(item);
                             this.$refs.tree.setCurrentKey(item.id);
+                            this.$message({type: 'success', message: '保存成功！'});
                         });
                     }
                 });
             },
-            deleteAll(){/*
+            deleteAll(){
                 let ids = this.$refs.tree.getCheckedKeys(true);
-                let isCurrentIn = false;
-                ids.forEach(id => {
-                    this.$refs.tree.remove(id);
-                    this.removeFromTab(id);
-                    if(this.currentTabItem != null && this.currentTabItem.id === id && !isCurrentIn){
-                        isCurrentIn = true;
-                    }
-                });
-                if(isCurrentIn && this.tabs.length > 0){
-                    this.selectNode(this.tabs[0]);
-                }*/
+                if(!ids.length){
+                    return;
+                }
+                this.$confirm('确定删除所选？', {type: 'warning'})
+                    .then(() => {
+                        this.Api.DataModel.delete({idList:ids}).then((data) => {
+                            let isCurrentIn = false;
+                            ids.forEach(id => {
+                                this.$refs.tree.remove(id);
+                                this.removeFromTab(id);
+                                if(this.currentTabItem != null && this.currentTabItem.id === id && !isCurrentIn){
+                                    isCurrentIn = true;
+                                }
+                            });
+                            if(isCurrentIn && this.tabs.length > 0){
+                                this.selectNode(this.tabs[0]);
+                            }
+                            this.$message({type: 'success', message: '删除成功！'});
+                        });
+                    });
             },
             initAceEditor:function (editor) {
                 editor.setOptions({
@@ -427,7 +438,6 @@
                 if(item.isLoaded != null && item.isLoaded){
                     this.addToTab(item);
                     this.selectTab(item);
-                    this.rowDrop(item);
                     return;
                 }
                 this.Api.DataModel.get({id: item.model.id}).then((model) => {
@@ -448,6 +458,13 @@
                 });
                 if(result.length === 0){
                     this.tabs.push(item);
+                }
+            },
+            removeFromTab(item){
+                let index = -1;
+                index = this.tabs.indexOf(item);
+                if (index > -1) {
+                    this.tabs.splice(index, 1);
                 }
             },
             wrapToItem(model){
@@ -521,16 +538,18 @@
             //行拖拽
             rowDrop(item) {
                 this.$nextTick(function () {
-                    const propertyTbody = document.querySelector('.property-table .el-table__body-wrapper tbody');
+                    const propertyTbody = document.querySelector('.tab-pane-' + item.id + ' .property-table .el-table__body-wrapper tbody');
                     Sortable.create(propertyTbody, {
+                        animation:100,
                         handle:".sort-handle",
                         onEnd({ newIndex, oldIndex }) {
                             const currRow = item.model.propertyList.splice(oldIndex, 1)[0];
                             item.model.propertyList.splice(newIndex, 0, currRow)
                         }
                     });
-                    const fieldTbody = document.querySelector('.field-table .el-table__body-wrapper tbody');
+                    const fieldTbody = document.querySelector('.tab-pane-' + item.id + ' .field-table .el-table__body-wrapper tbody');
                     Sortable.create(fieldTbody, {
+                        animation:100,
                         handle:".sort-handle",
                         onEnd({ newIndex, oldIndex }) {
                             const currRow = item.model.fieldList.splice(oldIndex, 1)[0];

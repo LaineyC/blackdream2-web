@@ -52,7 +52,7 @@
             },
             save(){
                 this.Api.GeneratorGuide.save(this.guide).then((data) => {
-
+                    this.$message({type: 'success', message: '保存成功！'});
                 });
             },
             initAceEditor:function (editor) {
@@ -65,8 +65,8 @@
         },
         mounted(){
             this.Api.GeneratorGuide.get({generatorId: this.$route.params.generatorId,}).then((model) => {
-                if(model !== undefined && model != null){
-                    this.guide = model;
+                if(model !== undefined && model !== null){
+                    Object.assign(this.guide, model);
                 }
             });
         }

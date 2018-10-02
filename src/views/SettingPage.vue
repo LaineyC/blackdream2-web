@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="setting">
         SettingPage
     </div>
 </template>
@@ -11,5 +11,7 @@
 </script>
 
 <style scoped lang="less">
+    #setting{
 
+    }
 </style>
