@@ -7,7 +7,7 @@
                          active-text-color="#ffd04b">
                     <el-menu-item index="1" @click="linkToHome"><img id="bd-logo" src="@/assets/image/logo.jpg"/></el-menu-item>
                     <el-menu-item index="2">
-                        <el-input placeholder="搜索生成器" v-model="searchText" size="mini" @click="alert(1)">
+                        <el-input placeholder="搜索生成器" v-model="searchText" size="mini"  @keyup.enter.native="search">
                             <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
                         </el-input>
                     </el-menu-item>
@@ -43,12 +43,16 @@
             search(){
                 if(this.searchText !== ""){
                     this.$router.push({ name: 'search', params: { searchText: this.searchText }});
+                    this.searchText = "";
                 }
             },
             signOut(){
-                this.Api.User.signOut({}).then(() => {
-                    this.Auth.body = null;
-                    this.$router.push({ name: 'signIn'});
+                this.$confirm('确定退出系统？', {type: 'warning'})
+                .then(() => {
+                    this.Api.User.signOut({}).then(() => {
+                        this.Auth.body = null;
+                        this.$router.push({ name: 'signIn'});
+                    });
                 });
             },
             linkToHome(){

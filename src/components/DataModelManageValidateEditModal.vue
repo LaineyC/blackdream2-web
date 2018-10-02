@@ -22,7 +22,7 @@
                             <el-button type="success" size="mini" @click="addEnumItem">添加值</el-button>
                         </el-col>
                         <el-col :span="20">
-                            <el-row v-for="(enumItem, $index) in request.enumList">
+                            <el-row v-for="(enumItem, $index) in request.enumList" :key="$index">
                                 <el-col :span="6">
                                     <el-form-item label-width="10px" :prop="'enumList.' + $index + '.label'" :rules="validRule.enumLabel">
                                         <el-input placeholder="label" v-model="enumItem.label"></el-input>
@@ -208,23 +208,40 @@
                 this.$refs.form.validate((valid) => {
                     if (valid) {
                         this.copyAttribute(this.sourceAttribute, this.request);
-                        this.request.enumList = [];
-                        this.$emit('on-confirm');
                         this.close();
+                        this.$emit('on-confirm');
                     }
                 });
             },
             open({attribute}){
                 this.isShow = true;
                 this.sourceAttribute = attribute;
+                this.resetRequest();
                 this.copyAttribute(this.request, this.sourceAttribute);
             },
             copyAttribute(target, source){
                 Object.assign(target, source);
                 target.enumList = !source.enumList || !source.enumList.length ? [] : [...source.enumList];
             },
+            resetRequest(){
+                this.request = {
+                    dataType:null,
+                    isEnum:false,
+                    enumList:[],
+                    isRequired:false,
+                    minValue:null,
+                    maxValue:null,
+                    length:null,
+                    minLength:null,
+                    maxLength:null,
+                    regex:null,
+                    regexMessage:null,
+                    validateScript:""
+                }
+            },
             close(){
                 this.isShow = false;
+                this.resetRequest();
                 this.$refs.form.resetFields();
             },
             addEnumItem(){

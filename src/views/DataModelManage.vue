@@ -30,7 +30,7 @@
                     <div v-for="item in tabs" :key="item.id" v-show="item===currentTabItem" class="tab-pane" :class="'tab-pane-' + item.id">
                         <el-form :ref="'form' + item.id" label-width="80px" :model="item.model" :rules="validRule" inline size="small">
                             <el-form-item label=" " label-width="20px">
-                                <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
+                                <el-button type="primary" size="small" @click="update(item)">保存</el-button>
                             </el-form-item>
                             <el-form-item label="名称" prop="name">
                                 <el-input v-model="item.model.name" placeholder="" />
@@ -46,7 +46,7 @@
                                     <el-button type="success" size="mini" @click="addProperty(item)">添加属性</el-button>
                                 </el-button-group>
                                 <el-table class="property-table" :data="item.model.propertyList" row-key="id" style="width: 100%">
-                                    <el-table-column type="index" width="45" class-name="sort-handle">
+                                    <el-table-column type="index" width="28" class-name="sort-handle">
                                     </el-table-column>
                                     <el-table-column label="显示设置" align="center">
                                         <el-table-column prop="displayGroup" label="显示分组">
@@ -111,7 +111,7 @@
                                         <el-table-column prop="dataType" label="数据类型" width="125">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item>
-                                                    <el-select v-model="row.dataType">
+                                                    <el-select v-model="row.dataType" @change="changeDataType(item, row, $index)">
                                                         <el-option v-for="item in Constant.DataModelAttributeDataTypeEnum" :value="item.value" :key="item.value" :label="item.label"></el-option>
                                                     </el-select>
                                                 </el-form-item>
@@ -143,12 +143,12 @@
                                     </el-table-column>
                                     <el-table-column prop="displayGroup" label="验证规则" width="80">
                                         <template slot-scope="{ row, column, $index }">
-                                            <el-button type="primary" size="mini" @click="showDataModelValidateEditModal(item, row)">设置</el-button>
+                                            <el-button type="primary" size="mini" @click="showDataModelManageValidateEditModal(item, row)">设置</el-button>
                                         </template>
                                     </el-table-column>
                                     <el-table-column label="级联脚本" width="80">
                                         <template slot-scope="{ row, column, $index }">
-                                            <el-button type="primary" size="mini" @click="showDataModelCascadeScriptEditModal(item, row)">编辑</el-button>
+                                            <el-button type="primary" size="mini" @click="showDataModelManageCascadeScriptEditModal(item, row)">编辑</el-button>
                                         </template>
                                     </el-table-column>
                                     <el-table-column label="操作" width="80">
@@ -164,7 +164,7 @@
                                     <el-button type="success" size="mini" @click="addField(item)">添加字段</el-button>
                                 </el-button-group>
                                 <el-table class="field-table" :data="item.model.fieldList" row-key="id" style="width: 100%">
-                                    <el-table-column type="index" width="45" class-name="sort-handle">
+                                    <el-table-column type="index" width="28" class-name="sort-handle">
                                     </el-table-column>
                                     <el-table-column label="显示设置" align="center">
                                         <el-table-column prop="displayGroup" label="显示分组">
@@ -229,7 +229,7 @@
                                         <el-table-column prop="dataType" label="数据类型" width="125">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item>
-                                                    <el-select v-model="row.dataType">
+                                                    <el-select v-model="row.dataType" @change="changeDataType(item, row, $index)">
                                                         <el-option v-for="item in Constant.DataModelAttributeDataTypeEnum" :value="item.value" :key="item.value" :label="item.label"></el-option>
                                                     </el-select>
                                                 </el-form-item>
@@ -261,12 +261,12 @@
                                     </el-table-column>
                                     <el-table-column prop="displayGroup" label="验证规则" width="80">
                                         <template slot-scope="{ row, column, $index }">
-                                            <el-button type="primary" size="mini" @click="showDataModelValidateEditModal(item, row)">设置</el-button>
+                                            <el-button type="primary" size="mini" @click="showDataModelManageValidateEditModal(item, row)">设置</el-button>
                                         </template>
                                     </el-table-column>
                                     <el-table-column label="级联脚本" width="80">
                                         <template slot-scope="{ row, column, $index }">
-                                            <el-button type="primary" size="mini" @click="showDataModelCascadeScriptEditModal(item, row)">编辑</el-button>
+                                            <el-button type="primary" size="mini" @click="showDataModelManageCascadeScriptEditModal(item, row)">编辑</el-button>
                                         </template>
                                     </el-table-column>
                                     <el-table-column label="操作" width="80">
@@ -281,8 +281,8 @@
                 </div>
             </Split>
         </div>
-        <DataModelValidateEditModal ref="dataModelValidateEditModal"/>
-        <DataModelCascadeScriptEditModal ref="dataModelCascadeScriptEditModal" />
+        <DataModelManageValidateEditModal ref="dataModelManageValidateEditModal"/>
+        <DataModelManageCascadeScriptEditModal ref="dataModelManageCascadeScriptEditModal" />
     </div>
 </template>
 
@@ -297,8 +297,8 @@
         name: "DataModelManage",
         components: {
             AceEditor,
-            DataModelValidateEditModal:() => import('@/components/DataModelValidateEditModal.vue'),
-            DataModelCascadeScriptEditModal:() => import('@/components/DataModelCascadeScriptEditModal.vue')
+            DataModelManageValidateEditModal:() => import('@/components/DataModelManageValidateEditModal.vue'),
+            DataModelManageCascadeScriptEditModal:() => import('@/components/DataModelManageCascadeScriptEditModal.vue')
         },
         data () {
             return {
@@ -379,8 +379,6 @@
                 };
                 this.Api.DataModel.create(model).then((data) => {
                     model.id = data.id;
-                    data.propertyList.forEach(value => value.id = this.Method.generateId());
-                    data.fieldList.forEach(value => value.id = this.Method.generateId());
                     let item = this.wrapToItem(model);
                     this.addToTreeData(item);
                     this.selectNode(item);
@@ -410,22 +408,22 @@
                     return;
                 }
                 this.$confirm('确定删除所选？', {type: 'warning'})
-                    .then(() => {
-                        this.Api.DataModel.delete({idList:ids}).then((data) => {
-                            let isCurrentIn = false;
-                            ids.forEach(id => {
-                                this.$refs.tree.remove(id);
-                                this.removeFromTab(id);
-                                if(this.currentTabItem != null && this.currentTabItem.id === id && !isCurrentIn){
-                                    isCurrentIn = true;
-                                }
-                            });
-                            if(isCurrentIn && this.tabs.length > 0){
-                                this.selectNode(this.tabs[0]);
+                .then(() => {
+                    this.Api.DataModel.delete({idList:ids}).then((data) => {
+                        let isCurrentIn = false;
+                        ids.forEach(id => {
+                            this.$refs.tree.remove(id);
+                            this.removeFromTab(id);
+                            if(this.currentTabItem != null && this.currentTabItem.id === id && !isCurrentIn){
+                                isCurrentIn = true;
                             }
-                            this.$message({type: 'success', message: '删除成功！'});
                         });
+                        if(isCurrentIn && this.tabs.length > 0){
+                            this.selectNode(this.tabs[0]);
+                        }
+                        this.$message({type: 'success', message: '删除成功！'});
                     });
+                });
             },
             initAceEditor:function (editor) {
                 editor.setOptions({
@@ -441,6 +439,8 @@
                     return;
                 }
                 this.Api.DataModel.get({id: item.model.id}).then((model) => {
+                    model.propertyList.forEach(value => value.id = this.Method.generateId());
+                    model.fieldList.forEach(value => value.id = this.Method.generateId());
                     item.model.propertyList = model.propertyList;
                     item.model.fieldList = model.fieldList;
                     item.isLoaded = true;
@@ -525,13 +525,13 @@
                 let fieldList = item.model.fieldList;
                 fieldList.splice(index, 1);
             },
-            showDataModelValidateEditModal(item, attribute){
-                this.$refs.dataModelValidateEditModal.open({
+            showDataModelManageValidateEditModal(item, attribute){
+                this.$refs.dataModelManageValidateEditModal.open({
                     attribute: attribute
                 })
             },
-            showDataModelCascadeScriptEditModal(item, attribute){
-                this.$refs.dataModelCascadeScriptEditModal.open({
+            showDataModelManageCascadeScriptEditModal(item, attribute){
+                this.$refs.dataModelManageCascadeScriptEditModal.open({
                     attribute: attribute
                 })
             },
@@ -557,6 +557,9 @@
                         }
                     });
                 });
+            },
+            changeDataType(item, attribute, index){
+                attribute.defaultValue = undefined;
             },
         },
         mounted(){
@@ -636,7 +639,7 @@
         }
         .el-card__body{
             padding: 5px;
-            .el-form-item--small.el-form-item{
+            .el-form-item--small.el-form-item, .el-form-item--mini.el-form-item{
                 margin: 0;
             }
         }

@@ -3,8 +3,9 @@
         <el-row>
             <el-col :span="8" :offset="8">
                 <el-card>
-                    <div slot="header">
+                    <div slot="header" class="card-header-flex">
                         <strong>注册</strong>
+                        <router-link to="/sign-in"><el-button size="small" type="text">已有账号，去登陆</el-button></router-link>
                     </div>
                     <el-form ref="signUpForm" :model="request" :rules="validRule" size="small" label-width="80px">
                         <el-form-item label="用户名" prop="username">
@@ -28,7 +29,7 @@
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="handleSignUp()">提交</el-button>
-                            <router-link to="/sign-in"><el-button style="float: right;" type="success">已有账号，去登陆</el-button></router-link>
+                            <router-link to="/sign-up"><el-button style="float: right;" type="text">忘记密码？</el-button></router-link>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -90,5 +91,11 @@
 <style scoped lang="less">
     #sign-up{
         padding-top: 64px;
+        .card-header-flex{
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
     }
 </style>

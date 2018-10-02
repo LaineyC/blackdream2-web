@@ -1,49 +1,37 @@
 <template>
-    <div>
-        <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item label="活动名称"><label class="el-form-item__label" style="width: 80px;">活动形式</label>
-                <el-input v-model="form.name" style="width:100px;"></el-input>
-            </el-form-item>
-            <el-form-item label="活动区域">
-                <el-select v-model="form.region" placeholder="请选择活动区域">
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="活动时间">
-                <el-col :span="11">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-                </el-col>
-                <el-col class="line" :span="2">-</el-col>
-                <el-col :span="11">
-                    <el-time-picker type="fixed-time" placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
-                </el-col>
-            </el-form-item>
-            <el-form-item label="即时配送">
-                <label class="el-form-item__label" style="width: 80px;">活动形式</label><el-switch v-model="form.delivery"></el-switch>
-            </el-form-item>
-            <el-form-item label="活动性质">
-                <el-checkbox-group v-model="form.type">
-                    <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-                    <el-checkbox label="地推活动" name="type"></el-checkbox>
-                    <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-                    <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
-                </el-checkbox-group>
-            </el-form-item>
-            <el-form-item label="特殊资源">
-                <el-radio-group v-model="form.resource">
-                    <el-radio label="线上品牌商赞助"></el-radio>
-                    <el-radio label="线下场地免费"></el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item label="活动形式">
-                <el-input type="textarea" v-model="form.desc"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="onSubmit">立即创建</el-button>
-                <el-button>取消</el-button>
-            </el-form-item>
-        </el-form>
+    <div id="guide" class="container">
+        <el-row>
+            <el-col :span="4" style="position: fixed; top:65px;width: 200px">
+                <el-menu default-active="1-1" :default-openeds="['1','2']">
+                    <el-submenu index="1">
+                        <template slot="title">
+                            <i class="el-icon-location"></i>
+                            <strong>开发手册</strong>
+                        </template>
+                        <el-menu-item index="1-1" @click="goAnchor('#a1')">我的生成器</el-menu-item>
+                        <el-menu-item index="1-2">数据模型</el-menu-item>
+                        <el-menu-item index="1-3">模板文件</el-menu-item>
+                        <el-menu-item index="1-4">生成策略</el-menu-item>
+                        <el-menu-item index="1-5">数据结构</el-menu-item>
+                        <el-menu-item index="1-6">注意事项</el-menu-item>
+                    </el-submenu>
+                    <el-submenu index="2">
+                        <template slot="title">
+                            <i class="el-icon-location"></i>
+                            <strong>用户手册</strong>
+                        </template>
+                        <el-menu-item index="2-1">他们的生成器</el-menu-item>
+                        <el-menu-item index="2-2">我的实例</el-menu-item>
+                        <el-menu-item index="2-3">注意事项</el-menu-item>
+                    </el-submenu>
+                </el-menu>
+            </el-col>
+            <el-col :span="20" style="margin-left: 205px;">
+                <div style="width: 100%;height: 500px;background:darkgray" id="a1">
+
+                </div>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
@@ -52,26 +40,21 @@
         name: "GuidePage",
         data() {
             return {
-                form: {
-                    name: '',
-                    region: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
-                }
+
             }
         },
         methods: {
-            onSubmit() {
-                console.log('submit!');
+            goAnchor(selector) {
+                let anchor = this.$el.querySelector(selector);
+                console.info(anchor.width);
+                document.body.scrollTop = anchor.offsetTop
             }
         }
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+    #guide{
+        padding: 5px;
+    }
 </style>

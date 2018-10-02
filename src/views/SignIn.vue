@@ -3,8 +3,9 @@
         <el-row>
             <el-col :span="8" :offset="8">
                 <el-card>
-                    <div slot="header">
+                    <div slot="header" class="card-header-flex">
                         <strong>登陆</strong>
+                        <router-link to="/sign-up"><el-button size="small" type="text">还没账号，去注册</el-button></router-link>
                     </div>
                     <el-form ref="signInForm" :model="request" :rules="validRule" size="small" label-width="120px">
                         <el-form-item label="用户名或邮箱" prop="username">
@@ -15,7 +16,7 @@
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="handleSignIn()">登陆</el-button>
-                            <router-link to="/sign-up"><el-button style="float: right;" type="success">还没账号，去创建</el-button></router-link>
+                            <router-link to="/sign-up"><el-button style="float: right;" type="text">忘记密码？</el-button></router-link>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -65,5 +66,11 @@
 <style scoped lang="less">
     #sign-in{
         padding-top: 64px;
+        .card-header-flex{
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
     }
 </style>

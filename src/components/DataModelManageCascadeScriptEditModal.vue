@@ -60,13 +60,20 @@
             open({attribute}){
                 this.isShow = true;
                 this.sourceAttribute = attribute;
+                this.resetRequest();
                 this.copyAttribute(this.request, this.sourceAttribute);
+            },
+            resetRequest(){
+                this.request = {
+                    cascadeScript:""
+                }
             },
             copyAttribute(target, source){
                 Object.assign(target, source);
             },
             close(){
                 this.isShow = false;
+                this.resetRequest();
                 this.$refs.form.resetFields();
             }
         }
