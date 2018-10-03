@@ -128,5 +128,9 @@ export default Vue.prototype.Api = {
     GeneratorGuide: {
         save: doPost('/generatorGuide/save'),
         get: doPost('/generatorGuide/get')
+    },
+    DataModelSchema: {
+        save: doPost('/dataModelSchema/save'),
+        get: doPost('/dataModelSchema/get')
     }
 }

@@ -6,10 +6,13 @@
                     <el-button @click="$router.go(-1)" type="info" size="small">返回</el-button>
                 </el-menu-item>
                 <el-menu-item index="1">
-                    <el-button @click="create()" type="success" size="small">新建</el-button>
+                    <el-button @click="create" type="success" size="small">新建</el-button>
                 </el-menu-item>
                 <el-menu-item index="2">
                     <el-button type="danger" size="small" @click="deleteAll">删除</el-button>
+                </el-menu-item>
+                <el-menu-item index="3">
+                    <el-button @click="showDataModelSchemaSaveModal" type="primary" size="small">Scheme设置</el-button>
                 </el-menu-item>
             </el-menu>
         </div>
@@ -283,6 +286,7 @@
         </div>
         <DataModelManageValidateEditModal ref="dataModelManageValidateEditModal"/>
         <DataModelManageCascadeScriptEditModal ref="dataModelManageCascadeScriptEditModal" />
+        <DataModelSchemaSaveModal ref="dataModelSchemaSaveModal" />
     </div>
 </template>
 
@@ -298,7 +302,8 @@
         components: {
             AceEditor,
             DataModelManageValidateEditModal:() => import('@/components/DataModelManageValidateEditModal.vue'),
-            DataModelManageCascadeScriptEditModal:() => import('@/components/DataModelManageCascadeScriptEditModal.vue')
+            DataModelManageCascadeScriptEditModal:() => import('@/components/DataModelManageCascadeScriptEditModal.vue'),
+            DataModelSchemaSaveModal:() => import('@/components/DataModelSchemaSaveModal.vue'),
         },
         data () {
             return {
@@ -533,6 +538,11 @@
             showDataModelManageCascadeScriptEditModal(item, attribute){
                 this.$refs.dataModelManageCascadeScriptEditModal.open({
                     attribute: attribute
+                })
+            },
+            showDataModelSchemaSaveModal(){
+                this.$refs.dataModelSchemaSaveModal.open({
+                    generatorId: this.generatorId
                 })
             },
             //行拖拽
