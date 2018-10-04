@@ -11,7 +11,7 @@
         <br/>
         <el-card class="box-card">
             <div slot="header" class="card-header-flex">
-                <strong>模板文件</strong>
+                <strong>模板代码</strong>
             </div>
             <el-collapse>
                 <el-collapse-item :title="group.name" v-for="group in treeData" :name="group.name" :key="group.name">
@@ -133,6 +133,7 @@
         overflow-x: hidden;
         height: 100%;
         z-index: 2000;
+        padding: 5px;
     }
     .el-tag{
         margin: 2px 0;

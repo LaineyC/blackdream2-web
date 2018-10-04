@@ -41,10 +41,17 @@
                                 </el-select>
                             </el-form-item>
                         <el-card shadow="hover">
-                            <el-button-group slot="header">
-                                <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
-                                <el-button type="success" size="mini" @click="insertTemplateFileScript(item)">插入模板代码</el-button>
-                            </el-button-group>
+                            <div slot="header">
+                                <el-button-group>
+                                    <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
+                                </el-button-group>
+                                <el-button-group style="margin-left: 5px;">
+                                    <el-button type="success" size="mini" @click="insertVarScript(item)">插入变量</el-button>
+                                    <el-button type="success" size="mini" @click="insertTemplateScript(item)">插入模板</el-button>
+                                    <el-button type="success" size="mini" @click="insertFileScript(item)">插入文件</el-button>
+                                    <el-button type="success" size="mini" @click="insertDirectoryScript(item)">插入目录</el-button>
+                                </el-button-group>
+                            </div>
                             <div class="code-box">
                                 <el-form-item prop="script">
                                     <AceEditor :ref="'aceEditor' + item.id" v-model="item.model.script" lang="javascript" theme="chrome" width="100%" height="100%" @init="initAceEditor"/>
@@ -163,19 +170,37 @@
                     enableLiveAutocompletion: true
                 });
             },
-            insertTemplateFileScript(item){
+            insertTemplateScript(item){
                 let aceEditor = this.$refs['aceEditor' + item.id][0];
                 let code = "";
                 this.templateFileList.forEach(group => {
-                    code +=  "//" + group.name + ";\n";
+                    code +=  "//" + group.name + "\n";
                     group.children.forEach(item => {
-                        code +=  "var tf_" + item.name + " = $tempUtil.newTmpl(\"" + item.model.code + "\");\n";
+                        code +=  "var tmpl_" + item.name + " = $util.newTmpl(\"" + item.model.code + "\");\n";
                     });
                 });
                 if(code !== ""){
                     aceEditor.editor.insert("\n");
                     aceEditor.editor.insert(code);
                 }
+            },
+            insertFileScript(item){
+                let aceEditor = this.$refs['aceEditor' + item.id][0];
+                aceEditor.editor.insert("\n");
+                aceEditor.editor.insert("var file_ = $util.newFile(fileName, templateRef);");
+                aceEditor.editor.insert("\n");
+            },
+            insertDirectoryScript(item){
+                let aceEditor = this.$refs['aceEditor' + item.id][0];
+                aceEditor.editor.insert("\n");
+                aceEditor.editor.insert("var dir_ = $util.newDir(dirName);");
+                aceEditor.editor.insert("\n");
+            },
+            insertVarScript(item){
+                let aceEditor = this.$refs['aceEditor' + item.id][0];
+                aceEditor.editor.insert("\n");
+                aceEditor.editor.insert("var var_ = $util.newVar(varName, varValue);");
+                aceEditor.editor.insert("\n");
             },
             selectNode(item){
                 if(item.isLoaded != null && item.isLoaded){
