@@ -11,6 +11,9 @@
                 <el-menu-item index="2">
                     <el-button type="danger" size="small" @click="deleteAll">删除</el-button>
                 </el-menu-item>
+                <el-menu-item index="3">
+                    <el-button type="info" size="small" @click="showTemplateFileScriptHelp">帮助</el-button>
+                </el-menu-item>
             </el-menu>
         </div>
         <div class="split-box">
@@ -40,10 +43,11 @@
                         <el-card shadow="hover">
                             <el-button-group slot="header">
                                 <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
+                                <el-button type="success" size="mini" @click="insertTemplateFileScript(item)">插入模板代码</el-button>
                             </el-button-group>
                             <div class="code-box">
                                 <el-form-item prop="script">
-                                    <AceEditor v-model="item.model.script" lang="javascript" theme="chrome" width="100%" height="100%" @init="initAceEditor"/>
+                                    <AceEditor :ref="'aceEditor' + item.id" v-model="item.model.script" lang="javascript" theme="chrome" width="100%" height="100%" @init="initAceEditor"/>
                                 </el-form-item>
                             </div>
                         </el-card>
@@ -52,6 +56,7 @@
                 </div>
             </Split>
         </div>
+        <TemplateFileScriptHelpModal ref="templateFileScriptHelpModal"/>
     </div>
 </template>
 
@@ -65,6 +70,7 @@
         name: "CreationStrategyManage",
         components: {
             AceEditor,
+            TemplateFileScriptHelpModal:() => import('@/components/TemplateFileScriptHelpModal.vue'),
         },
         data () {
             return {
@@ -86,7 +92,7 @@
                     scriptLanguage: [
                         { type:"number", required: true, message: '请选择脚本语言', trigger: 'change' }
                     ]
-                }
+                },
             }
         },
         methods:{
@@ -157,6 +163,20 @@
                     enableLiveAutocompletion: true
                 });
             },
+            insertTemplateFileScript(item){
+                let aceEditor = this.$refs['aceEditor' + item.id][0];
+                let code = "";
+                this.templateFileList.forEach(group => {
+                    code +=  "//" + group.name + ";\n";
+                    group.children.forEach(item => {
+                        code +=  "var tf_" + item.name + " = $tempUtil.newTmpl(\"" + item.model.code + "\");\n";
+                    });
+                });
+                if(code !== ""){
+                    aceEditor.editor.insert("\n");
+                    aceEditor.editor.insert(code);
+                }
+            },
             selectNode(item){
                 if(item.isLoaded != null && item.isLoaded){
                     this.addToTab(item);
@@ -221,6 +241,9 @@
             },
             removeFromTreeData(item){
                 this.$refs.tree.remove(item);
+            },
+            showTemplateFileScriptHelp(){
+                this.$refs.templateFileScriptHelpModal.toggle({generatorId: this.generatorId});
             }
         },
         mounted(){
@@ -228,6 +251,79 @@
                 models.forEach(model => {
                     let item = this.wrapToItem(model);
                     this.addToTreeData(item);
+                });
+            });
+
+            let wrapToGroup = function(model){
+                return  {
+                    id: model.displayGroup,
+                    name: model.displayGroup,
+                    children: []
+                };
+            };
+            let wrapToItem = function(model){
+                return {
+                    id: model.id,
+                    name: model.name,
+                    model: model,
+                    children: []
+                };
+            };
+            let that = this;
+            let addToTreeData = function(item){
+                let model = item.model;
+                if(that.templateFileList.length === 0){
+                    let group = wrapToGroup(model);
+                    that.templateFileList.push(group);
+                    addToGroup(item, group);
+                    return;
+                }
+                for(let i = 0 ; i < that.templateFileList.length ; i++){
+                    let group = that.templateFileList[i];
+                    if(model.displayGroup === group.name){
+                        addToGroup(item, group);
+                        return;
+                    }
+                    else if(model.displayGroup < group.name){
+                        let g = wrapToGroup(model);
+                        that.templateFileList.splice(i, 0, g);
+                        addToGroup(item, g);
+                        return;
+                    }
+                    else if(i + 1 === that.templateFileList.length){
+                        let g = wrapToGroup(model);
+                        that.templateFileList.push(g);
+                        addToGroup(item, g);
+                        return;
+                    }
+                }
+            };
+            let addToGroup = function(item, group){
+                if(group.children.length === 0){
+                    group.children.push(item);
+                    return;
+                }
+                for(let i = 0 ; i < group.children.length ; i++){
+                    let child = group.children[i];
+                    if(item.name === child.name){
+                        group.children.splice(i + 1, 0, item);
+                        return;
+                    }
+                    else if(item.name < child.name){
+                        group.children.splice(i, 0, item);
+                        return;
+                    }
+                    else if(i + 1 === group.children.length){
+                        group.children.push(item);
+                        return;
+                    }
+                }
+            };
+            this.Api.TemplateFile.infoQuery({generatorId: this.generatorId}).then((templateFileList) => {
+                this.templateFileList = [];
+                templateFileList.forEach(model => {
+                    let item = wrapToItem(model);
+                    addToTreeData(item);
                 });
             });
         }
