@@ -26,17 +26,18 @@
                     <el-col :span="24">
                         <el-card shadow="hover">
                             <div slot="header" class="card-header-flex">
-                                <el-breadcrumb>
-                                    <el-breadcrumb-item :to="{ name: 'generatorDetail',params: { generatorId: item.generator.id } }">{{item.generator.name}}</el-breadcrumb-item>
-                                    <el-breadcrumb-item><strong @click="linkToGeneratorDataManage(item)">{{item.name}}</strong></el-breadcrumb-item>
-                                </el-breadcrumb>
+                                <div>
+                                    <el-button type="text" size="mini" @click="linkToGeneratorDataManage(item)"><strong>{{item.name}}</strong></el-button>
+                                </div>
                                 <el-button-group>
                                     <el-button size="mini" @click="showGeneratorInstanceUpdateModal(item)">编辑</el-button>
                                     <el-button size="mini" @click="linkToGeneratorDataManage(item)">工作台</el-button>
+                                    <el-button size="mini" type="danger" @click="deleteItem(item)">删除</el-button>
                                 </el-button-group>
                             </div>
                             <p>{{item.description}}</p>
-                            <p> 最后更新 <Time :time="item.updateTime" :interval="60"/></p>
+                            <p>所属生成器 <el-button type="text" size="mini" @click="linkToGeneratorDetail(item)">{{item.generator.name}}</el-button></p>
+                            <p>最后更新 <Time :time="item.updateTime" :interval="60"/></p>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -89,9 +90,20 @@
             linkToGeneratorDataManage(item){
                 this.$router.push({ name: 'generatorDataManage', params: { generatorInstanceId: item.id }});
             },
+            linkToGeneratorDetail(item){
+                this.$router.push({ name: 'generatorDetail', params: { generatorId: item.generator.id }});
+            },
             search(){
                 this.Api.GeneratorInstance.infoSearch(this.searchRequest).then((data) => {
                     this.searchResult = data;
+                });
+            },
+            deleteItem(item){
+                this.$confirm('确定删除所选？', {type: 'warning'})
+                .then(() => {
+                    this.Api.GeneratorInstance.delete({id:item.id}).then((data) => {
+                        this.$message({type: 'success', message: '删除成功！'});
+                    });
                 });
             }
         },

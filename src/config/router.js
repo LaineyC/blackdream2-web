@@ -46,6 +46,11 @@ let router = new Router({
             component: () => import('../views/GeneratorDetail.vue')
         },
         {
+            path: '/developer/:developerId',
+            name: 'generatorDeveloperHome',
+            component: () => import('../views/GeneratorDeveloperHome.vue')
+        },
+        {
             path: '/generator-instance-manage',
             name: 'generatorInstanceManage',
             meta: { isRequiredAuth: true},

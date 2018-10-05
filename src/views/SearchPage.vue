@@ -7,19 +7,7 @@
                         <strong>排行</strong>
                     </div>
                     <CellGroup>
-                        <Cell title="Only show titles">
-                            <Badge :count="10" slot="extra" />
-                        </Cell>
-                        <Cell title="Only show titles">
-                            <Badge :count="10" slot="extra" />
-                        </Cell>
-                        <Cell title="Only show titles">
-                            <Badge :count="10" slot="extra" />
-                        </Cell>
-                        <Cell title="Only show titles">
-                            <Badge :count="10" slot="extra" />
-                        </Cell>
-                        <Cell title="Only show titles">
+                        <Cell v-for="generator in generatorList" :title="generator.name" :key="generator.id">
                             <Badge :count="10" slot="extra" />
                         </Cell>
                     </CellGroup>
@@ -48,29 +36,28 @@
                     <el-col :span="24">
                         <el-card shadow="hover">
                             <div slot="header" class="card-header-flex">
-                                <el-breadcrumb>
-                                    <el-breadcrumb-item :to="{ name: '/' }">{{item.user.username}}</el-breadcrumb-item>
-                                    <el-breadcrumb-item :to="{ name: 'generatorDetail',params: { generatorId: item.id } }">{{item.name}}</el-breadcrumb-item>
-                                </el-breadcrumb>
+                                <div>
+                                    <el-button type="text" size="mini" @click="linkToGeneratorDeveloperHome(item)"><strong>{{item.user.username}}</strong></el-button>
+                                    <span> / </span>
+                                    <el-button type="text" size="mini" @click="linkToGeneratorDetail(item)"><strong>{{item.name}}</strong></el-button>
+                                </div>
                                 <el-button-group>
-                                    <el-button size="mini" type="text" @click="showGeneratorInstanceCreateModal(item)">创建实例</el-button>
+                                    <el-button size="mini" @click="showGeneratorInstanceCreateModal(item)">创建实例</el-button>
                                 </el-button-group>
                             </div>
                             <p>{{item.description}}</p>
-                            <p>
-                                <span>{{item.engineType | enumFormat(Constant.TemplateEngineTypeEnum)}}</span>
-                                <span> 最后更新 <Time :time="item.updateTime" :interval="60"/></span>
-                            </p>
+                            <p>模板引擎 {{item.engineType | enumFormat(Constant.TemplateEngineTypeEnum)}}</p>
+                            <p>最后更新 <Time :time="item.updateTime" :interval="60"/></p>
                         </el-card>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="24">
                         <el-pagination
-                                :page-size="10"
-                                layout="total, prev, pager, next, jumper"
-                                background
-                                :total="searchResult.total">
+                            :page-size="10"
+                            layout="total, prev, pager, next, jumper"
+                            background
+                            :total="searchResult.total">
                         </el-pagination>
                     </el-col>
                 </el-row>
@@ -88,6 +75,7 @@
         },
         data () {
             return {
+                generatorList:[],
                 searchRequest:{
                     page: 1,
                     pageSize: 10,
@@ -114,10 +102,20 @@
                 this.Api.Generator.search(this.searchRequest).then((data) => {
                     this.searchResult = data;
                 });
-            }
+            },
+            linkToGeneratorDeveloperHome(item){
+                this.$router.push({ name: 'generatorDeveloperHome', params: { developerId: item.user.id }});
+            },
+            linkToGeneratorDetail(item){
+                this.$router.push({ name: 'generatorDetail', params: { generatorId: item.id }});
+            },
         },
         mounted(){
             this.searchRequest.name = this.$route.params.searchText;
+
+            this.Api.Generator.query({}).then((data) => {
+                this.generatorList = data;
+            });
             this.search();
         }
     }

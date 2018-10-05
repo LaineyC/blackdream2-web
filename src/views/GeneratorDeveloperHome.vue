@@ -1,12 +1,12 @@
 <template>
-    <div id="generator-manage" class="container">
+    <div id="generator-developer-home" class="container">
         <el-row>
             <el-col :span="6">
                 <el-card shadow="hover">
-                    <p slot="header"><strong>{{Auth.body.nickname}}</strong></p>
+                    <p slot="header"><strong>{{developer.nickname}}</strong></p>
                     <p><img src="@/assets/image/logo.jpg" class="head-img"/></p>
-                    <p>{{Auth.body.username}}</p>
-                    <p>{{Auth.body.email}}</p>
+                    <p>{{developer.username}}</p>
+                    <p>{{developer.email}}</p>
                 </el-card>
             </el-col>
             <el-col :span="18">
@@ -31,9 +31,6 @@
                             <el-form-item>
                                 <el-button type="primary" @click="search">搜索</el-button>
                             </el-form-item>
-                            <el-form-item>
-                                <el-button @click="showGeneratorCreateModal" type="success">新建</el-button>
-                            </el-form-item>
                         </el-form>
                     </el-col>
                 </el-row>
@@ -43,19 +40,6 @@
                             <div slot="header" class="card-header-flex">
                                 <div>
                                     <el-button type="text" size="mini" @click="linkToGeneratorDetail(item)"><strong>{{item.name}}</strong></el-button>
-                                </div>
-                                <div>
-                                    <el-button-group>
-                                        <el-button size="mini" @click="showGeneratorUpdateModal(item)">编辑</el-button>
-                                        <el-button size="mini">状态</el-button>
-                                        <el-button size="mini" @click="linkToGeneratorGuideSave(item)">指南</el-button>
-                                    </el-button-group>
-                                    <el-button-group style="margin-left: 5px;">
-                                        <el-button size="mini" @click="linkToDataModelManage(item)">模型</el-button>
-                                        <el-button size="mini" @click="linkToTemplateFileManage(item)">模板</el-button>
-                                        <el-button size="mini" @click="linkToCreationStrategyManage(item)">策略</el-button>
-                                        <el-button size="mini" @click="showGeneratorInstanceCreateModal(item)">实例</el-button>
-                                    </el-button-group>
                                 </div>
                             </div>
                             <p>{{item.description}}</p>
@@ -76,28 +60,22 @@
                 </el-row>
             </el-col>
         </el-row>
-        <GeneratorCreateModal ref="generatorCreateModal" @on-success="handleGeneratorCreateSuccess"/>
-        <GeneratorUpdateModal ref="generatorUpdateModal" @on-success="handleGeneratorUpdateSuccess"/>
-        <GeneratorInstanceCreateModal ref="generatorInstanceCreateModal" @on-success="handleGeneratorInstanceCreateSuccess"/>
     </div>
 </template>
 
 <script>
     export default {
-        name: "GeneratorManage",
-        components:{
-            GeneratorCreateModal:() => import('@/components/GeneratorCreateModal.vue'),
-            GeneratorUpdateModal:() => import('@/components/GeneratorUpdateModal.vue'),
-            GeneratorInstanceCreateModal:() => import('@/components/GeneratorInstanceCreateModal.vue')
-        },
+        name: "GeneratorDeveloperHome",
         data () {
             return {
+                developer:{},
                 searchRequest:{
                     page: 1,
                     pageSize: 10,
                     name: null,
                     status: null,
-                    engineType: null
+                    engineType: null,
+                    userId: this.$route.params.developerId,
                 },
                 searchResult:{
                     total: 0,
@@ -106,44 +84,10 @@
             }
         },
         methods:{
-            handleGeneratorCreateSuccess(){
-                this.search();
-            },
-            handleGeneratorUpdateSuccess(){
-                this.search();
-            },
-            handleGeneratorInstanceCreateSuccess(){
-                this.$router.push({ name: 'generatorInstanceManage'});
-            },
-            showGeneratorInstanceCreateModal(item){
-                this.$refs.generatorInstanceCreateModal.open({
-                    generatorId:item.id
-                })
-            },
-            showGeneratorCreateModal(){
-                this.$refs.generatorCreateModal.open();
-            },
-            showGeneratorUpdateModal(item){
-                this.$refs.generatorUpdateModal.open({
-                    generatorId:item.id
-                });
-            },
             search(){
-                this.Api.Generator.infoSearch(this.searchRequest).then((data) => {
+                this.Api.Generator.search(this.searchRequest).then((data) => {
                     this.searchResult = data;
                 });
-            },
-            linkToGeneratorGuideSave(item){
-                this.$router.push({ name: 'generatorGuideSave', params: { generatorId: item.id }});
-            },
-            linkToDataModelManage(item){
-                this.$router.push({ name: 'dataModelManage', params: { generatorId: item.id }});
-            },
-            linkToTemplateFileManage(item){
-                this.$router.push({ name: 'templateFileManage', params: { generatorId: item.id }});
-            },
-            linkToCreationStrategyManage(item){
-                this.$router.push({ name: 'creationStrategyManage', params: { generatorId: item.id }});
             },
             linkToGeneratorDetail(item){
                 this.$router.push({ name: 'generatorDetail', params: { generatorId: item.id }});
@@ -151,12 +95,15 @@
         },
         mounted(){
             this.search();
+            this.Api.User.get({id: this.$route.params.developerId}).then((data) => {
+                this.developer = data;
+            });
         }
     }
 </script>
 
 <style scoped lang="less">
-    #generator-manage{
+    #generator-developer-home{
         .el-col{
             padding: 10px;
         }

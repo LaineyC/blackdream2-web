@@ -4,19 +4,18 @@
             <el-col :span="24">
                 <el-card shadow="hover">
                     <div slot="header" class="card-header-flex">
-                        <el-breadcrumb>
-                            <el-breadcrumb-item :to="{ name: '/' }">{{generator.user.username}}</el-breadcrumb-item>
-                            <el-breadcrumb-item>{{generator.name}}</el-breadcrumb-item>
-                        </el-breadcrumb>
-                        <el-button-group>
+                        <div>
+                            <el-button type="text" size="mini" @click="linkToGeneratorDeveloperHome(generator)"><strong>{{generator.user.username}}</strong></el-button>
+                            <span> / </span>
+                            <el-button type="text" size="mini">{{generator.name}}</el-button>
+                        </div>
+                        <el-button-group v-if="Auth.body.id === generator.user.id">
                             <el-button size="mini" @click="showGeneratorUpdateModal">编辑</el-button>
                         </el-button-group>
                     </div>
                     <p>{{generator.description}}</p>
-                    <p>
-                        <span>{{generator.engineType | enumFormat(Constant.TemplateEngineTypeEnum)}}</span>
-                        <span> 最后更新 <Time :time="generator.updateTime" :interval="1"/></span>
-                    </p>
+                    <p>模板引擎 {{generator.engineType | enumFormat(Constant.TemplateEngineTypeEnum)}}</p>
+                    <p>最后更新 <Time :time="generator.updateTime" :interval="1"/></p>
                 </el-card>
             </el-col>
         </el-row>
@@ -25,7 +24,7 @@
                 <el-card shadow="hover">
                     <div slot="header" class="card-header-flex">
                         <strong>使用指南</strong>
-                        <el-button-group>
+                        <el-button-group v-if="Auth.body.id === generator.user.id">
                             <el-button size="mini" @click="linkToGeneratorGuideSave">编辑</el-button>
                         </el-button-group>
                     </div>
@@ -70,6 +69,9 @@
                 this.$refs.generatorUpdateModal.open({
                     generatorId: this.generatorId
                 });
+            },
+            linkToGeneratorDeveloperHome(generator){
+                this.$router.push({ name: 'generatorDeveloperHome', params: { developerId: generator.user.id }});
             },
         },
         mounted(){
