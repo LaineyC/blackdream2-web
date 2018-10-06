@@ -68,7 +68,7 @@
                 this.$router.push({ name: 'guide'});
             },
             linkToSetting(){
-                this.$router.push({ name: 'setting'});
+                this.$router.push({ name: 'settingProfile'});
             },
             linkToGeneratorManage(){
                 this.$router.push({ name: 'generatorManage'});

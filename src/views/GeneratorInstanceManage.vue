@@ -30,8 +30,8 @@
                                     <el-button type="text" size="mini" @click="linkToGeneratorDataManage(item)"><strong>{{item.name}}</strong></el-button>
                                 </div>
                                 <el-button-group>
-                                    <el-button size="mini" @click="showGeneratorInstanceUpdateModal(item)">编辑</el-button>
-                                    <el-button size="mini" @click="linkToGeneratorDataManage(item)">工作台</el-button>
+                                    <el-button size="mini" type="primary" @click="showGeneratorInstanceUpdateModal(item)">编辑</el-button>
+                                    <el-button size="mini" type="success" @click="linkToGeneratorDataManage(item)">工作台</el-button>
                                     <el-button size="mini" type="danger" @click="deleteItem(item)">删除</el-button>
                                 </el-button-group>
                             </div>

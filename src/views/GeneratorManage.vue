@@ -46,15 +46,15 @@
                                 </div>
                                 <div>
                                     <el-button-group>
-                                        <el-button size="mini" @click="showGeneratorUpdateModal(item)">编辑</el-button>
-                                        <el-button size="mini">状态</el-button>
-                                        <el-button size="mini" @click="linkToGeneratorGuideSave(item)">指南</el-button>
+                                        <el-button size="mini" type="primary" @click="showGeneratorUpdateModal(item)">编辑</el-button>
+                                        <el-button size="mini" type="primary">状态</el-button>
                                     </el-button-group>
                                     <el-button-group style="margin-left: 5px;">
-                                        <el-button size="mini" @click="linkToDataModelManage(item)">模型</el-button>
-                                        <el-button size="mini" @click="linkToTemplateFileManage(item)">模板</el-button>
-                                        <el-button size="mini" @click="linkToCreationStrategyManage(item)">策略</el-button>
-                                        <el-button size="mini" @click="showGeneratorInstanceCreateModal(item)">实例</el-button>
+                                        <el-button size="mini" type="success" @click="linkToDataModelManage(item)">模型</el-button>
+                                        <el-button size="mini" type="success" @click="linkToTemplateFileManage(item)">模板</el-button>
+                                        <el-button size="mini" type="success" @click="linkToCreationStrategyManage(item)">策略</el-button>
+                                        <el-button size="mini" type="success" @click="linkToGeneratorGuideSave(item)">指南</el-button>
+                                        <el-button size="mini" type="success" @click="showGeneratorInstanceCreateModal(item)">实例</el-button>
                                     </el-button-group>
                                 </div>
                             </div>

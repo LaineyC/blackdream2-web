@@ -76,7 +76,28 @@ let router = new Router({
             path: '/setting',
             name: 'setting',
             meta: { isRequiredAuth: true},
-            component: () => import('../views/SettingPage.vue')
+            component: () => import('../views/SettingPage.vue'),
+            children: [
+                {
+                    path: '',
+                    redirect:'profile'
+                },
+                {
+                    path: 'account',
+                    name: 'settingAccount',
+                    component: () => import('../views/setting/SettingAccount.vue'),
+                },
+                {
+                    path: 'key',
+                    name: 'settingKey',
+                    component: () => import('../views/setting/SettingKey.vue'),
+                },
+                {
+                    path: 'profile',
+                    name: 'settingProfile',
+                    component: () => import('../views/setting/SettingProfile.vue'),
+                },
+            ]
         },
         {
             path: '/sign-in',

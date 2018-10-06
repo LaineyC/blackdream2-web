@@ -2,23 +2,14 @@
     <div id="setting" class="container">
         <el-row>
             <el-col :span="4" style="position: fixed; top:65px;width: 200px">
-                <el-menu default-active="1">
-                    <el-menu-item index="1">
-                        <i class="el-icon-picture"></i>
-                        <strong slot="title">个性</strong>
-                    </el-menu-item>
-                    <el-menu-item index="3">
-                        <i class="el-icon-menu"></i>
-                        <strong slot="title">账号</strong>
-                    </el-menu-item>
-                    <el-menu-item index="4">
-                        <i class="el-icon-phone"></i>
-                        <strong slot="title">认证</strong>
+                <el-menu :default-active="activeLink">
+                    <el-menu-item :index="tab.linkName" v-for="tab in tabs" :key="tab.linkName" @click="linkTo(tab)">
+                        <strong slot="title">{{tab.title}}</strong>
                     </el-menu-item>
                 </el-menu>
             </el-col>
             <el-col :span="20" style="margin-left: 205px;">
-                    大大大
+                <router-view/>
             </el-col>
         </el-row>
     </div>
@@ -26,7 +17,25 @@
 
 <script>
     export default {
-        name: "SettingPage"
+        name: "SettingPage",
+        data(){
+            return {
+                activeLink:this.$route.name,
+                tabs:[
+                    {title:"形象", linkName:"settingProfile"},
+                    {title:"账号", linkName:"settingAccount"},
+                    {title:"Key", linkName:"settingKey"},
+                ]
+            }
+        },
+        methods:{
+            linkTo(tab){
+                this.$router.push({ name: tab.linkName,});
+            }
+        },
+        mounted(){
+
+        }
     }
 </script>
 

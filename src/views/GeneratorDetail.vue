@@ -10,7 +10,7 @@
                             <el-button type="text" size="mini">{{generator.name}}</el-button>
                         </div>
                         <el-button-group v-if="Auth.body.id === generator.user.id">
-                            <el-button size="mini" @click="showGeneratorUpdateModal">编辑</el-button>
+                            <el-button size="mini" type="primary" @click="showGeneratorUpdateModal">编辑</el-button>
                         </el-button-group>
                     </div>
                     <p>{{generator.description}}</p>
@@ -25,7 +25,7 @@
                     <div slot="header" class="card-header-flex">
                         <strong>使用指南</strong>
                         <el-button-group v-if="Auth.body.id === generator.user.id">
-                            <el-button size="mini" @click="linkToGeneratorGuideSave">编辑</el-button>
+                            <el-button size="mini" type="primary" @click="linkToGeneratorGuideSave">编辑</el-button>
                         </el-button-group>
                     </div>
                     <p>

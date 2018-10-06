@@ -42,7 +42,7 @@
                                     <el-button type="text" size="mini" @click="linkToGeneratorDetail(item)"><strong>{{item.name}}</strong></el-button>
                                 </div>
                                 <el-button-group>
-                                    <el-button size="mini" @click="showGeneratorInstanceCreateModal(item)">创建实例</el-button>
+                                    <el-button size="mini" type="success" @click="showGeneratorInstanceCreateModal(item)">创建实例</el-button>
                                 </el-button-group>
                             </div>
                             <p>{{item.description}}</p>
