@@ -1,22 +1,23 @@
 <template>
-    <div id="sign-in">
+    <div id="setting-account">
         <el-row>
-            <el-col :span="8" :offset="8">
+            <el-col :span="24">
                 <el-card>
                     <div slot="header" class="card-header-flex">
-                        <strong>账号</strong>
-                        <router-link to="/sign-up"><el-button size="small" type="text">还没账号，去注册</el-button></router-link>
+                        <strong>修改密码</strong>
                     </div>
-                    <el-form ref="signInForm" :model="request" :rules="validRule" size="small" label-width="120px">
-                        <el-form-item label="用户名或邮箱" prop="username">
+                    <el-form ref="signInForm" :model="request" :rules="validRule" size="small" label-width="120px" style="width: 300px">
+                        <el-form-item label="旧密码" prop="username">
                             <el-input v-model="request.username" type="text"></el-input>
                         </el-form-item>
-                        <el-form-item label="密码" prop="password">
+                        <el-form-item label="新密码" prop="password">
+                            <el-input v-model="request.password" type="password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="确认密码" prop="password">
                             <el-input v-model="request.password" type="password"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" @click="handleSignIn()">登陆</el-button>
-                            <router-link to="/sign-up"><el-button style="float: right;" type="text">忘记密码？</el-button></router-link>
+                            <el-button type="primary" @click="handleSignIn()">保存</el-button>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -64,8 +65,7 @@
 </script>
 
 <style scoped lang="less">
-    #sign-in{
-        padding-top: 64px;
+    #setting-account{
         .card-header-flex{
             flex: 1;
             display: flex;

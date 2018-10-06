@@ -5,7 +5,7 @@
                 <el-card>
                     <div slot="header" class="card-header-flex">
                         <strong>登陆</strong>
-                        <router-link to="/sign-up"><el-button size="small" type="text">还没账号，去注册</el-button></router-link>
+                        <el-button size="small" type="text" @click="linkToSignUp()">还没账号，去注册</el-button>
                     </div>
                     <el-form ref="signInForm" :model="request" :rules="validRule" size="small" label-width="120px">
                         <el-form-item label="用户名或邮箱" prop="username">
@@ -16,7 +16,7 @@
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="handleSignIn()">登陆</el-button>
-                            <router-link to="/sign-up"><el-button style="float: right;" type="text">忘记密码？</el-button></router-link>
+                            <el-button style="float: right;" type="text" @click="linkToSignUp()">忘记密码？</el-button>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -58,6 +58,9 @@
             },
             linkToGeneratorInstanceManage(){
                 this.$router.push({ name: 'generatorInstanceManage'});
+            },
+            linkToSignUp(){
+                this.$router.push({ name: 'signUp'});
             }
         }
     }

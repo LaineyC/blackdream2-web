@@ -5,7 +5,7 @@
                 <el-card>
                     <div slot="header" class="card-header-flex">
                         <strong>注册</strong>
-                        <router-link to="/sign-in"><el-button size="small" type="text">已有账号，去登陆</el-button></router-link>
+                        <el-button size="small" type="text" @click="linkToSignIn()">已有账号，去登陆</el-button>
                     </div>
                     <el-form ref="signUpForm" :model="request" :rules="validRule" size="small" label-width="80px">
                         <el-form-item label="用户名" prop="username">
@@ -29,7 +29,7 @@
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="handleSignUp()">提交</el-button>
-                            <router-link to="/sign-up"><el-button style="float: right;" type="text">忘记密码？</el-button></router-link>
+                            <el-button style="float: right;" type="text" @click="linkToSignIn()">忘记密码？</el-button>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -83,6 +83,9 @@
                         });
                     }
                 })
+            },
+            linkToSignIn(){
+                this.$router.push({ name: 'signIn'});
             }
         }
     }

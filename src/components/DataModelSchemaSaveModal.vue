@@ -58,7 +58,7 @@
                     let dataModelCache = {};
                     dataModelList.forEach(item => {
                         dataModelCache[item.id] = [];
-                        this.$set(this.request.ruleMap, item.id, [])
+                        this.$set(this.request.ruleMap, item.id, []);
                     });
                     if(schema){
                         let ruleMap = {};
@@ -75,6 +75,11 @@
                         Object.assign(this.request, schema);
                         this.$set(this.request, "ruleMap", ruleMap);
                     }
+                    dataModelList.forEach(item => {
+                        if(!this.request.ruleMap[item.id]){
+                            this.$set(this.request.ruleMap, item.id, []);
+                        }
+                    });
                     this.dataModelList = dataModelList.sort((a, b) => {
                         if(a.name > b.name){
                             return 1;

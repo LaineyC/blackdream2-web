@@ -79,7 +79,7 @@
         },
         data () {
             return {
-                idIncrement : 1,
+                incrementer: this.Method.newIncrementer(),
                 split: 0.15,
                 generatorId:this.$route.params.generatorId,
                 tabs:[],
@@ -106,11 +106,8 @@
             }
         },
         methods:{
-            newId(){
-                return this.idIncrement++;
-            },
             create(group){
-                let id = this.newId();
+                let id = this.incrementer.next();
                 let model = {
                     id: "$" + id,
                     name: "新建模板" + id,

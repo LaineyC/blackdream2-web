@@ -1,14 +1,13 @@
 <template>
-    <div id="sign-in">
+    <div id="setting-key">
         <el-row>
-            <el-col :span="8" :offset="8">
+            <el-col :span="24">
                 <el-card>
                     <div slot="header" class="card-header-flex">
-                        <strong>登陆</strong>
-                        <router-link to="/sign-up"><el-button size="small" type="text">还没账号，去注册</el-button></router-link>
+                        <strong>Key</strong>
                     </div>
-                    <el-form ref="signInForm" :model="request" :rules="validRule" size="small" label-width="120px">
-                        <el-form-item label="用户名或邮箱" prop="username">
+                    <el-form ref="signInForm" :model="request" :rules="validRule" size="small" label-width="120px" style="width:300px;">
+                        <el-form-item label="Key" prop="username">
                             <el-input v-model="request.username" type="text"></el-input>
                         </el-form-item>
                         <el-form-item label="密码" prop="password">
@@ -16,7 +15,6 @@
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="handleSignIn()">登陆</el-button>
-                            <router-link to="/sign-up"><el-button style="float: right;" type="text">忘记密码？</el-button></router-link>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -64,8 +62,7 @@
 </script>
 
 <style scoped lang="less">
-    #sign-in{
-        padding-top: 64px;
+    #setting-key{
         .card-header-flex{
             flex: 1;
             display: flex;

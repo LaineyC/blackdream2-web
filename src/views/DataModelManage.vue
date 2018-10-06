@@ -307,7 +307,7 @@
         },
         data () {
             return {
-                idIncrement : 1,
+                incrementer: this.Method.newIncrementer(),
                 split: 0.15,
                 generatorId:this.$route.params.generatorId,
                 tabs:[],
@@ -369,11 +369,8 @@
             }
         },
         methods:{
-            newId(){
-                return this.idIncrement++;
-            },
             create(){
-                let id = this.newId();
+                let id = this.incrementer.next();
                 let model = {
                     id: "$" + id,
                     name: "新建模型" + id,
@@ -444,8 +441,8 @@
                     return;
                 }
                 this.Api.DataModel.get({id: item.model.id}).then((model) => {
-                    model.propertyList.forEach(value => value.id = this.Method.generateId());
-                    model.fieldList.forEach(value => value.id = this.Method.generateId());
+                    //model.propertyList.forEach(value => value.id = this.Method.generateId());
+                    //model.fieldList.forEach(value => value.id = this.Method.generateId());
                     item.model.propertyList = model.propertyList;
                     item.model.fieldList = model.fieldList;
                     item.isLoaded = true;
