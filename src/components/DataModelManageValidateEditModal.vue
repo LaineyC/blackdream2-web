@@ -57,6 +57,11 @@
             </el-row>
             <el-row v-if="validateShow.isShowLength">
                 <el-col :span="8">
+                    <el-form-item label="长度" prop="length">
+                        <el-input v-model.number="request.length"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
                     <el-form-item label="最小长度" prop="minLength">
                         <el-input v-model.number="request.minLength"></el-input>
                     </el-form-item>
@@ -64,11 +69,6 @@
                 <el-col :span="8">
                     <el-form-item label="最大长度" prop="maxLength">
                         <el-input v-model.number="request.maxLength"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="长度" prop="length">
-                        <el-input v-model.number="request.length"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>

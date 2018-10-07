@@ -113,10 +113,15 @@
                                         </el-table-column>
                                         <el-table-column prop="dataType" label="数据类型" width="125">
                                             <template slot-scope="{ row, column, $index }">
-                                                <el-form-item>
+                                                <el-form-item :prop="'propertyList.' + $index + '.dataType'" :rules="validRule.property.dataType">
                                                     <el-select v-model="row.dataType" @change="changeDataType(item, row, $index)">
                                                         <el-option v-for="item in Constant.DataModelAttributeDataTypeEnum" :value="item.value" :key="item.value" :label="item.label"></el-option>
                                                     </el-select>
+                                                    <template slot="error" slot-scope="{ error }">
+                                                        <el-popover placement="bottom" trigger="manual" :value="true">
+                                                            <el-alert :title="error" type="error" :closable="false"></el-alert>
+                                                        </el-popover>
+                                                    </template>
                                                 </el-form-item>
                                             </template>
                                         </el-table-column>
@@ -127,10 +132,10 @@
                                                         <el-option v-for="item in [{'label':'Null','value':null},{'label':'True','value':true},{'label':'False','value':false}]" :value="item.value" :key="item.value" :label="item.label"></el-option>
                                                     </el-select>
                                                 </el-form-item>
-                                                <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value || row.dataType===Constant.DataModelAttributeDataTypeEnum.NUMBER.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
+                                                <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
                                                     <el-input v-model.number="row.defaultValue" />
                                                 </el-form-item>
-                                                <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value || row.dataType===Constant.DataModelAttributeDataTypeEnum.NUMBER.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
+                                                <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.NUMBER.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
                                                     <el-input v-model.number="row.defaultValue" />
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
@@ -231,10 +236,15 @@
                                         </el-table-column>
                                         <el-table-column prop="dataType" label="数据类型" width="125">
                                             <template slot-scope="{ row, column, $index }">
-                                                <el-form-item>
+                                                <el-form-item :prop="'fieldList.' + $index + '.dataType'" :rules="validRule.field.dataType">
                                                     <el-select v-model="row.dataType" @change="changeDataType(item, row, $index)">
                                                         <el-option v-for="item in Constant.DataModelAttributeDataTypeEnum" :value="item.value" :key="item.value" :label="item.label"></el-option>
                                                     </el-select>
+                                                    <template slot="error" slot-scope="{ error }">
+                                                        <el-popover placement="bottom" trigger="manual" :value="true">
+                                                            <el-alert :title="error" type="error" :closable="false"></el-alert>
+                                                        </el-popover>
+                                                    </template>
                                                 </el-form-item>
                                             </template>
                                         </el-table-column>
@@ -245,10 +255,10 @@
                                                         <el-option v-for="item in [{'label':'Null','value':null},{'label':'True','value':true},{'label':'False','value':false}]" :value="item.value" :key="item.value" :label="item.label"></el-option>
                                                     </el-select>
                                                 </el-form-item>
-                                                <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value || row.dataType===Constant.DataModelAttributeDataTypeEnum.NUMBER.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
+                                                <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
                                                     <el-input v-model.number="row.defaultValue" />
                                                 </el-form-item>
-                                                <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value || row.dataType===Constant.DataModelAttributeDataTypeEnum.NUMBER.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
+                                                <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.NUMBER.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
                                                     <el-input v-model.number="row.defaultValue" />
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
@@ -342,6 +352,9 @@
                             { required: true, message: '请填写属性名称', trigger: 'blur' },
                             { type: 'string', max: 255, message: '属性名称长度不能大于255', trigger: 'blur' }
                         ],
+                        dataType: [
+                            { required: true, message: '请选择数据类型', trigger: 'change' }
+                        ],
                         defaultValue: [
 
                         ],
@@ -360,6 +373,9 @@
                         name: [
                             { required: true, message: '请填写字段名称', trigger: 'blur' },
                             { type: 'string', max: 255, message: '字段名称长度不能大于255', trigger: 'blur' }
+                        ],
+                        dataType: [
+                            { required: true, message: '请选择数据类型', trigger: 'change' }
                         ],
                         defaultValue: [
 
@@ -507,7 +523,7 @@
                 item.model.propertyList.push({
                     id:this.Method.generateId(),
                     displayType:this.Constant.DataModelAttributeDisplayTypeEnum.DISPLAY_DEFAULT.value,
-                    dataType:this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
+                    dataType:null,//this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
                     isEnum:false
                 });
             },
@@ -519,7 +535,7 @@
                 item.model.fieldList.push({
                     id:this.Method.generateId(),
                     displayType:this.Constant.DataModelAttributeDisplayTypeEnum.DISPLAY_DEFAULT.value,
-                    dataType:this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
+                    dataType:null,//this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
                     isEnum:false
                 });
             },
@@ -566,7 +582,7 @@
                 });
             },
             changeDataType(item, attribute, index){
-                attribute.defaultValue = undefined;
+                this.$set(attribute, "defaultValue", null);
             },
         },
         mounted(){
