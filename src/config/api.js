@@ -135,5 +135,12 @@ export default Vue.prototype.Api = {
     DataModelSchema: {
         save: doPost('/dataModelSchema/save'),
         get: doPost('/dataModelSchema/get')
-    }
+    },
+    GeneratorData: {
+        create: doPost('/generatorData/create'),
+        delete: doPost('/generatorData/delete'),
+        update: doPost('/generatorData/update'),
+        get: doPost('/generatorData/get'),
+        tree: doPost('/generatorData/tree'),
+    },
 }

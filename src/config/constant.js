@@ -68,11 +68,12 @@ class DataModelAttributeDisplayTypeEnum extends Enum{
 class DataModelAttributeDataTypeEnum extends Enum{
     constructor(){
         super();
-            this.BOOLEAN = new EnumItem(1, "布尔型");
-            this.INTEGER = new EnumItem(2, "整型");
-            this.NUMBER = new EnumItem(3, "数字型");
-            this.STRING = new EnumItem(4, "字符串型");
-            this.MODEL_REF = new EnumItem(15, "数据模型");
+        this.NONE = new EnumItem(1, "NONE");
+        this.BOOLEAN = new EnumItem(2, "BOOLEAN");
+        this.INTEGER = new EnumItem(3, "INTEGER");
+        this.FLOAT = new EnumItem(4, "FLOAT");
+        this.STRING = new EnumItem(5, "STRING");
+        this.MODEL_REF = new EnumItem(15, "MODEL_REF");
     }
 }
 

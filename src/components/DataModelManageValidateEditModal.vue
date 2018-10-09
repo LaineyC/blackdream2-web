@@ -104,6 +104,12 @@
 
     let DataModelAttributeDataTypeEnum = Vue.prototype.Constant.DataModelAttributeDataTypeEnum;
     let dataModelValidateShowRule = {
+        [DataModelAttributeDataTypeEnum.NONE.value] : {
+            isShowEnum:true,
+            isShowValue:true,
+            isShowLength:true,
+            isShowRegex:true
+        },
         [DataModelAttributeDataTypeEnum.BOOLEAN.value] : {
             isShowEnum:false,
             isShowValue:false,
@@ -116,7 +122,7 @@
             isShowLength:false,
             isShowRegex:false
         },
-        [DataModelAttributeDataTypeEnum.NUMBER.value] : {
+        [DataModelAttributeDataTypeEnum.FLOAT.value] : {
             isShowEnum:false,
             isShowValue:true,
             isShowLength:false,

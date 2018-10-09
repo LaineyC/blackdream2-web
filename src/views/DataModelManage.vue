@@ -135,7 +135,7 @@
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
                                                     <el-input v-model.number="row.defaultValue" />
                                                 </el-form-item>
-                                                <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.NUMBER.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
+                                                <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.FLOAT.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
                                                     <el-input v-model.number="row.defaultValue" />
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
@@ -258,7 +258,7 @@
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
                                                     <el-input v-model.number="row.defaultValue" />
                                                 </el-form-item>
-                                                <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.NUMBER.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
+                                                <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.FLOAT.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
                                                     <el-input v-model.number="row.defaultValue" />
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
@@ -301,16 +301,11 @@
 </template>
 
 <script>
-    import AceEditor from 'vue2-ace-editor'
-    import 'brace/ext/language_tools'
-    import 'brace/mode/javascript'
-    import 'brace/theme/chrome'
     import Sortable from 'sortablejs'
 
     export default {
         name: "DataModelManage",
         components: {
-            AceEditor,
             DataModelManageValidateEditModal:() => import('@/components/DataModelManageValidateEditModal.vue'),
             DataModelManageCascadeScriptEditModal:() => import('@/components/DataModelManageCascadeScriptEditModal.vue'),
             DataModelSchemaSaveModal:() => import('@/components/DataModelSchemaSaveModal.vue'),
@@ -441,13 +436,6 @@
                         }
                         this.$message({type: 'success', message: '删除成功！'});
                     });
-                });
-            },
-            initAceEditor:function (editor) {
-                editor.setOptions({
-                    enableBasicAutocompletion: true,
-                    enableSnippets: true,
-                    enableLiveAutocompletion: true
                 });
             },
             selectNode(item){
