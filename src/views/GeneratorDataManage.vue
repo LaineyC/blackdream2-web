@@ -23,16 +23,60 @@
                 <div slot="left" class="left-split-pane">
                     <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
                         <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">
-                            <strong v-if="!data.model">{{ node.label }}</strong>
-                            <span v-else>{{ node.label }}</span>
+                            <span>{{ node.label }}</span>
                             <span>
-                                <el-button v-if="!data.model" type="text" size="mini" @click.stop="create(data)">添加</el-button>
+                                <el-button type="text" size="mini" @click.stop="create(data)">添加</el-button>
                             </span>
                         </div>
                     </el-tree>
                 </div>
                 <div slot="right" class="right-split-pane">
+                    <el-tabs ref="tabs" type="card" @tab-click="clickTab">
+                        <el-tab-pane :label="item.name" v-for="item in tabs" :key="item.id" :name="item.id">
+                            <el-form :ref="'form' + item.id" :model="item.model" inline :rules="validRule" size="small">
+                                <div class="properties">
+                                    <template v-for="group in dataModelCache[item.model.dataModel.id].propertyGroup">
+                                        <div v-if="group.isGroup">
+                                            <div class="group-label">
+                                                <el-form-item>{{group.name}}</el-form-item>
+                                            </div>
+                                            <div class="group-item" v-for="property in group.children" :key="property.id">
+                                                <el-form-item :label="property.name" prop="name">
+                                                    <el-input v-model="item.model.name" placeholder="" />
+                                                </el-form-item>
+                                            </div>
+                                        </div>
+                                        <div v-else>
+                                            <el-form-item :label="group.name" prop="name">
+                                                <el-input v-model="item.model.name" placeholder="" />
+                                            </el-form-item>
+                                        </div>
+                                    </template>
+                                </div>
+                                <el-card shadow="hover">
+                                    <el-button-group slot="header">
+                                        <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
+                                        <el-button type="success" size="mini" @click="addTuple(item)">添加记录</el-button>
+                                    </el-button-group>
+                                    <el-table class="field-table" :data="item.model.tupleList" row-key="id" style="width: 100%">
+                                        <el-table-column type="index" width="28" class-name="sort-handle"></el-table-column>
+                                        <el-table-column type="selection" width="25"></el-table-column>
+                                        <el-table-column :label="group.name" v-for="group in dataModelCache[item.model.dataModel.id].fieldGroup" :key="group.id" :align="group.isGroup?'center':'left'">
+                                            <el-table-column v-if="group.isGroup" v-for="field in group.children" :label="field.name" :width="field.displayWidth">
 
+                                            </el-table-column>
+                                        </el-table-column>
+
+                                        <el-table-column label="操作" width="80">
+                                            <template slot-scope="{ row, column, $index }">
+                                                <el-button type="danger" size="mini" @click="removeTuple(item, row, $index)">删除</el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </el-card>
+                            </el-form>
+                        </el-tab-pane>
+                    </el-tabs>
                 </div>
             </Split>
         </div>
@@ -69,7 +113,7 @@
                 let id = this.incrementer.next();
                 let model = {
                     //id: "$" + id,
-                    name: "新建数据" + id,
+                    name: dataModel.name + id,
                     generatorInstanceId: this.generatorInstanceId,
                     dataModelId: dataModel.id,
                     parentId: !parent ? null : parent.id,
@@ -136,10 +180,17 @@
                     item.isLoaded = true;
                     this.addToTab(item);
                     this.selectTab(item);
-                    this.rowDrop(item);
+                    //this.rowDrop(item);
                 });
             },
+            clickTab(tab){
+                let index = this.tabs.findIndex(item => item.id === tab.name);
+                if(index !== -1){
+                    this.currentTabItem = this.tabs[index];
+                }
+            },
             selectTab(item){
+                this.$refs.tabs.setCurrentName(item.id);
                 this.currentTabItem = item;
             },
             addToTab(item){
@@ -197,13 +248,19 @@
                     id:this.Method.generateId(),
                 });
             },
-            removeTuple(item, property, index){
+            removeTuple(item, tuple, index){
                 let tupleList = item.model.tupleList;
                 tupleList.splice(index, 1);
             },
         },
         computed:{
-            //dataModel
+            dataModelCache(){
+                let cache = {};
+                this.dataModelList.forEach(value => {
+                    cache[value.id] = value;
+                });
+                return cache;
+            }
         },
         mounted(){
             this.Api.GeneratorInstance.get({id: this.generatorInstanceId}).then((generatorInstance) => {
@@ -212,10 +269,74 @@
                 let treeRequest = this.Api.GeneratorData.tree({generatorInstanceId: this.generatorInstanceId});
                 this.$http.all([infoQueryRequest, treeRequest])
                 .then(([dataModelList, generatorDataTree]) => {
-                    this.dataModelCache = {};
+                    //this.dataModelCache = {};
                     this.dataModelList = dataModelList;
                     dataModelList.forEach(model => {
-                        this.dataModelCache[model.id] = model;
+                        //this.dataModelCache[model.id] = model;
+
+                        let propertyGroupPrevious = null;
+                        model.propertyGroup = [];
+                        model.propertyList.forEach(property => {
+                            let displayGroup = property.displayGroup;
+                            if(displayGroup !== undefined && displayGroup !== null && displayGroup !== ""){
+                                if(propertyGroupPrevious != null && propertyGroupPrevious.isGroup && propertyGroupPrevious.name === displayGroup){
+                                    propertyGroupPrevious.children.push(property);
+                                }
+                                else{
+                                    propertyGroupPrevious = {
+                                        id:this.Method.generateId(),
+                                        name:displayGroup,
+                                        isGroup:true,
+                                        children:[property]
+                                    };
+                                    model.propertyGroup.push(propertyGroupPrevious);
+                                }
+                            }
+                            else{
+                                let comment = property.comment;
+                                propertyGroupPrevious = {
+                                    id:this.Method.generateId(),
+                                    name:comment,
+                                    isGroup:false,
+                                    model:property
+                                };
+                                model.propertyGroup.push(propertyGroupPrevious);
+                            }
+
+                            if(property.isPrimary){
+                                model.primaryProperty = property;
+                            }
+                        });
+
+                        let fieldGroupPrevious = null;
+                        model.fieldGroup = [];
+                        model.fieldList.forEach(field => {
+                            let displayGroup = field.displayGroup;
+                            if(displayGroup !== undefined && displayGroup !== null && displayGroup !== ""){
+                                if(fieldGroupPrevious != null && fieldGroupPrevious.isGroup && fieldGroupPrevious.name === displayGroup){
+                                    fieldGroupPrevious.children.push(field);
+                                }
+                                else{
+                                    fieldGroupPrevious = {
+                                        id:this.Method.generateId(),
+                                        name:displayGroup,
+                                        isGroup:true,
+                                        children:[field]
+                                    };
+                                    model.fieldGroup.push(fieldGroupPrevious);
+                                }
+                            }
+                            else{
+                                let comment = field.comment;
+                                fieldGroupPrevious = {
+                                    id:this.Method.generateId(),
+                                    name:comment,
+                                    isGroup:false,
+                                    model:field
+                                };
+                                model.fieldGroup.push(fieldGroupPrevious);
+                            }
+                        });
                     });
 
                     let that = this;
@@ -305,6 +426,30 @@
         }
         .sort-handle{
             cursor: move;
+        }
+        .properties .el-form-item{
+            margin-left: 10px;
+        }
+        .el-tabs {
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+            .el-tabs__content {
+                position: absolute;
+                width: 100%;
+                top: 55px;
+                bottom: 0;
+                .el-tab-pane {
+                    position: absolute;
+                    width: 100%;
+                    top: 0;
+                    bottom: 0;
+                    overflow-y: auto;
+                }
+            }
+            .group-label, .group-item{
+                display: inline-block;
+            }
         }
     }
 </style>

@@ -52,7 +52,7 @@
                                     <el-table-column type="index" width="28" class-name="sort-handle">
                                     </el-table-column>
                                     <el-table-column label="显示设置" align="center">
-                                        <el-table-column prop="displayGroup" label="显示分组">
+                                        <el-table-column label="显示分组">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'propertyList.' + $index + '.displayGroup'" :rules="validRule.property.displayGroup">
                                                     <el-input v-model="row.displayGroup" />
@@ -64,7 +64,7 @@
                                                 </el-form-item>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="comment" label="显示标题">
+                                        <el-table-column label="显示标题">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'propertyList.' + $index + '.comment'" :rules="validRule.property.comment">
                                                     <el-input v-model="row.comment" />
@@ -76,7 +76,7 @@
                                                 </el-form-item>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="displayWidth" label="显示宽度">
+                                        <el-table-column label="显示宽度">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'propertyList.' + $index + '.displayWidth'" :rules="validRule.property.displayWidth">
                                                     <el-input v-model.number="row.displayWidth" />
@@ -88,7 +88,7 @@
                                                 </el-form-item>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="displayType" label="显示方式" width="125">
+                                        <el-table-column label="显示方式" width="125">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item>
                                                     <el-select v-model="row.displayType">
@@ -99,7 +99,7 @@
                                         </el-table-column>
                                     </el-table-column>
                                     <el-table-column label="数据设置" align="center">
-                                        <el-table-column prop="name" label="属性名称">
+                                        <el-table-column label="属性名称">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'propertyList.' + $index + '.name'" :rules="validRule.property.name">
                                                     <el-input v-model="row.name" />
@@ -111,9 +111,9 @@
                                                 </el-form-item>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="dataType" label="数据类型" width="125">
+                                        <el-table-column label="数据类型" width="125">
                                             <template slot-scope="{ row, column, $index }">
-                                                <el-form-item :prop="'propertyList.' + $index + '.dataType'" :rules="validRule.property.dataType">
+                                                <el-form-item v-if="!row.isPrimary" :prop="'propertyList.' + $index + '.dataType'" :rules="validRule.property.dataType">
                                                     <el-select v-model="row.dataType" @change="changeDataType(item, row, $index)">
                                                         <el-option v-for="item in Constant.DataModelAttributeDataTypeEnum" :value="item.value" :key="item.value" :label="item.label"></el-option>
                                                     </el-select>
@@ -123,11 +123,13 @@
                                                         </el-popover>
                                                     </template>
                                                 </el-form-item>
+                                                <span style="padding-left: 14px;" v-else>{{row.dataType | enumFormat(Constant.DataModelAttributeDataTypeEnum)}}</span>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="defaultValue" label="默认值">
+                                        <el-table-column label="默认值">
                                             <template slot-scope="{ row, column, $index }">
-                                                <el-form-item v-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
+                                                <span v-if="row.isPrimary"></span>
+                                                <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
                                                     <el-select v-model="row.defaultValue">
                                                         <el-option v-for="item in [{'label':'Null','value':null},{'label':'True','value':true},{'label':'False','value':false}]" :value="item.value" :key="item.value" :label="item.label"></el-option>
                                                     </el-select>
@@ -149,7 +151,7 @@
                                             </template>
                                         </el-table-column>
                                     </el-table-column>
-                                    <el-table-column prop="displayGroup" label="验证规则" width="80">
+                                    <el-table-column label="验证规则" width="80">
                                         <template slot-scope="{ row, column, $index }">
                                             <el-button type="primary" size="mini" @click="showDataModelManageValidateEditModal(item, row)">设置</el-button>
                                         </template>
@@ -161,7 +163,8 @@
                                     </el-table-column>
                                     <el-table-column label="操作" width="80">
                                         <template slot-scope="{ row, column, $index }">
-                                            <el-button type="danger" size="mini" @click="removeProperty(item, row, $index)">删除</el-button>
+                                            <span v-if="row.isPrimary"></span>
+                                            <el-button v-else type="danger" size="mini" @click="removeProperty(item, row, $index)">删除</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -175,7 +178,7 @@
                                     <el-table-column type="index" width="28" class-name="sort-handle">
                                     </el-table-column>
                                     <el-table-column label="显示设置" align="center">
-                                        <el-table-column prop="displayGroup" label="显示分组">
+                                        <el-table-column label="显示分组">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'fieldList.' + $index + '.displayGroup'" :rules="validRule.field.displayGroup">
                                                     <el-input v-model="row.displayGroup" />
@@ -187,7 +190,7 @@
                                                 </el-form-item>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="comment" label="显示标题">
+                                        <el-table-column label="显示标题">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'fieldList.' + $index + '.comment'" :rules="validRule.field.comment">
                                                     <el-input v-model="row.comment" />
@@ -199,7 +202,7 @@
                                                 </el-form-item>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="displayWidth" label="显示宽度">
+                                        <el-table-column label="显示宽度">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'fieldList.' + $index + '.displayWidth'" :rules="validRule.field.displayWidth">
                                                     <el-input v-model.number="row.displayWidth" />
@@ -211,7 +214,7 @@
                                                 </el-form-item>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="displayType" label="显示方式" width="125">
+                                        <el-table-column label="显示方式" width="125">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item>
                                                     <el-select v-model="row.displayType">
@@ -222,7 +225,7 @@
                                         </el-table-column>
                                     </el-table-column>
                                     <el-table-column label="数据设置" align="center">
-                                        <el-table-column prop="name" label="字段名称">
+                                        <el-table-column label="字段名称">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'fieldList.' + $index + '.name'" :rules="validRule.field.name">
                                                     <el-input v-model="row.name" />
@@ -234,7 +237,7 @@
                                                 </el-form-item>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="dataType" label="数据类型" width="125">
+                                        <el-table-column label="数据类型" width="125">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'fieldList.' + $index + '.dataType'" :rules="validRule.field.dataType">
                                                     <el-select v-model="row.dataType" @change="changeDataType(item, row, $index)">
@@ -248,7 +251,7 @@
                                                 </el-form-item>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="defaultValue" label="默认值">
+                                        <el-table-column label="默认值">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item v-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
                                                     <el-select v-model="row.defaultValue">
@@ -272,7 +275,7 @@
                                             </template>
                                         </el-table-column>
                                     </el-table-column>
-                                    <el-table-column prop="displayGroup" label="验证规则" width="80">
+                                    <el-table-column label="验证规则" width="80">
                                         <template slot-scope="{ row, column, $index }">
                                             <el-button type="primary" size="mini" @click="showDataModelManageValidateEditModal(item, row)">设置</el-button>
                                         </template>
@@ -387,7 +390,17 @@
                     name: "新建模型" + id,
                     generatorId: this.generatorId,
                     iconStyle: "el-icon-star-on",
-                    propertyList: [],
+                    propertyList: [{
+                        id:this.Method.generateId(),
+                        name:"name",
+                        isPrimary:true,
+                        comment:"名称",
+                        displayType:this.Constant.DataModelAttributeDisplayTypeEnum.DISPLAY_ONLY.value,
+                        dataType:this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
+                        displayWidth:100,
+                        isRequired:true,
+                        isEnum:false
+                    }],
                     fieldList: []
                 };
                 this.Api.DataModel.create(model).then((data) => {
@@ -510,6 +523,7 @@
             addProperty(item){
                 item.model.propertyList.push({
                     id:this.Method.generateId(),
+                    isPrimary:false,
                     displayType:this.Constant.DataModelAttributeDisplayTypeEnum.DISPLAY_DEFAULT.value,
                     dataType:null,//this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
                     isEnum:false
