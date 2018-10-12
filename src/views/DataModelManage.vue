@@ -153,18 +153,18 @@
                                     </el-table-column>
                                     <el-table-column label="验证规则" width="80">
                                         <template slot-scope="{ row, column, $index }">
-                                            <el-button type="primary" size="mini" @click="showDataModelManageValidateEditModal(item, row)">设置</el-button>
+                                            <el-button type="primary" size="small" @click="showDataModelManageValidateEditModal(item, row)">设置</el-button>
                                         </template>
                                     </el-table-column>
                                     <el-table-column label="级联脚本" width="80">
                                         <template slot-scope="{ row, column, $index }">
-                                            <el-button type="primary" size="mini" @click="showDataModelManageCascadeScriptEditModal(item, row)">编辑</el-button>
+                                            <el-button type="primary" size="small" @click="showDataModelManageCascadeScriptEditModal(item, row)">编辑</el-button>
                                         </template>
                                     </el-table-column>
                                     <el-table-column label="操作" width="80">
                                         <template slot-scope="{ row, column, $index }">
                                             <span v-if="row.isPrimary"></span>
-                                            <el-button v-else type="danger" size="mini" @click="removeProperty(item, row, $index)">删除</el-button>
+                                            <el-button v-else type="danger" size="small" @click="removeProperty(item, row, $index)">删除</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -277,17 +277,17 @@
                                     </el-table-column>
                                     <el-table-column label="验证规则" width="80">
                                         <template slot-scope="{ row, column, $index }">
-                                            <el-button type="primary" size="mini" @click="showDataModelManageValidateEditModal(item, row)">设置</el-button>
+                                            <el-button type="primary" size="small" @click="showDataModelManageValidateEditModal(item, row)">设置</el-button>
                                         </template>
                                     </el-table-column>
                                     <el-table-column label="级联脚本" width="80">
                                         <template slot-scope="{ row, column, $index }">
-                                            <el-button type="primary" size="mini" @click="showDataModelManageCascadeScriptEditModal(item, row)">编辑</el-button>
+                                            <el-button type="primary" size="small" @click="showDataModelManageCascadeScriptEditModal(item, row)">编辑</el-button>
                                         </template>
                                     </el-table-column>
                                     <el-table-column label="操作" width="80">
                                         <template slot-scope="{ row, column, $index }">
-                                            <el-button type="danger" size="mini" @click="removeField(item, row, $index)">删除</el-button>
+                                            <el-button type="danger" size="small" @click="removeField(item, row, $index)">删除</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -399,7 +399,8 @@
                         dataType:this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
                         displayWidth:100,
                         isRequired:true,
-                        isEnum:false
+                        isEnum:false,
+                        defaultValue:null
                     }],
                     fieldList: []
                 };
@@ -458,8 +459,8 @@
                     return;
                 }
                 this.Api.DataModel.get({id: item.model.id}).then((model) => {
-                    //model.propertyList.forEach(value => value.id = this.Method.generateId());
-                    //model.fieldList.forEach(value => value.id = this.Method.generateId());
+                    model.propertyList.forEach(value => value.id = this.Method.generateId());
+                    model.fieldList.forEach(value => value.id = this.Method.generateId());
                     item.model.propertyList = model.propertyList;
                     item.model.fieldList = model.fieldList;
                     item.isLoaded = true;
@@ -526,7 +527,8 @@
                     isPrimary:false,
                     displayType:this.Constant.DataModelAttributeDisplayTypeEnum.DISPLAY_DEFAULT.value,
                     dataType:null,//this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
-                    isEnum:false
+                    isEnum:false,
+                    defaultValue:null
                 });
             },
             removeProperty(item, property, index){
@@ -538,7 +540,8 @@
                     id:this.Method.generateId(),
                     displayType:this.Constant.DataModelAttributeDisplayTypeEnum.DISPLAY_DEFAULT.value,
                     dataType:null,//this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
-                    isEnum:false
+                    isEnum:false,
+                    defaultValue:null
                 });
             },
             removeField(item, field, index){

@@ -32,7 +32,7 @@
                 </div>
                 <div slot="right" class="right-split-pane">
                     <el-tabs ref="tabs" type="card" @tab-click="clickTab">
-                        <el-tab-pane :label="item.name" v-for="item in tabs" :key="item.id" :name="item.id">
+                        <el-tab-pane :label="item.name" v-for="item in tabs" :key="item.id" :name="item.id" :class="'tab-pane-' + item.id">
                             <el-form :ref="'form' + item.id" :model="item.model" inline :rules="validRule" size="small">
                                 <div class="properties">
                                     <template v-for="group in dataModelCache[item.model.dataModel.id].propertyGroup">
@@ -41,15 +41,61 @@
                                                 <el-form-item>{{group.name}}</el-form-item>
                                             </div>
                                             <div class="group-item" v-for="property in group.children" :key="property.id">
-                                                <el-form-item :label="property.name" prop="name">
-                                                    <el-input v-model="item.model.name" placeholder="" />
-                                                </el-form-item>
+                                                <div class="group-label" style="margin-left: 5px;">
+                                                     <el-form-item>{{property.comment}}</el-form-item>
+                                                </div>
+                                                <div class="group-item" :style="{ width: property.displayWidth ? property.displayWidth + 'px' : '' }">
+                                                    <el-form-item v-if="item.model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value">
+                                                        <el-checkbox v-model="item.model.properties[property.name].value"></el-checkbox>
+                                                    </el-form-item>
+                                                    <el-form-item v-else-if="item.model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value">
+                                                        <el-input v-model.number="item.model.properties[property.name].value" />
+                                                    </el-form-item>
+                                                    <el-form-item v-else-if="item.model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.FLOAT.value">
+                                                        <el-input v-model.number="item.model.properties[property.name].value" />
+                                                    </el-form-item>
+                                                    <el-form-item v-else-if="item.model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value">
+                                                        <el-input v-if="!property.isEnum" v-model="item.model.properties[property.name].value" />
+                                                        <el-select v-else v-model="item.model.properties[property.name].value">
+                                                            <el-option v-for="enumItem in property.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
+                                                        </el-select>
+                                                    </el-form-item>
+                                                    <el-form-item v-else-if="item.model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.MODEL_REF.value">
+                                                        <el-button-group>
+                                                            <el-button :type="generatorDataCache[item.model.properties[property.name].value]?'info':''" :style="{ width: property.displayWidth ? (property.displayWidth - 56) + 'px' : '' }" size="small" @click="showDataModelChooseModal(item.model.properties[property.name])">{{generatorDataCache[item.model.properties[property.name].value] ? generatorDataCache[item.model.properties[property.name].value].name : '请选择'}}</el-button>
+                                                            <el-button type="warning" size="small" @click="clearDataModelChoose(item.model.properties[field.name])" icon="el-icon-close"></el-button>
+                                                        </el-button-group>
+                                                    </el-form-item>
+                                                </div>
                                             </div>
                                         </div>
                                         <div v-else>
-                                            <el-form-item :label="group.name" prop="name">
-                                                <el-input v-model="item.model.name" placeholder="" />
-                                            </el-form-item>
+                                            <div class="group-label">
+                                                <el-form-item>{{group.model.comment}}</el-form-item>
+                                            </div>
+                                            <div class="group-item">
+                                                <el-form-item v-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value">
+                                                    <el-checkbox v-model="item.model.properties[group.model.name].value"></el-checkbox>
+                                                </el-form-item>
+                                                <el-form-item v-else-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value">
+                                                    <el-input v-model.number="item.model.properties[group.model.name].value" />
+                                                </el-form-item>
+                                                <el-form-item v-else-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.FLOAT.value">
+                                                    <el-input v-model.number="item.model.properties[group.model.name].value" />
+                                                </el-form-item>
+                                                <el-form-item v-else-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value">
+                                                    <el-input v-if="!group.model.isEnum" v-model="item.model.properties[group.model.name].value" />
+                                                    <el-select v-else v-model="item.model.properties[group.model.name].value">
+                                                        <el-option v-for="enumItem in group.model.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                                <el-form-item v-else-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.MODEL_REF.value">
+                                                    <el-button-group>
+                                                        <el-button :type="generatorDataCache[item.model.properties[group.model.name].value]?'info':''" :style="{ width: group.model.displayWidth ? (group.model.displayWidth - 56) + 'px' : '' }" size="small" @click="showDataModelChooseModal(item.model.properties[group.model.name])">{{generatorDataCache[item.model.properties[group.model.name].value] ? generatorDataCache[item.model.properties[group.model.name].value].name : '请选择'}}</el-button>
+                                                        <el-button type="warning" size="small" @click="clearDataModelChoose(item.model.properties[group.model.name])" icon="el-icon-close"></el-button>
+                                                    </el-button-group>
+                                                </el-form-item>
+                                            </div>
                                         </div>
                                     </template>
                                 </div>
@@ -58,21 +104,68 @@
                                         <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
                                         <el-button type="success" size="mini" @click="addTuple(item)">添加记录</el-button>
                                     </el-button-group>
+                                    <div class="tupleList">
                                     <el-table class="field-table" :data="item.model.tupleList" row-key="id" style="width: 100%">
                                         <el-table-column type="index" width="28" class-name="sort-handle"></el-table-column>
                                         <el-table-column type="selection" width="25"></el-table-column>
-                                        <el-table-column :label="group.name" v-for="group in dataModelCache[item.model.dataModel.id].fieldGroup" :key="group.id" :align="group.isGroup?'center':'left'">
-                                            <el-table-column v-if="group.isGroup" v-for="field in group.children" :label="field.name" :width="field.displayWidth">
-
+                                        <el-table-column :width="group.isGroup ? '' : group.model.displayWidth" :label="group.name" v-for="group in dataModelCache[item.model.dataModel.id].fieldGroup" :key="group.id" :align="group.isGroup?'center':'left'">
+                                            <el-table-column v-if="group.isGroup" v-for="field in group.children" :label="field.comment" :width="field.displayWidth">
+                                                <template slot-scope="{ row, column, $index }">
+                                                    <el-form-item v-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value">
+                                                        <el-checkbox v-model="row.tuple[field.name].value"></el-checkbox>
+                                                    </el-form-item>
+                                                    <el-form-item v-else-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value">
+                                                        <el-input v-model.number="row.tuple[field.name].value" />
+                                                    </el-form-item>
+                                                    <el-form-item v-else-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.FLOAT.value">
+                                                        <el-input v-model.number="row.tuple[field.name].value" />
+                                                    </el-form-item>
+                                                    <el-form-item v-else-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value">
+                                                        <el-input v-if="!field.isEnum" v-model="row.tuple[field.name].value" />
+                                                        <el-select v-else v-model="row.tuple[field.name].value">
+                                                            <el-option v-for="enumItem in field.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
+                                                        </el-select>
+                                                    </el-form-item>
+                                                    <el-form-item v-else-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.MODEL_REF.value">
+                                                        <el-button-group>
+                                                            <el-button :type="generatorDataCache[row.tuple[field.name].value]?'info':''" :style="{ width: field.displayWidth ? (field.displayWidth - 56) + 'px' : '' }" size="small" @click="showDataModelChooseModal(row.tuple[field.name])">{{generatorDataCache[row.tuple[field.name].value] ? generatorDataCache[row.tuple[field.name].value].name : '请选择'}}</el-button>
+                                                            <el-button type="warning" size="small" @click="clearDataModelChoose(row.tuple[field.name])" icon="el-icon-close"></el-button>
+                                                        </el-button-group>
+                                                    </el-form-item>
+                                                </template>
                                             </el-table-column>
+                                            <template slot-scope="{ row, column, $index }">
+                                                <el-form-item v-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value">
+                                                    <el-checkbox v-model="row.tuple[group.model.name].value"></el-checkbox>
+                                                </el-form-item>
+                                                <el-form-item v-else-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value">
+                                                    <el-input v-model.number="row.tuple[group.model.name].value" />
+                                                </el-form-item>
+                                                <el-form-item v-else-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.FLOAT.value">
+                                                    <el-input v-model.number="row.tuple[group.model.name].value" />
+                                                </el-form-item>
+                                                <el-form-item v-else-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value">
+                                                    <el-input v-if="!group.model.name.isEnum" v-model="row.tuple[group.model.name].value" />
+                                                    <el-select v-else v-model="row.tuple[group.model.name].value">
+                                                        <el-option v-for="enumItem in group.model.name.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                                <el-form-item v-else-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.MODEL_REF.value">
+                                                    <el-button-group>
+                                                        <el-button :type="!!generatorDataCache[row.tuple[group.model.name].value]?'info':''" :style="{ width: group.model.displayWidth ? (group.model.displayWidth - 56) + 'px' : '' }" size="small" @click="showDataModelChooseModal(row.tuple[group.model.name])">{{generatorDataCache[row.tuple[group.model.name].value] ? generatorDataCache[row.tuple[group.model.name].value].name : '请选择'}}</el-button>
+                                                        <el-button type="warning" size="small" @click="clearDataModelChoose(row.tuple[group.model.name])" icon="el-icon-close"></el-button>
+                                                    </el-button-group>
+                                                </el-form-item>
+                                            </template>
                                         </el-table-column>
 
                                         <el-table-column label="操作" width="80">
                                             <template slot-scope="{ row, column, $index }">
-                                                <el-button type="danger" size="mini" @click="removeTuple(item, row, $index)">删除</el-button>
+                                                <el-button type="danger" size="small" @click="removeTuple(item, row, $index)">删除</el-button>
                                             </template>
                                         </el-table-column>
                                     </el-table>
+                                    </div>
                                 </el-card>
                             </el-form>
                         </el-tab-pane>
@@ -80,6 +173,7 @@
                 </div>
             </Split>
         </div>
+        <DataModelChooseModal ref="dataModelChooseModal" @on-success="handleDataModelChooseSuccess"/>
     </div>
 </template>
 
@@ -88,7 +182,8 @@
 
     export default {
         name: "GeneratorDataManage",
-        components: {
+        components:{
+            DataModelChooseModal:() => import('@/components/DataModelChooseModal.vue'),
         },
         data () {
             return {
@@ -109,6 +204,23 @@
             }
         },
         methods:{
+            handleDataModelChooseSuccess(item){
+                if(!item){
+                    return;
+                }
+                //this.currentControl.value = item.id;
+                this.$set(this.currentControl, "value", item.id);
+            },
+            showDataModelChooseModal(control){
+                this.currentControl = control;
+                this.$refs.dataModelChooseModal.open({
+                    currentKey:control.value,
+                    treeData:this.treeData
+                })
+            },
+            clearDataModelChoose(control){
+                this.$set(control, "value", null);
+            },
             create(parent, dataModel){
                 let id = this.incrementer.next();
                 let model = {
@@ -117,12 +229,21 @@
                     generatorInstanceId: this.generatorInstanceId,
                     dataModelId: dataModel.id,
                     parentId: !parent ? null : parent.id,
-                    properties: {},
+                    properties: this.buildProperties(dataModel),
                     tupleList: []
                 };
+                model.properties[dataModel.primaryProperty.name].value = model.name;
                 this.Api.GeneratorData.create(model).then((data) => {
-                    model.id = data.id;
-                    let item = this.wrapToItem(model);
+                    let m = {
+                        id: data.id,
+                        name: model.name,
+                        generatorInstance: {id:model.generatorInstanceId},
+                        dataModel: {id:model.dataModelId},
+                        parent: {id:model.parentId},
+                        properties: model.properties,
+                        tupleList: model.tupleList
+                    };
+                    let item = this.wrapToItem(m);
                     this.addToTreeData(item);
                     this.selectNode(item);
                     this.$message({type: 'success', message: '创建成功！'});
@@ -134,8 +255,20 @@
             update(item){
                 this.$refs['form' + item.id][0].validate((valid) => {
                     if (valid) {
-                        this.Api.GeneratorData.update(item.model).then((data) => {
-                            item.name = item.model.name;
+                        let model = item.model;
+                        let dataModel = this.dataModelCache[model.dataModel.id];
+                        let tupleList = [];
+                        model.tupleList.forEach(tuple => {
+                            tupleList.push(tuple.tuple);
+                        });
+                        model.name = model.properties[dataModel.primaryProperty.name].value;
+                        this.Api.GeneratorData.update({
+                            id:model.id,
+                            name: model.name,
+                            properties: model.properties,
+                            tupleList: tupleList
+                        }).then((data) => {
+                            item.name = model.name;
                             item.isDirty = false;
                             this.removeFromTreeData(item);
                             this.addToTreeData(item);
@@ -176,11 +309,16 @@
                 }
                 this.Api.GeneratorData.get({id: item.model.id}).then((model) => {
                     item.model.properties = model.properties;
-                    item.model.tupleList = model.tupleList;
+                    model.tupleList.forEach(tuple => {
+                        item.model.tupleList.push({
+                            id:this.Method.generateId(),
+                            tuple:tuple
+                        });
+                    });
                     item.isLoaded = true;
                     this.addToTab(item);
                     this.selectTab(item);
-                    //this.rowDrop(item);
+                    this.rowDrop(item);
                 });
             },
             clickTab(tab){
@@ -244,23 +382,57 @@
                 this.$refs.tree.remove(item);
             },
             addTuple(item){
+                let dataModel = this.dataModelCache[item.model.dataModel.id];
+                let fieldList = dataModel.fieldList;
+                let tuple = {};
+                fieldList.forEach(field => {
+                    tuple[field.name] = {
+                        dataType:field.dataType,
+                        value: field.defaultValue === null || field.defaultValue === undefined ? null : field.defaultValue,
+                    }
+                });
                 item.model.tupleList.push({
-                    id:this.Method.generateId(),
+                    id: this.Method.generateId(),
+                    tuple:tuple
                 });
             },
             removeTuple(item, tuple, index){
                 let tupleList = item.model.tupleList;
                 tupleList.splice(index, 1);
             },
+            buildProperties(dataModel){
+                let propertyList = dataModel.propertyList;
+                let properties = {};
+                propertyList.forEach(property => {
+                    properties[property.name] = {
+                        dataType:property.dataType,
+                        value: property.defaultValue === null || property.defaultValue === undefined ? null: property.defaultValue,
+                    }
+                });
+                return properties;
+            },
+            rowDrop(item) {
+                this.$nextTick(function () {
+                    const tupleTbody = document.querySelector('.tab-pane-' + item.id + ' .field-table .el-table__body-wrapper tbody');
+                    Sortable.create(tupleTbody, {
+                        animation:100,
+                        handle:".sort-handle",
+                        onEnd({ newIndex, oldIndex }) {
+                            const currRow = item.model.tupleList.splice(oldIndex, 1)[0];
+                            item.model.tupleList.splice(newIndex, 0, currRow)
+                        }
+                    });
+                });
+            },
         },
-        computed:{
+        computed:{/*
             dataModelCache(){
                 let cache = {};
                 this.dataModelList.forEach(value => {
                     cache[value.id] = value;
                 });
                 return cache;
-            }
+            }*/
         },
         mounted(){
             this.Api.GeneratorInstance.get({id: this.generatorInstanceId}).then((generatorInstance) => {
@@ -269,10 +441,10 @@
                 let treeRequest = this.Api.GeneratorData.tree({generatorInstanceId: this.generatorInstanceId});
                 this.$http.all([infoQueryRequest, treeRequest])
                 .then(([dataModelList, generatorDataTree]) => {
-                    //this.dataModelCache = {};
+                    this.dataModelCache = {};
                     this.dataModelList = dataModelList;
                     dataModelList.forEach(model => {
-                        //this.dataModelCache[model.id] = model;
+                        this.dataModelCache[model.id] = model;
 
                         let propertyGroupPrevious = null;
                         model.propertyGroup = [];
@@ -340,11 +512,13 @@
                     });
 
                     let that = this;
+                    this.generatorDataCache = {};
                     let init = function(children, parent){
                         children.forEach(child => {
                             let item = that.wrapToItem(child);
                             init(child.children, item);
                             that.addToTreeData(item, parent);
+                            that.generatorDataCache[child.id] = child;
                         });
                     };
                     init(generatorDataTree);
@@ -449,6 +623,12 @@
             }
             .group-label, .group-item{
                 display: inline-block;
+            }
+
+            .properties .el-form-item,
+            .tupleList .el-form-item,
+            .tupleList .el-form-item__content{
+                width: 100%;
             }
         }
     }
