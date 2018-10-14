@@ -173,7 +173,7 @@
                 this.templateFileList.forEach(group => {
                     code +=  "//" + group.name + "\n";
                     group.children.forEach(item => {
-                        code +=  "var tmpl_" + item.name + " = $util.newTmpl(\"" + item.model.code + "\");\n";
+                        code +=  "var tmpl_" + item.name + " = $tool.newTmpl(\"" + item.model.code + "\");\n";
                     });
                 });
                 if(code !== ""){
@@ -184,19 +184,19 @@
             insertFileScript(item){
                 let aceEditor = this.$refs['aceEditor' + item.id][0];
                 aceEditor.editor.insert("\n");
-                aceEditor.editor.insert("var file_ = $util.newFile(fileName, templateRef);");
+                aceEditor.editor.insert("var file_ = $tool.newFile(fileName, templateRef);");
                 aceEditor.editor.insert("\n");
             },
             insertDirectoryScript(item){
                 let aceEditor = this.$refs['aceEditor' + item.id][0];
                 aceEditor.editor.insert("\n");
-                aceEditor.editor.insert("var dir_ = $util.newDir(dirName);");
+                aceEditor.editor.insert("var dir_ = $tool.newDir(dirName);");
                 aceEditor.editor.insert("\n");
             },
             insertVarScript(item){
                 let aceEditor = this.$refs['aceEditor' + item.id][0];
                 aceEditor.editor.insert("\n");
-                aceEditor.editor.insert("var var_ = $util.newVar(varName, varValue);");
+                aceEditor.editor.insert("var var_ = $tool.newVar(varName, varValue);");
                 aceEditor.editor.insert("\n");
             },
             selectNode(item){

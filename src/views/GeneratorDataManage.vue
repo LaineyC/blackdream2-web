@@ -17,7 +17,7 @@
                     <el-button type="danger" size="small" @click="deleteAll">删除</el-button>
                 </el-menu-item>
                 <el-menu-item index="3">
-                    <el-button @click="showGeneratorInstanceMakeModal()" type="primary" size="small">生成</el-button>
+                    <el-button @click="showGeneratorInstanceMakeModal()" type="primary" size="small">构建</el-button>
                 </el-menu-item>
             </el-menu>
         </div>
@@ -226,8 +226,7 @@
                     return;
                 }
                 this.$refs.generatorInstanceMakeModal.open({
-                    generatorInstanceId:this.generatorInstance.id,
-                    generatorId:this.generatorInstance.generator.id,
+                    generatorInstance:this.generatorInstance,
                     treeData:this.treeData
                 })
             },
@@ -253,7 +252,7 @@
                 let id = this.incrementer.next();
                 let model = {
                     //id: "$" + id,
-                    name: dataModel.name + id,
+                    name: "新建" + dataModel.name + id,
                     generatorInstanceId: this.generatorInstanceId,
                     dataModelId: dataModel.id,
                     parentId: !parent ? null : parent.id,
