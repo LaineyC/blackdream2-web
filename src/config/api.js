@@ -106,6 +106,8 @@ export default Vue.prototype.Api = {
         update: doPost('/generatorInstance/update'),
         get: doPost('/generatorInstance/get'),
         infoSearch: doPost('/generatorInstance/infoSearch'),
+        make: doPost('/generatorInstance/make'),
+        makeTest: doPost('/generatorInstance/makeTest'),
     },
     TemplateFile: {
         create: doPost('/templateFile/create'),
@@ -119,6 +121,7 @@ export default Vue.prototype.Api = {
         update: doPost('/creationStrategy/update'),
         delete: doPost('/creationStrategy/delete'),
         get: doPost('/creationStrategy/get'),
+        query: doPost('/creationStrategy/query'),
         infoQuery: doPost('/creationStrategy/infoQuery'),
     },
     DataModel: {

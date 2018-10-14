@@ -7,14 +7,17 @@
                 </el-menu-item>
                 <el-menu-item index="1">
                     <el-dropdown trigger="click">
-                        <el-button size="small" type="success">新建<i class="el-icon-arrow-down el-icon--right" style="font-size: inherit"></i></el-button>
+                        <el-button size="small" type="success">新建</el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item v-for="dataModel in dataModelList" :key="dataModel.id"><div @click="create(null, dataModel)">{{dataModel.name}}</div></el-dropdown-item>
+                            <el-dropdown-item v-for="dataModel in schemeRuleMap['']" :key="dataModel.id"><div @click="create(null, dataModel)">{{dataModel.name}}</div></el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </el-menu-item>
                 <el-menu-item index="2">
                     <el-button type="danger" size="small" @click="deleteAll">删除</el-button>
+                </el-menu-item>
+                <el-menu-item index="3">
+                    <el-button @click="showGeneratorInstanceMakeModal()" type="primary" size="small">生成</el-button>
                 </el-menu-item>
             </el-menu>
         </div>
@@ -24,9 +27,12 @@
                     <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
                         <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">
                             <span>{{ node.label }}</span>
-                            <span>
-                                <el-button type="text" size="mini" @click.stop="create(data)">添加</el-button>
-                            </span>
+                            <el-dropdown trigger="click">
+                                <span class="el-dropdown-link"><i class="el-icon-circle-plus"></i></span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item v-for="dataModel in schemeRuleMap[data.model.dataModel.id]" :key="dataModel.id"><div @click="create(data, dataModel)">{{dataModel.name}}</div></el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
                         </div>
                     </el-tree>
                 </div>
@@ -46,24 +52,25 @@
                                                 </div>
                                                 <div class="group-item" :style="{ width: property.displayWidth ? property.displayWidth + 'px' : '' }">
                                                     <el-form-item v-if="item.model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value">
-                                                        <el-checkbox v-model="item.model.properties[property.name].value"></el-checkbox>
+                                                        <el-checkbox v-model="item.model.properties[property.name].value" @change="cascadeFunction(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)"></el-checkbox>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="item.model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value">
-                                                        <el-input v-model.number="item.model.properties[property.name].value" />
+                                                        <el-input v-model.number="item.model.properties[property.name].value" @change="cascadeFunction(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)"/>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="item.model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.FLOAT.value">
-                                                        <el-input v-model.number="item.model.properties[property.name].value" />
+                                                        <el-input v-model.number="item.model.properties[property.name].value" @change="cascadeFunction(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)"/>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="item.model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value">
-                                                        <el-input v-if="!property.isEnum" v-model="item.model.properties[property.name].value" />
-                                                        <el-select v-else v-model="item.model.properties[property.name].value">
+                                                        <el-input v-if="!property.isEnum" v-model="item.model.properties[property.name].value" @change="cascadeFunction(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)"/>
+                                                        <el-select v-else v-model="item.model.properties[property.name].value" @change="cascadeFunction(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)">
                                                             <el-option v-for="enumItem in property.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                         </el-select>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="item.model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.MODEL_REF.value">
                                                         <el-button-group>
-                                                            <el-button :type="generatorDataCache[item.model.properties[property.name].value]?'info':''" :style="{ width: property.displayWidth ? (property.displayWidth - 56) + 'px' : '' }" size="small" @click="showDataModelChooseModal(item.model.properties[property.name])">{{generatorDataCache[item.model.properties[property.name].value] ? generatorDataCache[item.model.properties[property.name].value].name : '请选择'}}</el-button>
-                                                            <el-button type="warning" size="small" @click="clearDataModelChoose(item.model.properties[field.name])" icon="el-icon-close"></el-button>
+                                                            <el-button :type="generatorDataCache[item.model.properties[property.name].value]?'info':''" :style="{ width: property.displayWidth ? (property.displayWidth - 56) + 'px' : '' }"
+                                                                       size="small" @click="showDataModelChooseModal(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)">{{generatorDataCache[item.model.properties[property.name].value] ? generatorDataCache[item.model.properties[property.name].value].name : '请选择'}}</el-button>
+                                                            <el-button type="warning" size="small" @click="clearDataModelChoose(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)" icon="el-icon-close"></el-button>
                                                         </el-button-group>
                                                     </el-form-item>
                                                 </div>
@@ -75,24 +82,25 @@
                                             </div>
                                             <div class="group-item">
                                                 <el-form-item v-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value">
-                                                    <el-checkbox v-model="item.model.properties[group.model.name].value"></el-checkbox>
+                                                    <el-checkbox v-model="item.model.properties[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)"></el-checkbox>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value">
-                                                    <el-input v-model.number="item.model.properties[group.model.name].value" />
+                                                    <el-input v-model.number="item.model.properties[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)"/>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.FLOAT.value">
-                                                    <el-input v-model.number="item.model.properties[group.model.name].value" />
+                                                    <el-input v-model.number="item.model.properties[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)"/>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value">
-                                                    <el-input v-if="!group.model.isEnum" v-model="item.model.properties[group.model.name].value" />
-                                                    <el-select v-else v-model="item.model.properties[group.model.name].value">
+                                                    <el-input v-if="!group.model.isEnum" v-model="item.model.properties[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)"/>
+                                                    <el-select v-else v-model="item.model.properties[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)">
                                                         <el-option v-for="enumItem in group.model.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                     </el-select>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.MODEL_REF.value">
                                                     <el-button-group>
-                                                        <el-button :type="generatorDataCache[item.model.properties[group.model.name].value]?'info':''" :style="{ width: group.model.displayWidth ? (group.model.displayWidth - 56) + 'px' : '' }" size="small" @click="showDataModelChooseModal(item.model.properties[group.model.name])">{{generatorDataCache[item.model.properties[group.model.name].value] ? generatorDataCache[item.model.properties[group.model.name].value].name : '请选择'}}</el-button>
-                                                        <el-button type="warning" size="small" @click="clearDataModelChoose(item.model.properties[group.model.name])" icon="el-icon-close"></el-button>
+                                                        <el-button :type="generatorDataCache[item.model.properties[group.model.name].value]?'info':''" :style="{ width: group.model.displayWidth ? (group.model.displayWidth - 56) + 'px' : '' }" size="small"
+                                                                   @click="showDataModelChooseModal(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)">{{generatorDataCache[item.model.properties[group.model.name].value] ? generatorDataCache[item.model.properties[group.model.name].value].name : '请选择'}}</el-button>
+                                                        <el-button type="warning" size="small" @click="clearDataModelChoose(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)" icon="el-icon-close"></el-button>
                                                     </el-button-group>
                                                 </el-form-item>
                                             </div>
@@ -104,7 +112,7 @@
                                         <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
                                         <el-button type="success" size="mini" @click="addTuple(item)">添加记录</el-button>
                                     </el-button-group>
-                                    <div class="tupleList">
+                                    <div class="tupleList" style="width: 100%">
                                     <el-table class="field-table" :data="item.model.tupleList" row-key="id" style="width: 100%">
                                         <el-table-column type="index" width="28" class-name="sort-handle"></el-table-column>
                                         <el-table-column type="selection" width="25"></el-table-column>
@@ -112,48 +120,50 @@
                                             <el-table-column v-if="group.isGroup" v-for="field in group.children" :label="field.comment" :width="field.displayWidth">
                                                 <template slot-scope="{ row, column, $index }">
                                                     <el-form-item v-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value">
-                                                        <el-checkbox v-model="row.tuple[field.name].value"></el-checkbox>
+                                                        <el-checkbox v-model="row.tuple[field.name].value" @change="cascadeFunction(field.cascadeFunction, row.tuple[field.name], row.tuple, item.model)"></el-checkbox>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value">
-                                                        <el-input v-model.number="row.tuple[field.name].value" />
+                                                        <el-input v-model.number="row.tuple[field.name].value" @change="cascadeFunction(field.cascadeFunction, row.tuple[field.name], row.tuple, item.model)"/>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.FLOAT.value">
-                                                        <el-input v-model.number="row.tuple[field.name].value" />
+                                                        <el-input v-model.number="row.tuple[field.name].value" @change="cascadeFunction(field.cascadeFunction, row.tuple[field.name], row.tuple, item.model)"/>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value">
-                                                        <el-input v-if="!field.isEnum" v-model="row.tuple[field.name].value" />
-                                                        <el-select v-else v-model="row.tuple[field.name].value">
+                                                        <el-input v-if="!field.isEnum" v-model="row.tuple[field.name].value" @change="cascadeFunction(field.cascadeFunction, row.tuple[field.name], row.tuple, item.model)"/>
+                                                        <el-select v-else v-model="row.tuple[field.name].value" @change="cascadeFunction(field.cascadeFunction, row.tuple[field.name], row.tuple, item.model)">
                                                             <el-option v-for="enumItem in field.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                         </el-select>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.MODEL_REF.value">
                                                         <el-button-group>
-                                                            <el-button :type="generatorDataCache[row.tuple[field.name].value]?'info':''" :style="{ width: field.displayWidth ? (field.displayWidth - 56) + 'px' : '' }" size="small" @click="showDataModelChooseModal(row.tuple[field.name])">{{generatorDataCache[row.tuple[field.name].value] ? generatorDataCache[row.tuple[field.name].value].name : '请选择'}}</el-button>
-                                                            <el-button type="warning" size="small" @click="clearDataModelChoose(row.tuple[field.name])" icon="el-icon-close"></el-button>
+                                                            <el-button :type="generatorDataCache[row.tuple[field.name].value]?'info':''" :style="{ width: field.displayWidth ? (field.displayWidth - 56) + 'px' : '' }" size="small"
+                                                                       @click="showDataModelChooseModal(field.cascadeFunction, row.tuple[field.name], row.tuple, item.model)">{{generatorDataCache[row.tuple[field.name].value] ? generatorDataCache[row.tuple[field.name].value].name : '请选择'}}</el-button>
+                                                            <el-button type="warning" size="small" @click="clearDataModelChoose(field.cascadeFunction, row.tuple[field.name], row.tuple, item.model)" icon="el-icon-close"></el-button>
                                                         </el-button-group>
                                                     </el-form-item>
                                                 </template>
                                             </el-table-column>
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item v-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value">
-                                                    <el-checkbox v-model="row.tuple[group.model.name].value"></el-checkbox>
+                                                    <el-checkbox v-model="row.tuple[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, row.tuple[group.model.name], row.tuple, item.model)"></el-checkbox>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value">
-                                                    <el-input v-model.number="row.tuple[group.model.name].value" />
+                                                    <el-input v-model.number="row.tuple[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, row.tuple[group.model.name], row.tuple, item.model)"/>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.FLOAT.value">
-                                                    <el-input v-model.number="row.tuple[group.model.name].value" />
+                                                    <el-input v-model.number="row.tuple[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, row.tuple[group.model.name], row.tuple, item.model)"/>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value">
-                                                    <el-input v-if="!group.model.name.isEnum" v-model="row.tuple[group.model.name].value" />
-                                                    <el-select v-else v-model="row.tuple[group.model.name].value">
+                                                    <el-input v-if="!group.model.name.isEnum" v-model="row.tuple[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, row.tuple[group.model.name], row.tuple, item.model)"/>
+                                                    <el-select v-else v-model="row.tuple[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, row.tuple[group.model.name], row.tuple, item.model)">
                                                         <el-option v-for="enumItem in group.model.name.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                     </el-select>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.MODEL_REF.value">
                                                     <el-button-group>
-                                                        <el-button :type="!!generatorDataCache[row.tuple[group.model.name].value]?'info':''" :style="{ width: group.model.displayWidth ? (group.model.displayWidth - 56) + 'px' : '' }" size="small" @click="showDataModelChooseModal(row.tuple[group.model.name])">{{generatorDataCache[row.tuple[group.model.name].value] ? generatorDataCache[row.tuple[group.model.name].value].name : '请选择'}}</el-button>
-                                                        <el-button type="warning" size="small" @click="clearDataModelChoose(row.tuple[group.model.name])" icon="el-icon-close"></el-button>
+                                                        <el-button :type="!!generatorDataCache[row.tuple[group.model.name].value]?'info':''" :style="{ width: group.model.displayWidth ? (group.model.displayWidth - 56) + 'px' : '' }" size="small"
+                                                                   @click="showDataModelChooseModal(group.model.cascadeFunction, row.tuple[group.model.name], row.tuple, item.model)">{{generatorDataCache[row.tuple[group.model.name].value] ? generatorDataCache[row.tuple[group.model.name].value].name : '请选择'}}</el-button>
+                                                        <el-button type="warning" size="small" @click="clearDataModelChoose(group.model.cascadeFunction, row.tuple[group.model.name], row.tuple, item.model)" icon="el-icon-close"></el-button>
                                                     </el-button-group>
                                                 </el-form-item>
                                             </template>
@@ -174,6 +184,7 @@
             </Split>
         </div>
         <DataModelChooseModal ref="dataModelChooseModal" @on-success="handleDataModelChooseSuccess"/>
+        <GeneratorInstanceMakeModal ref="generatorInstanceMakeModal"/>
     </div>
 </template>
 
@@ -184,9 +195,11 @@
         name: "GeneratorDataManage",
         components:{
             DataModelChooseModal:() => import('@/components/DataModelChooseModal.vue'),
+            GeneratorInstanceMakeModal:() => import('@/components/GeneratorInstanceMakeModal.vue'),
         },
         data () {
             return {
+                schemeRuleMap:{"":[]},
                 incrementer: this.Method.newIncrementer(),
                 split: 0.15,
                 generatorInstanceId:this.$route.params.generatorInstanceId,
@@ -204,22 +217,37 @@
             }
         },
         methods:{
+            cascadeFunction(fn, control, attribute, model){
+                //("$control","$properties", "$data", "$global",
+                fn && fn(control, attribute, model, this.global);
+            },
+            showGeneratorInstanceMakeModal(){
+                if(!this.generatorInstance){
+                    return;
+                }
+                this.$refs.generatorInstanceMakeModal.open({
+                    generatorInstanceId:this.generatorInstance.id,
+                    generatorId:this.generatorInstance.generator.id,
+                    treeData:this.treeData
+                })
+            },
             handleDataModelChooseSuccess(item){
                 if(!item){
                     return;
                 }
-                //this.currentControl.value = item.id;
-                this.$set(this.currentControl, "value", item.id);
+                this.$set(this.currentChange.control, "value", item.id);
+                this.currentChange.fn && this.currentChange.fn(this.currentChange.control, this.currentChange.attribute, this.currentChange.model, this.global);
             },
-            showDataModelChooseModal(control){
-                this.currentControl = control;
+            showDataModelChooseModal(fn, control, attribute, model){
+                this.currentChange = {fn,attribute,model,control};
                 this.$refs.dataModelChooseModal.open({
                     currentKey:control.value,
                     treeData:this.treeData
                 })
             },
-            clearDataModelChoose(control){
+            clearDataModelChoose(fn, control, attribute, model){
                 this.$set(control, "value", null);
+                fn && fn(control, attribute, model, this.global);
             },
             create(parent, dataModel){
                 let id = this.incrementer.next();
@@ -244,7 +272,7 @@
                         tupleList: model.tupleList
                     };
                     let item = this.wrapToItem(m);
-                    this.addToTreeData(item);
+                    this.addToTreeData(item, parent);
                     this.selectNode(item);
                     this.$message({type: 'success', message: '创建成功！'});
                 });
@@ -262,16 +290,18 @@
                             tupleList.push(tuple.tuple);
                         });
                         model.name = model.properties[dataModel.primaryProperty.name].value;
+                        let parent = model.parent;
                         this.Api.GeneratorData.update({
                             id:model.id,
                             name: model.name,
+                            parentId:parent ? parent.id : null,
                             properties: model.properties,
                             tupleList: tupleList
                         }).then((data) => {
                             item.name = model.name;
                             item.isDirty = false;
                             this.removeFromTreeData(item);
-                            this.addToTreeData(item);
+                            this.addToTreeData(item, parent ? this.$refs.tree.getNode(parent.id).data : null);
                             this.$refs.tree.setCurrentKey(item.id);
                             this.$message({type: 'success', message: '保存成功！'});
                         });
@@ -308,11 +338,12 @@
                     return;
                 }
                 this.Api.GeneratorData.get({id: item.model.id}).then((model) => {
-                    item.model.properties = model.properties;
+                    let dataModel = this.dataModelCache[model.dataModel.id];
+                    item.model.properties = this.compatibleProperty(model.properties, dataModel);
                     model.tupleList.forEach(tuple => {
                         item.model.tupleList.push({
                             id:this.Method.generateId(),
-                            tuple:tuple
+                            tuple:this.compatibleTuple(tuple, dataModel)
                         });
                     });
                     item.isLoaded = true;
@@ -320,6 +351,30 @@
                     this.selectTab(item);
                     this.rowDrop(item);
                 });
+            },
+            //后添加的属性也能兼容
+            compatibleProperty(properties, dataModel){
+                dataModel.propertyList.forEach(property => {
+                    if(!(property.name in properties)){
+                        properties[property.name] = {
+                            dataType:property.dataType,
+                            value: property.defaultValue === null || property.defaultValue === undefined ? null : property.defaultValue,
+                        }
+                    }
+                });
+                return properties;
+            },
+            //后添加的字段也能兼容
+            compatibleTuple(tuple, dataModel){
+                dataModel.fieldList.forEach(field => {
+                    if(!(field.name in tuple)) {
+                        tuple[field.name] = {
+                            dataType: field.dataType,
+                            value: field.defaultValue === null || field.defaultValue === undefined ? null : field.defaultValue,
+                        }
+                    }
+                });
+                return tuple;
             },
             clickTab(tab){
                 let index = this.tabs.findIndex(item => item.id === tab.name);
@@ -436,11 +491,12 @@
         },
         mounted(){
             this.Api.GeneratorInstance.get({id: this.generatorInstanceId}).then((generatorInstance) => {
-                //this.generatorInstance = generatorInstance;
+                this.generatorInstance = generatorInstance;
                 let infoQueryRequest = this.Api.DataModel.infoQuery({generatorId: generatorInstance.generator.id, fetchLazy:false});
                 let treeRequest = this.Api.GeneratorData.tree({generatorInstanceId: this.generatorInstanceId});
-                this.$http.all([infoQueryRequest, treeRequest])
-                .then(([dataModelList, generatorDataTree]) => {
+                let schemeRequest = this.Api.DataModelSchema.get({generatorId: generatorInstance.generator.id});
+                this.$http.all([infoQueryRequest, treeRequest, schemeRequest])
+                .then(([dataModelList, generatorDataTree, scheme]) => {
                     this.dataModelCache = {};
                     this.dataModelList = dataModelList;
                     dataModelList.forEach(model => {
@@ -474,9 +530,11 @@
                                 };
                                 model.propertyGroup.push(propertyGroupPrevious);
                             }
-
                             if(property.isPrimary){
                                 model.primaryProperty = property;
+                            }
+                            if(property.cascadeScript){
+                                property.cascadeFunction = new Function("$control","$properties", "$data", "$global", property.cascadeScript);
                             }
                         });
 
@@ -508,20 +566,39 @@
                                 };
                                 model.fieldGroup.push(fieldGroupPrevious);
                             }
+                            if(field.cascadeScript){
+                                field.cascadeFunction = new Function("$control", "$tuple", "$data", "$global", field.cascadeScript);
+                            }
                         });
                     });
+                    this.schemeRuleMap = {};
+                    let schemeRuleMap = scheme.ruleMap || {};
+                    for(let k in schemeRuleMap){
+                        let ruleArray = [];
+                        if(k in this.dataModelCache || k === ""){
+                            schemeRuleMap[k].forEach(value => {
+                                if(value in this.dataModelCache){
+                                    ruleArray.push(this.dataModelCache[value]);
+                                }
+                            });
+                            this.schemeRuleMap[k] = ruleArray;
+                        }
+                    }
 
                     let that = this;
                     this.generatorDataCache = {};
                     let init = function(children, parent){
                         children.forEach(child => {
                             let item = that.wrapToItem(child);
-                            init(child.children, item);
                             that.addToTreeData(item, parent);
+                            init(child.children, item);
                             that.generatorDataCache[child.id] = child;
                         });
                     };
                     init(generatorDataTree);
+                    this.global = {
+                        dataCache:this.generatorDataCache
+                    };
                 });
             });
         }

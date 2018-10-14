@@ -128,7 +128,7 @@
                 item.isDirty = true;
             },
             update(item){
-                this.$refs['form' + item.id][0].validate((valid, errors) => {console.info(this.$refs['form' + item.id][0])
+                this.$refs['form' + item.id][0].validate((valid, errors) => {
                     if (valid) {
                         this.Api.TemplateFile.update(item.model).then((data) => {
                             item.name = item.model.name;

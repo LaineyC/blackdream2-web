@@ -7,6 +7,11 @@
         :close-on-press-escape="false"
         :visible.sync="isShow">
         <el-form ref="form" :model="request" :rules="validRule" label-width="125px" size="small">
+            <el-form-item label="ROOT">
+                <el-checkbox-group v-model="request.ruleMap['']">
+                    <el-checkbox v-for="dm in dataModelList" :label="dm.id" :key="dm.id" name="type" border>{{dm.name}}</el-checkbox>
+                </el-checkbox-group>
+            </el-form-item>
             <el-form-item :label="dataModel.name" v-for="dataModel in dataModelList" :key="dataModel.id">
                 <el-checkbox-group v-model="request.ruleMap[dataModel.id]">
                     <el-checkbox v-for="dm in dataModelList" :label="dm.id" :key="dm.id" name="type" border>{{dm.name}}</el-checkbox>
@@ -39,7 +44,6 @@
             submit () {
                 this.$refs.form.validate((valid) => {
                     if (valid) {
-                        console.info(this.request)
                         this.Api.DataModelSchema.save(this.request).then((data) => {
                             this.$emit('on-success');
                             this.close();
@@ -63,7 +67,7 @@
                     if(schema){
                         let ruleMap = {};
                         for(let k in schema.ruleMap){
-                            if(dataModelCache[k]){
+                            if(dataModelCache[k] || k === ""){
                                 let ruleArray = ruleMap[k] = [];
                                 schema.ruleMap[k].forEach(rule => {
                                     if(dataModelCache[rule]){
@@ -80,6 +84,10 @@
                             this.$set(this.request.ruleMap, item.id, []);
                         }
                     });
+                    if(!this.request.ruleMap['']){
+                        this.$set(this.request.ruleMap, '', []);
+                    }
+                    console.info(this.request.ruleMap);
                     this.dataModelList = dataModelList.sort((a, b) => {
                         if(a.name > b.name){
                             return 1;

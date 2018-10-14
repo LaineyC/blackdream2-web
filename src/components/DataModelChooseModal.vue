@@ -6,7 +6,11 @@
         width="600px"
         :close-on-press-escape="false"
         :visible.sync="isShow">
-        <el-tree ref="tree" node-key="id" :data="treeData" :props="treeProps" :expand-on-click-node="false" highlight-current></el-tree>
+        <el-tree ref="tree" node-key="id" :data="treeData" :props="treeProps" :expand-on-click-node="false" highlight-current>
+            <div slot-scope="{ node, data }" @dblclick.stop="submit">
+                <div>{{ node.label }}</div>
+            </div>
+        </el-tree>
         <div slot="footer">
             <el-button @click="close">取消</el-button>
             <el-button @click="submit" type="primary">确定</el-button>
