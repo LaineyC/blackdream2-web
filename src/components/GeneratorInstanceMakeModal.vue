@@ -8,22 +8,22 @@
         custom-class="generator-instance-make-modal"
         :visible.sync="isShow">
         <el-row style="height: 500px;overflow-y: hidden">
-           <el-col :span="8" id="tree-panel">
-               <el-card shadow="hover">
-                   <div slot="header" class="card-header-flex">
-                       <div>
-                           <el-checkbox border size="small">全选</el-checkbox>
-                       </div>
+            <el-col :span="8" id="tree-panel">
+                <el-card shadow="hover">
+                    <div slot="header" class="card-header-flex">
+                        <div>
+                            <el-checkbox border size="small">全选</el-checkbox>
+                        </div>
                    </div>
-                   <div id="tree-body">
-                       <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
-                   </div>
-               </el-card>
-           </el-col>
-           <el-col :span="16">
-               <el-card shadow="hover">
-                   <div slot="header" class="card-header-flex">
-                       <div>
+                    <div id="tree-body">
+                        <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="16">
+                <el-card shadow="hover">
+                    <div slot="header" class="card-header-flex">
+                        <div>
                            <el-form ref="form" :model="request" :rules="validRule" label-width="80px" size="small" inline :show-message="false">
                                <el-form-item prop="runFunction">
                                    <el-radio-group v-model="request.runFunction" size="small">
@@ -42,10 +42,25 @@
                            <el-button @click="run" type="primary" size="small">运行</el-button>
                            <el-button @click="clear" size="small">清空</el-button>
                        </div>
-                   </div>
-                  <div id="result-body">
-
-                  </div>
+                    </div>
+                    <div id="result-body">
+                        <div class="result-item" v-show="request.runFunction==='makeTest'" v-for="item in testResultList">
+                            <el-card style="margin: 2px;" v-if="item.type==='test'">
+                                <el-tree ref="tree" node-key="id" :data="item.data" :props="testTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
+                            </el-card>
+                            <el-card style="margin: 2px;" v-else-if="item.type==='message'">
+                                <el-tree ref="tree" node-key="id" :data="item.data" :props="messageTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
+                            </el-card>
+                        </div>
+                        <div class="result-item" v-show="request.runFunction==='make'" v-for="item in prodResultList">
+                            <el-card style="margin: 2px;" v-if="item.type==='message'">
+                                <el-tree ref="tree" node-key="id" :data="item.data" :props="messageTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
+                            </el-card>
+                            <el-card style="margin: 2px;" v-else-if="item.type==='prod'">
+                                <el-button type="text" @click="download(item.url)"><i class="el-icon-upload"></i> {{item.fileName}}</el-button>
+                            </el-card>
+                        </div>
+                    </div>
                </el-card>
            </el-col>
         </el-row>
@@ -74,11 +89,29 @@
                     children: 'children',
                     label: 'name'
                 },
+                testTreeProps: {
+                    children: 'children',
+                    label: 'name'
+                },
+                messageTreeProps: {
+                    children: 'children',
+                    label: 'name'
+                },
                 creationStrategyList:[],
+                testResultList:[],
+                prodResultList:[]
             }
         },
         methods: {
             clear(){
+                if(this.request.runFunction === "makeTest"){
+                    this.testResultList = [];
+                }
+                else{
+                    this.prodResultList = [];
+                }
+            },
+            download(url){
 
             },
             run(){
@@ -90,10 +123,32 @@
                         };
                         this.Api.GeneratorInstance[this.request.runFunction](request).then((data) => {
                             if(this.request.runFunction === "makeTest"){
+                                if(data.errorMessageList.length){
+                                    this.testResultList.push({
+                                        type:"prod",
+                                        data: data.errorMessageList
+                                    });
+                                }else{
+                                    this.testResultList.push({
+                                        type:"test",
+                                        data: data.resultFileTree
+                                    });
+                                }
 
                             }
                             else{
-
+                                if(data.errorMessageList.length){
+                                    this.prodResultList.push({
+                                        type:"prod",
+                                        data: data.errorMessageList
+                                    });
+                                }
+                                else{
+                                    this.prodResultList.push({
+                                        type:"prod",
+                                        data: {url:data.url, fileName:data.fileName}
+                                    });
+                                }
                             }
                         });
                     }
@@ -144,6 +199,12 @@
         #result-body{
             height: 432px;
             overflow-y: auto;
+        }
+        .result-item{
+            .el-card__body{
+                max-height: 424px;
+                overflow-y: auto;
+            }
         }
         .el-form-item{
             margin: 0;

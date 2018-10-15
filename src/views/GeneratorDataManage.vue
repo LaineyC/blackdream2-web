@@ -270,6 +270,7 @@
                         properties: model.properties,
                         tupleList: model.tupleList
                     };
+                    this.generatorDataCache[m.id] = m;
                     let item = this.wrapToItem(m);
                     this.addToTreeData(item, parent);
                     this.selectNode(item);
