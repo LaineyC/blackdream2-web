@@ -57,7 +57,7 @@
                                 <el-tree ref="tree" node-key="id" :data="item.data" :props="messageTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
                             </el-card>
                             <el-card style="margin: 2px;" v-else-if="item.type==='prod'">
-                                <el-button type="text" @click="download(item.url)"><i class="el-icon-upload"></i> {{item.fileName}}</el-button>
+                                <el-button type="text" ><i class="el-icon-download"></i><a :href="downloadUrl(item.data.url)">{{item.data.fileName}}</a></el-button>
                             </el-card>
                         </div>
                     </div>
@@ -111,8 +111,11 @@
                     this.prodResultList = [];
                 }
             },
+            downloadUrl(url){
+                return this.Config.serverUrl + "/web/generatorInstance/download?url=" + url;
+            },
             download(url){
-
+                //
             },
             run(){
                 this.$refs.form.validate((valid) => {

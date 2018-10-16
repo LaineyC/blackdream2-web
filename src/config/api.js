@@ -108,6 +108,7 @@ export default Vue.prototype.Api = {
         infoSearch: doPost('/generatorInstance/infoSearch'),
         make: doPost('/generatorInstance/make'),
         makeTest: doPost('/generatorInstance/makeTest'),
+        download: doPost('/generatorInstance/download'),
     },
     TemplateFile: {
         create: doPost('/templateFile/create'),
