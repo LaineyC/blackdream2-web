@@ -26,7 +26,7 @@
                 <div slot="left" class="left-split-pane">
                     <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
                         <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">
-                            <span>{{ node.label }}</span>
+                            <span><i :class="data.model.dataModel.iconStyle"></i> {{ node.label }}</span>
                             <el-dropdown trigger="click">
                                 <span class="el-dropdown-link"><i class="el-icon-circle-plus"></i></span>
                                 <el-dropdown-menu slot="dropdown">
@@ -39,6 +39,7 @@
                 <div slot="right" class="right-split-pane">
                     <el-tabs ref="tabs" type="card" @tab-click="clickTab">
                         <el-tab-pane :label="item.name" v-for="item in tabs" :key="item.id" :name="item.id" :class="'tab-pane-' + item.id">
+                            <span slot="label"><i :class="item.model.dataModel.iconStyle"></i> {{item.name}}</span>
                             <el-form :ref="'form' + item.id" :model="item.model" inline :rules="validRule" size="small">
                                 <div class="properties">
                                     <template v-for="group in dataModelCache[item.model.dataModel.id].propertyGroup">
@@ -265,8 +266,8 @@
                         id: data.id,
                         name: model.name,
                         generatorInstance: {id:model.generatorInstanceId},
-                        dataModel: {id:model.dataModelId},
-                        parent: {id:model.parentId},
+                        dataModel: dataModel,
+                        parent: parent,
                         properties: model.properties,
                         tupleList: model.tupleList
                     };
@@ -301,7 +302,7 @@
                             item.name = model.name;
                             item.isDirty = false;
                             this.removeFromTreeData(item);
-                            this.addToTreeData(item, parent ? this.$refs.tree.getNode(parent.id).data : null);
+                            this.addToTreeData(item, parent != null ? this.$refs.tree.getNode(parent.id).data : null);
                             this.$refs.tree.setCurrentKey(item.id);
                             this.$message({type: 'success', message: '保存成功！'});
                         });
@@ -589,6 +590,7 @@
                     this.generatorDataCache = {};
                     let init = function(children, parent){
                         children.forEach(child => {
+                            child.dataModel = that.dataModelCache[child.dataModel.id];
                             let item = that.wrapToItem(child);
                             that.addToTreeData(item, parent);
                             init(child.children, item);

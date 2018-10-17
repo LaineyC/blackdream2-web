@@ -80,7 +80,7 @@
                     page: 1,
                     pageSize: 10,
                     name: null,
-                    //status: 2,
+                    status: this.GeneratorStatusEnum.RELEASE.value,
                     engineType: null
                 },
                 searchResult:{

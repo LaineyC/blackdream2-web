@@ -21,11 +21,7 @@
                 <div slot="left" class="left-split-pane">
                     <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
                         <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">
-                            <strong v-if="!data.model">{{ node.label }}</strong>
-                            <span v-else>{{ node.label }}</span>
-                            <span>
-                                <el-button v-if="!data.model" type="text" size="mini" @click.stop="create(data)">添加</el-button>
-                            </span>
+                            <span><i :class="data.iconStyle"></i> {{ node.label }}</span>
                         </div>
                     </el-tree>
                 </div>
@@ -420,6 +416,7 @@
                     if (valid) {
                         this.Api.DataModel.update(item.model).then((data) => {
                             item.name = item.model.name;
+                            item.iconStyle = item.model.iconStyle;
                             item.isDirty = false;
                             this.removeFromTreeData(item);
                             this.addToTreeData(item);
@@ -493,6 +490,7 @@
                     isLoaded:false,
                     id: model.id,
                     name: model.name,
+                    iconStyle:model.iconStyle,
                     model: model,
                     children: []
                 };
