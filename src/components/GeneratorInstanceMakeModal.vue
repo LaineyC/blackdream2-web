@@ -12,7 +12,7 @@
                 <el-card shadow="hover">
                     <div slot="header" class="card-header-flex">
                         <div>
-                            <el-checkbox border size="small">全选</el-checkbox>
+                            <el-checkbox border size="small" v-model="isCheckAll" @change="checkAll(isCheckAll)">全选</el-checkbox>
                         </div>
                    </div>
                     <div id="tree-body">
@@ -46,15 +46,15 @@
                     <div id="result-body">
                         <div class="result-item" v-show="request.runFunction==='makeTest'" v-for="item in testResultList">
                             <el-card style="margin: 2px;" v-if="item.type==='test'">
-                                <el-tree ref="tree" node-key="id" :data="item.data" :props="testTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
+                                <el-tree node-key="id" :data="item.data" :props="testTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
                             </el-card>
                             <el-card style="margin: 2px;" v-else-if="item.type==='message'">
-                                <el-tree ref="tree" node-key="id" :data="item.data" :props="messageTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
+                                <el-tree node-key="id" :data="item.data" :props="messageTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
                             </el-card>
                         </div>
                         <div class="result-item" v-show="request.runFunction==='make'" v-for="item in prodResultList">
                             <el-card style="margin: 2px;" v-if="item.type==='message'">
-                                <el-tree ref="tree" node-key="id" :data="item.data" :props="messageTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
+                                <el-tree node-key="id" :data="item.data" :props="messageTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
                             </el-card>
                             <el-card style="margin: 2px;" v-else-if="item.type==='prod'">
                                 <el-button type="text" ><i class="el-icon-download"></i><a :href="downloadUrl(item.data.url)">{{item.data.fileName}}</a></el-button>
@@ -75,6 +75,7 @@
         name: "GeneratorInstanceMakeModal",
         data () {
             return {
+                isCheckAll:false,
                 request:{
                     runFunction: "makeTest",
                     creationStrategyId: null,
@@ -103,6 +104,16 @@
             }
         },
         methods: {
+            checkAll(isCheck){
+                this.isCheckAll = isCheck;
+                let checkedKeys = [];
+                if(isCheck){
+                    this.treeData.forEach(value => {
+                        checkedKeys.push(value.id);
+                    });
+                }
+                this.$refs.tree.setCheckedKeys(checkedKeys);
+            },
             clear(){
                 if(this.request.runFunction === "makeTest"){
                     this.testResultList = [];
@@ -123,13 +134,21 @@
                         let request = {
                             id:this.generatorInstance.id,
                             creationStrategyId:this.request.creationStrategyId,
+                            generatorDataIdList:this.$refs.tree.getCheckedKeys()
                         };
                         this.Api.GeneratorInstance[this.request.runFunction](request).then((data) => {
                             if(this.request.runFunction === "makeTest"){
                                 if(data.errorMessageList.length){
+                                    let errorMessageList = [];
+                                    data.errorMessageList.forEach(message => {
+                                        errorMessageList.push({
+                                            name:message,
+                                            children:[]
+                                        })
+                                    });
                                     this.testResultList.push({
-                                        type:"prod",
-                                        data: data.errorMessageList
+                                        type:"message",
+                                        data: errorMessageList
                                     });
                                 }else{
                                     this.testResultList.push({
@@ -137,13 +156,19 @@
                                         data: data.resultFileTree
                                     });
                                 }
-
                             }
                             else{
                                 if(data.errorMessageList.length){
+                                    let errorMessageList = [];
+                                    data.errorMessageList.forEach(message => {
+                                        errorMessageList.push({
+                                            name:message,
+                                            children:[]
+                                        })
+                                    });
                                     this.prodResultList.push({
-                                        type:"prod",
-                                        data: data.errorMessageList
+                                        type:"message",
+                                        data: errorMessageList
                                     });
                                 }
                                 else{
@@ -161,6 +186,12 @@
             },
             open(config){
                 this.treeData = config.treeData;
+                if(!this.isInit){
+                    this.$nextTick(() => {
+                        this.checkAll(true);
+                        this.isInit = true;
+                    });
+                }
                 this.generatorInstance = config.generatorInstance;
                 this.isShow = true;
                 this.Api.CreationStrategy.query({generatorId: this.generatorInstance.generator.id}).then((creationStrategyList) => {

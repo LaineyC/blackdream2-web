@@ -184,7 +184,7 @@
             insertFileScript(item){
                 let aceEditor = this.$refs['aceEditor' + item.id][0];
                 aceEditor.editor.insert("\n");
-                aceEditor.editor.insert("var file_ = $tool.newFile(fileName, templateRef);");
+                aceEditor.editor.insert("var file_ = $tool.newFile(fileName, templateRef, templateContext);");
                 aceEditor.editor.insert("\n");
             },
             insertDirectoryScript(item){

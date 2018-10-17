@@ -99,6 +99,7 @@ export default Vue.prototype.Api = {
         query: doPost('/generator/query'),
         search: doPost('/generator/search'),
         infoSearch: doPost('/generator/infoSearch'),
+        release: doPost('/generator/release'),
     },
     GeneratorInstance: {
         create: doPost('/generatorInstance/create'),
