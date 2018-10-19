@@ -71,8 +71,11 @@ class DataModelAttributeDataTypeEnum extends Enum{
         this.NONE = new EnumItem(1, "NONE");
         this.BOOLEAN = new EnumItem(2, "BOOLEAN");
         this.INTEGER = new EnumItem(3, "INTEGER");
-        this.FLOAT = new EnumItem(4, "FLOAT");
+        this.DECIMAL = new EnumItem(4, "DECIMAL");
         this.STRING = new EnumItem(5, "STRING");
+        this.DATE = new EnumItem(6, "DATE");
+        this.TIME = new EnumItem(7, "TIME");
+        this.DATETIME = new EnumItem(8, "DATETIME");
         this.MODEL_REF = new EnumItem(15, "MODEL_REF");
     }
 }

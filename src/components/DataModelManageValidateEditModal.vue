@@ -44,16 +44,54 @@
                 </el-col>
             </el-row>
             <el-row v-if="validateShow.isShowValue">
-                <el-col :span="8">
+                <template v-if="sourceAttribute.dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value || sourceAttribute.dateType===Constant.DataModelAttributeDataTypeEnum.DECIMAL.value">
+                <el-col :span="10">
                     <el-form-item label="最小值" prop="minValue">
                         <el-input v-model.number="request.minValue"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="10">
                     <el-form-item label="最大值" prop="maxValue">
                         <el-input v-model.number="request.maxValue"></el-input>
                     </el-form-item>
                 </el-col>
+                </template>
+                <template v-if="sourceAttribute.dataType===Constant.DataModelAttributeDataTypeEnum.DATE.value">
+                <el-col :span="10">
+                    <el-form-item label="最小值" prop="minValue">
+                        <el-date-picker v-model="request.minValue" type="date" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="10">
+                    <el-form-item label="最大值" prop="maxValue">
+                        <el-date-picker v-model="request.maxValue" type="date" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                    </el-form-item>
+                </el-col>
+                </template>
+                <template v-if="sourceAttribute.dataType===Constant.DataModelAttributeDataTypeEnum.TIME.value">
+                <el-col :span="10">
+                    <el-form-item label="最小值" prop="minValue">
+                        <el-time-picker v-model="request.minValue" value-format="yyyy-MM-dd HH:mm:ss"></el-time-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="10">
+                    <el-form-item label="最大值" prop="maxValue">
+                        <el-time-picker v-model="request.maxValue" value-format="yyyy-MM-dd HH:mm:ss"></el-time-picker>
+                    </el-form-item>
+                </el-col>
+                </template>
+                <template v-if="sourceAttribute.dataType===Constant.DataModelAttributeDataTypeEnum.DATETIME.value">
+                <el-col :span="10">
+                    <el-form-item label="最小值" prop="minValue">
+                        <el-date-picker v-model="request.minValue" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="10">
+                    <el-form-item label="最大值" prop="maxValue">
+                        <el-date-picker v-model="request.maxValue" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                    </el-form-item>
+                </el-col>
+                </template>
             </el-row>
             <el-row v-if="validateShow.isShowLength">
                 <el-col :span="8">
@@ -72,7 +110,7 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-            <el-row  v-if="validateShow.isShowRegex">
+            <el-row v-if="validateShow.isShowRegex">
                 <el-col :span="12">
                     <el-form-item label="正则表达式" prop="regex">
                         <el-input v-model="request.regex"></el-input>
@@ -122,7 +160,7 @@
             isShowLength:false,
             isShowRegex:false
         },
-        [DataModelAttributeDataTypeEnum.FLOAT.value] : {
+        [DataModelAttributeDataTypeEnum.DECIMAL.value] : {
             isShowEnum:false,
             isShowValue:true,
             isShowLength:false,
@@ -133,6 +171,24 @@
             isShowValue:false,
             isShowLength:true,
             isShowRegex:true
+        },
+        [DataModelAttributeDataTypeEnum.DATE.value] : {
+            isShowEnum:false,
+            isShowValue:true,
+            isShowLength:false,
+            isShowRegex:false
+        },
+        [DataModelAttributeDataTypeEnum.TIME.value] : {
+            isShowEnum:false,
+            isShowValue:true,
+            isShowLength:false,
+            isShowRegex:false
+        },
+        [DataModelAttributeDataTypeEnum.DATETIME.value] : {
+            isShowEnum:false,
+            isShowValue:true,
+            isShowLength:false,
+            isShowRegex:false
         },
         [DataModelAttributeDataTypeEnum.MODEL_REF.value] : {
             isShowEnum:false,
