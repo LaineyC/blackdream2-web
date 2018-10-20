@@ -46,6 +46,9 @@
                                         </el-select>
                                     </el-input>
                                 </el-form-item>
+                                <el-form-item label="code">
+                                    <el-input readonly v-model="item.model.code" placeholder="" />
+                                </el-form-item>
                             <el-card shadow="hover">
                                 <el-button-group slot="header">
                                     <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
@@ -118,6 +121,7 @@
                 };
                 this.Api.TemplateFile.create(model).then((data) => {
                     model.id = data.id;
+                    model.code = data.code;
                     let item = this.wrapToItem(model);
                     this.addToTreeData(item);
                     this.selectNode(item);

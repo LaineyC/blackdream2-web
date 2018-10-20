@@ -9,7 +9,7 @@
                     <el-dropdown trigger="click">
                         <el-button size="small" type="success">新建</el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item v-for="dataModel in schemeRuleMap['']" :key="dataModel.id"><div @click="create(null, dataModel)">{{dataModel.name}}</div></el-dropdown-item>
+                            <el-dropdown-item v-for="dataModel in schemeRuleMap['']" :key="dataModel.id"><div @click="create(null, dataModel)"><i :class="dataModel.iconStyle"></i> {{dataModel.name}}</div></el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </el-menu-item>
@@ -30,7 +30,7 @@
                             <el-dropdown trigger="click">
                                 <span class="el-dropdown-link"><i class="el-icon-circle-plus"></i></span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item v-for="dataModel in schemeRuleMap[data.model.dataModel.id]" :key="dataModel.id"><div @click="create(data, dataModel)">{{dataModel.name}}</div></el-dropdown-item>
+                                    <el-dropdown-item v-for="dataModel in schemeRuleMap[data.model.dataModel.id]" :key="dataModel.id"><div @click="create(data, dataModel)"><i :class="dataModel.iconStyle"></i> {{dataModel.name}}</div></el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -154,13 +154,13 @@
                                                         </el-select>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.DATE.value">
-                                                        <el-date-picker v-model="row.tuple[field.name].value" type="date" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(field.cascadeFunction, row.tuple[field.name], row.tuple, item.model)"></el-date-picker>
+                                                        <el-date-picker v-model="row.tuple[field.name].value" :style="{ width: field.displayWidth ? (field.displayWidth - 10) + 'px' : '' }" type="date" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(field.cascadeFunction, row.tuple[field.name], row.tuple, item.model)"></el-date-picker>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.TIME.value">
-                                                        <el-time-picker v-model="row.tuple[field.name].value" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(field.cascadeFunction, row.tuple[field.name], row.tuple, item.model)"></el-time-picker>
+                                                        <el-time-picker v-model="row.tuple[field.name].value" :style="{ width: field.displayWidth ? (field.displayWidth - 10) + 'px' : '' }" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(field.cascadeFunction, row.tuple[field.name], row.tuple, item.model)"></el-time-picker>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.DATETIME.value">
-                                                        <el-date-picker v-model="row.tuple[field.name].value" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(field.cascadeFunction, row.tuple[field.name], row.tuple, item.model)"></el-date-picker>
+                                                        <el-date-picker v-model="row.tuple[field.name].value" :style="{ width: field.displayWidth ? (field.displayWidth - 10) + 'px' : '' }" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(field.cascadeFunction, row.tuple[field.name], row.tuple, item.model)"></el-date-picker>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="row.tuple[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.MODEL_REF.value">
                                                         <el-button-group>
@@ -188,13 +188,13 @@
                                                     </el-select>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.DATE.value">
-                                                    <el-date-picker v-model="row.tuple[group.model.name].value" type="date" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(group.model.cascadeFunction, row.tuple[group.model.name], row.tuple, item.model)"></el-date-picker>
+                                                    <el-date-picker v-model="row.tuple[group.model.name].value" :style="{ width: group.model.displayWidth ? (group.model.displayWidth - 10) + 'px' : '' }" type="date" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(group.model.cascadeFunction, row.tuple[group.model.name], row.tuple, item.model)"></el-date-picker>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.TIME.value">
-                                                    <el-time-picker v-model="row.tuple[group.model.name].value" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(group.model.cascadeFunction, row.tuple[group.model.name], row.tuple, item.model)"></el-time-picker>
+                                                    <el-time-picker v-model="row.tuple[group.model.name].value" :style="{ width: group.model.displayWidth ? (group.model.displayWidth - 10) + 'px' : '' }" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(group.model.cascadeFunction, row.tuple[group.model.name], row.tuple, item.model)"></el-time-picker>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.DATETIME.value">
-                                                    <el-date-picker v-model="row.tuple[group.model.name].value" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(group.model.cascadeFunction, row.tuple[group.model.name], row.tuple, item.model)"></el-date-picker>
+                                                    <el-date-picker v-model="row.tuple[group.model.name].value" type="datetime" :style="{ width: group.model.displayWidth ? (group.model.displayWidth - 10) + 'px' : '' }" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(group.model.cascadeFunction, row.tuple[group.model.name], row.tuple, item.model)"></el-date-picker>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.tuple[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.MODEL_REF.value">
                                                     <el-button-group>

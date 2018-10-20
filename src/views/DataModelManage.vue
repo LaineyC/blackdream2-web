@@ -40,6 +40,9 @@
                                     <el-button slot="reference" style="font-size: 24px;padding: 2px;"> <i :class="item.model.iconStyle"></i></el-button>
                                 </el-popover>
                             </el-form-item>
+                            <el-form-item label="code">
+                                <el-input readonly v-model="item.model.code" placeholder="" />
+                            </el-form-item>
                             <el-card shadow="hover">
                                 <el-button-group slot="header">
                                     <el-button type="success" size="mini" @click="addProperty(item)">添加属性</el-button>
@@ -97,8 +100,8 @@
                                     <el-table-column label="数据设置" align="center">
                                         <el-table-column label="属性名称">
                                             <template slot-scope="{ row, column, $index }">
-                                                <el-form-item :prop="'propertyList.' + $index + '.name'" :rules="validRule.property.name">
-                                                    <el-input v-model="row.name" />
+                                                <el-form-item :prop="'propertyList.' + $index + '.name'" :rules="buildPropertyNameValidator(row, item, validRule.property.name)">
+                                                    <el-input :readonly="row.isPrimary" v-model="row.name" />
                                                     <template slot="error" slot-scope="{ error }">
                                                         <el-popover placement="bottom" trigger="manual" :value="true">
                                                             <el-alert :title="error" type="error" :closable="false"></el-alert>
@@ -232,7 +235,7 @@
                                     <el-table-column label="数据设置" align="center">
                                         <el-table-column label="字段名称">
                                             <template slot-scope="{ row, column, $index }">
-                                                <el-form-item :prop="'fieldList.' + $index + '.name'" :rules="validRule.field.name">
+                                                <el-form-item :prop="'fieldList.' + $index + '.name'" :rules="buildFieldNameValidator(row, item, validRule.field.name)">
                                                     <el-input v-model="row.name" />
                                                     <template slot="error" slot-scope="{ error }">
                                                         <el-popover placement="bottom" trigger="manual" :value="true">
@@ -410,6 +413,38 @@
             }
         },
         methods:{
+            buildPropertyNameValidator(property, item, rules){
+                let ruleArray = [...rules];
+                ruleArray.push(
+                    {
+                        validator(rule, value, callback, source, options) {
+                            item.model.propertyList.forEach(v => {
+                                if(v.name === property.name && v !== property){
+                                    callback(["属性名称不能重复"]);
+                                }
+                            });
+                        },
+                        trigger: 'blur'
+                    }
+                );
+                return ruleArray
+            },
+            buildFieldNameValidator(field, item, rules){
+                let ruleArray = [...rules];
+                ruleArray.push(
+                    {
+                        validator(rule, value, callback, source, options) {
+                            item.model.fieldList.forEach(v => {
+                                if(v.name === field.name && v !== field){
+                                    callback(["字段名称不能重复"]);
+                                }
+                            });
+                        },
+                        trigger: 'blur'
+                    }
+                );
+                return ruleArray
+            },
             create(){
                 let id = this.incrementer.next();
                 let model = {
@@ -433,6 +468,7 @@
                 };
                 this.Api.DataModel.create(model).then((data) => {
                     model.id = data.id;
+                    model.code = data.code;
                     let item = this.wrapToItem(model);
                     this.addToTreeData(item);
                     this.selectNode(item);

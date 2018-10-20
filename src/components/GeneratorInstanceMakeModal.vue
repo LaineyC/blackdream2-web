@@ -16,7 +16,11 @@
                         </div>
                    </div>
                     <div id="tree-body">
-                        <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
+                        <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
+                            <div slot-scope="{ node, data }">
+                                <div><i :class="data.model.dataModel.iconStyle"></i> {{ node.label }}</div>
+                            </div>
+                        </el-tree>
                     </div>
                 </el-card>
             </el-col>
@@ -46,18 +50,22 @@
                     <div id="result-body">
                         <div class="result-item" v-show="request.runFunction==='makeTest'" v-for="item in testResultList">
                             <el-card style="margin: 2px;" v-if="item.type==='test'">
-                                <el-tree node-key="id" :data="item.data" :props="testTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
+                                <el-tree node-key="id" :data="item.data" :props="testTreeProps" default-expand-all :expand-on-click-node="false" highlight-current>
+                                    <div slot-scope="{ node, data }">
+                                        <div><i :class="data.isFile ? 'el-icon-document' : 'el-icon-message'"></i> {{ node.label }}</div>
+                                    </div>
+                                </el-tree>
                             </el-card>
                             <el-card style="margin: 2px;" v-else-if="item.type==='message'">
                                 <el-tree node-key="id" :data="item.data" :props="messageTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
                             </el-card>
                         </div>
                         <div class="result-item" v-show="request.runFunction==='make'" v-for="item in prodResultList">
-                            <el-card style="margin: 2px;" v-if="item.type==='message'">
-                                <el-tree node-key="id" :data="item.data" :props="messageTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
-                            </el-card>
-                            <el-card style="margin: 2px;" v-else-if="item.type==='prod'">
+                            <el-card style="margin: 2px;" v-if="item.type==='prod'">
                                 <el-button type="text" ><i class="el-icon-download"></i><a :href="downloadUrl(item.data.url)">{{item.data.fileName}}</a></el-button>
+                            </el-card>
+                            <el-card style="margin: 2px;" v-else-if="item.type==='message'">
+                                <el-tree node-key="id" :data="item.data" :props="messageTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
                             </el-card>
                         </div>
                     </div>

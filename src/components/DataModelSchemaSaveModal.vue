@@ -3,7 +3,7 @@
         title="设置数据模型Scheme"
         :show-close="false"
         @close="close"
-        width="800px"
+        width="900px"
         :close-on-press-escape="false"
         :visible.sync="isShow">
         <el-form ref="form" :model="request" :rules="validRule" label-width="125px" size="small">
@@ -87,7 +87,6 @@
                     if(!this.request.ruleMap['']){
                         this.$set(this.request.ruleMap, '', []);
                     }
-                    console.info(this.request.ruleMap);
                     this.dataModelList = dataModelList.sort((a, b) => {
                         if(a.name > b.name){
                             return 1;
