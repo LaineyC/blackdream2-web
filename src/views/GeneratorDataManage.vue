@@ -516,6 +516,38 @@
                     });
                 });
             },
+            buildValidRuleList(attribute){
+                let dateType = attribute.dateType;
+                let ruleMap = attribute.ruleMap = {};
+                let ruleList = ruleMap[dateType] = [];
+                if(dateType === this.Constant.DataModelAttributeDataTypeEnum.NONE.value){
+
+                }
+                else if(dateType === this.Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value){
+                    //{ required: true, message: '请填写字段名称', trigger: 'blur' },
+                }
+                else if(dateType === this.Constant.DataModelAttributeDataTypeEnum.INTEGER.value){
+
+                }
+                else if(dateType === this.Constant.DataModelAttributeDataTypeEnum.DECIMAL.value){
+
+                }
+                else if(dateType === this.Constant.DataModelAttributeDataTypeEnum.STRING.value){
+
+                }
+                else if(dateType === this.Constant.DataModelAttributeDataTypeEnum.DATE.value){
+
+                }
+                else if(dateType === this.Constant.DataModelAttributeDataTypeEnum.TIME.value){
+
+                }
+                else if(dateType === this.Constant.DataModelAttributeDataTypeEnum.DATETIME.value){
+
+                }
+                else if(dateType === this.Constant.DataModelAttributeDataTypeEnum.MODEL_REF.value){
+
+                }
+            }
         },
         computed:{/*
             dataModelCache(){
@@ -573,6 +605,8 @@
                             if(property.cascadeScript){
                                 property.cascadeFunction = new Function("$control","$properties", "$data", "$global", property.cascadeScript);
                             }
+
+                            this.buildValidRuleList(property);
                         });
 
                         let fieldGroupPrevious = null;
@@ -606,6 +640,8 @@
                             if(field.cascadeScript){
                                 field.cascadeFunction = new Function("$control", "$tuple", "$data", "$global", field.cascadeScript);
                             }
+
+                            this.buildValidRuleList(field);
                         });
                     });
                     this.schemeRuleMap = {};

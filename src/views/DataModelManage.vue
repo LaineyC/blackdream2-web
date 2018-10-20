@@ -418,11 +418,15 @@
                 ruleArray.push(
                     {
                         validator(rule, value, callback, source, options) {
-                            item.model.propertyList.forEach(v => {
+                            let errors = [];
+                            for(let i = 0 ; i < item.model.propertyList.length ; i ++){
+                                let v = item.model.propertyList[i];
                                 if(v.name === property.name && v !== property){
-                                    callback(["属性名称不能重复"]);
+                                    errors.push("属性名称不能重复");
+                                    break;
                                 }
-                            });
+                            }
+                            callback(errors);
                         },
                         trigger: 'blur'
                     }
@@ -434,16 +438,20 @@
                 ruleArray.push(
                     {
                         validator(rule, value, callback, source, options) {
-                            item.model.fieldList.forEach(v => {
+                            let errors = [];
+                            for(let i = 0 ; i < item.model.fieldList.length ; i ++){
+                                let v = item.model.fieldList[i];
                                 if(v.name === field.name && v !== field){
-                                    callback(["字段名称不能重复"]);
+                                    errors.push("字段名称不能重复");
+                                    break;
                                 }
-                            });
+                            }
+                            callback(errors);
                         },
                         trigger: 'blur'
                     }
                 );
-                return ruleArray
+                return []
             },
             create(){
                 let id = this.incrementer.next();
@@ -480,6 +488,7 @@
             },
             update(item){
                 this.$refs['form' + item.id][0].validate((valid) => {
+                    console.info(valid)
                     if (valid) {
                         this.Api.DataModel.update(item.model).then((data) => {
                             item.name = item.model.name;
