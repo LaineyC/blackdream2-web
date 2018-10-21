@@ -7,124 +7,143 @@
         :close-on-press-escape="false"
         :visible.sync="isShow">
         <el-form ref="form" :model="request" :rules="validRule" label-width="85px" size="small">
-            <el-form-item label="是否必须" prop="isRequired">
-                <el-switch v-model="request.isRequired"></el-switch>
-            </el-form-item>
-            <el-row v-if="validateShow.isShowEnum">
-                <el-col :span="6">
-                    <el-form-item label="是否枚举" prop="isEnum">
-                        <el-switch v-model="request.isEnum"></el-switch>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="18" v-if="request.isEnum">
-                    <el-row>
-                        <el-col :span="4">
-                            <el-button type="success" size="mini" @click="addEnumItem">添加值</el-button>
+            <el-tabs v-model="currentTabName" tab-position="left">
+                <el-tab-pane v-for="dataTypeEnum in Constant.DataModelAttributeDataTypeEnum" :label="dataTypeEnum.label" :name="dataTypeEnum.value + ''" :key="dataTypeEnum.value">
+                    <span slot="label">
+                         <strong v-if="sourceAttribute.dataType===dataTypeEnum.value">{{dataTypeEnum.label}}</strong>
+                        <span v-else>{{dataTypeEnum.label}}</span>
+                    </span>
+                    <el-row v-if="dataTypeEnum.value === Constant.DataModelAttributeDataTypeEnum.NONE.value">
+                        <el-col :span="24">
+                            <el-form-item label="无设置"></el-form-item>
                         </el-col>
-                        <el-col :span="20">
-                            <el-row v-for="(enumItem, $index) in request.enumList" :key="$index">
-                                <el-col :span="6">
-                                    <el-form-item label-width="10px" :prop="'enumList.' + $index + '.label'" :rules="validRule.enumLabel">
-                                        <el-input placeholder="label" v-model="enumItem.label"></el-input>
-                                    </el-form-item>
+                    </el-row>
+                    <el-row v-if="dataTypeEnum.value !== Constant.DataModelAttributeDataTypeEnum.NONE.value">
+                        <el-col :span="24">
+                            <el-form-item label="是否必须" :prop="dataTypeEnum.value + '.isRequired'" :rules="validRule.isRequired">
+                                <el-switch v-model="request[dataTypeEnum.value].isRequired"></el-switch>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row v-if="dataTypeEnum.value === Constant.DataModelAttributeDataTypeEnum.STRING.value">
+                        <el-col :span="6">
+                            <el-form-item label="是否枚举" :prop="dataTypeEnum.value + '.isEnum'" :rules="validRule.isEnum">
+                                <el-switch v-model="request[dataTypeEnum.value].isEnum"></el-switch>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="18" v-if="request[dataTypeEnum.value].isEnum">
+                            <el-row>
+                                <el-col :span="4">
+                                    <el-button type="success" size="mini" @click="addEnumItem(dataTypeEnum)">添加值</el-button>
                                 </el-col>
-                                <el-col :span="6">
-                                    <el-form-item label-width="10px" :prop="'enumList.' + $index + '.value'" :rules="validRule.enumValue">
-                                        <el-input placeholder="value" v-model="enumItem.value"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="6">
-                                    <el-form-item label-width="10px">
-                                        <el-button type="danger" size="mini" @click="removeEnumItem(enumItem, $index)">删除</el-button>
-                                    </el-form-item>
+                                <el-col :span="20">
+                                    <el-row v-for="(enumItem, $index) in request[dataTypeEnum.value].enumList" :key="$index">
+                                        <el-col :span="9">
+                                            <el-form-item label-width="10px" :prop="dataTypeEnum.value + '.enumList.' + $index + '.label'" :rules="validRule.enumLabel">
+                                                <el-input placeholder="label" v-model="enumItem.label"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="9">
+                                            <el-form-item label-width="10px" :prop="dataTypeEnum.value + '.enumList.' + $index + '.value'" :rules="validRule.enumValue">
+                                                <el-input placeholder="value" v-model="enumItem.value"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="6">
+                                            <el-form-item label-width="10px">
+                                                <el-button type="danger" size="mini" @click="removeEnumItem(enumItem, $index)">删除</el-button>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
                                 </el-col>
                             </el-row>
                         </el-col>
                     </el-row>
-                </el-col>
-            </el-row>
-            <el-row v-if="validateShow.isShowValue">
-                <template v-if="sourceAttribute.dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value || sourceAttribute.dateType===Constant.DataModelAttributeDataTypeEnum.DECIMAL.value">
-                <el-col :span="10">
-                    <el-form-item label="最小值" prop="minValue">
-                        <el-input v-model.number="request.minValue"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="10">
-                    <el-form-item label="最大值" prop="maxValue">
-                        <el-input v-model.number="request.maxValue"></el-input>
-                    </el-form-item>
-                </el-col>
-                </template>
-                <template v-if="sourceAttribute.dataType===Constant.DataModelAttributeDataTypeEnum.DATE.value">
-                <el-col :span="10">
-                    <el-form-item label="最小值" prop="minValue">
-                        <el-date-picker v-model="request.minValue" type="date" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="10">
-                    <el-form-item label="最大值" prop="maxValue">
-                        <el-date-picker v-model="request.maxValue" type="date" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-                    </el-form-item>
-                </el-col>
-                </template>
-                <template v-if="sourceAttribute.dataType===Constant.DataModelAttributeDataTypeEnum.TIME.value">
-                <el-col :span="10">
-                    <el-form-item label="最小值" prop="minValue">
-                        <el-time-picker v-model="request.minValue" value-format="yyyy-MM-dd HH:mm:ss"></el-time-picker>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="10">
-                    <el-form-item label="最大值" prop="maxValue">
-                        <el-time-picker v-model="request.maxValue" value-format="yyyy-MM-dd HH:mm:ss"></el-time-picker>
-                    </el-form-item>
-                </el-col>
-                </template>
-                <template v-if="sourceAttribute.dataType===Constant.DataModelAttributeDataTypeEnum.DATETIME.value">
-                <el-col :span="10">
-                    <el-form-item label="最小值" prop="minValue">
-                        <el-date-picker v-model="request.minValue" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="10">
-                    <el-form-item label="最大值" prop="maxValue">
-                        <el-date-picker v-model="request.maxValue" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-                    </el-form-item>
-                </el-col>
-                </template>
-            </el-row>
-            <el-row v-if="validateShow.isShowLength">
-                <el-col :span="8">
-                    <el-form-item label="长度" prop="length">
-                        <el-input v-model.number="request.length"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="最小长度" prop="minLength">
-                        <el-input v-model.number="request.minLength"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="最大长度" prop="maxLength">
-                        <el-input v-model.number="request.maxLength"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row v-if="validateShow.isShowRegex">
-                <el-col :span="12">
-                    <el-form-item label="正则表达式" prop="regex">
-                        <el-input v-model="request.regex"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="正则提示" prop="regexMessage">
-                        <el-input v-model="request.regexMessage"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-form-item label="自定义脚本" prop="validateScript">
-                <AceEditor v-model="request.validateScript" lang="javascript" theme="chrome" width="100%" height="300px" @init="initAceEditor"/>
-            </el-form-item>
+                    <el-row v-if="dataTypeEnum.value === Constant.DataModelAttributeDataTypeEnum.STRING.value">
+                        <el-col :span="8">
+                            <el-form-item label="长度" :prop="dataTypeEnum.value + '.length'" :rules="validRule.length">
+                                <el-input v-model.number="request[dataTypeEnum.value].length"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="最小长度" :prop="dataTypeEnum.value + '.minLength'" :rules="validRule.minLength">
+                                <el-input v-model.number="request[dataTypeEnum.value].minLength"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="最大长度" :prop="dataTypeEnum.value + '.maxLength'" :rules="validRule.maxLength">
+                                <el-input v-model.number="request[dataTypeEnum.value].maxLength"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row v-if="dataTypeEnum.value === Constant.DataModelAttributeDataTypeEnum.STRING.value">
+                        <el-col :span="12">
+                            <el-form-item label="正则表达式" :prop="dataTypeEnum.value + '.regex'" :rules="validRule.regex">
+                                <el-input v-model="request[dataTypeEnum.value].regex"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="正则提示" :prop="dataTypeEnum.value + '.regexMessage'" :rules="validRule.regexMessage">
+                                <el-input v-model="request[dataTypeEnum.value].regexMessage"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row v-if="dataTypeEnum.value === Constant.DataModelAttributeDataTypeEnum.INTEGER.value || dataTypeEnum.value === Constant.DataModelAttributeDataTypeEnum.DECIMAL.value">
+                        <el-col :span="12">
+                            <el-form-item label="最小值" :prop="dataTypeEnum.value + '.minValue'" :rules="validRule.minValue">
+                                <el-input v-model.number="request[dataTypeEnum.value].minValue"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="最大值" :prop="dataTypeEnum.value + '.maxValue'" :rules="validRule.maxValue">
+                                <el-input v-model.number="request[dataTypeEnum.value].maxValue"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row v-if="dataTypeEnum.value === Constant.DataModelAttributeDataTypeEnum.DATE.value">
+                        <el-col :span="12">
+                            <el-form-item label="最小值" :prop="dataTypeEnum.value + '.minValue'" :rules="validRule.minValue">
+                                <el-date-picker v-model="request[dataTypeEnum.value].minValue" type="date" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="最大值" :prop="dataTypeEnum.value + '.maxValue'" :rules="validRule.maxValue">
+                                <el-date-picker v-model="request[dataTypeEnum.value].maxValue" type="date" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row v-if="dataTypeEnum.value === Constant.DataModelAttributeDataTypeEnum.TIME.value">
+                        <el-col :span="12">
+                            <el-form-item label="最小值" :prop="dataTypeEnum.value + '.minValue'" :rules="validRule.minValue">
+                                <el-time-picker v-model="request[dataTypeEnum.value].minValue" value-format="yyyy-MM-dd HH:mm:ss"></el-time-picker>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="最大值" :prop="dataTypeEnum.value + '.maxValue'" :rules="validRule.maxValue">
+                                <el-time-picker v-model="request[dataTypeEnum.value].maxValue" value-format="yyyy-MM-dd HH:mm:ss"></el-time-picker>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row v-if="dataTypeEnum.value === Constant.DataModelAttributeDataTypeEnum.DATETIME.value">
+                        <el-col :span="12">
+                            <el-form-item label="最小值" :prop="dataTypeEnum.value + '.minValue'" :rules="validRule.minValue">
+                                <el-date-picker v-model="request[dataTypeEnum.value].minValue" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="最大值" :prop="dataTypeEnum.value + '.maxValue'" :rules="validRule.maxValue">
+                                <el-date-picker v-model="request[dataTypeEnum.value].maxValue" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row v-if="dataTypeEnum.value !== Constant.DataModelAttributeDataTypeEnum.NONE.value">
+                        <el-col :span="24">
+                            <el-form-item label="自定义验证" :prop="dataTypeEnum.value + '.validateScript'" :rules="validRule.validateScript">
+                                <AceEditor v-model="request[dataTypeEnum.value].validateScript" lang="javascript" theme="chrome" width="100%" height="350px" @init="initAceEditor"/>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-tab-pane>
+            </el-tabs>
         </el-form>
         <div slot="footer">
             <el-button @click="close">取消</el-button>
@@ -140,64 +159,6 @@
     import 'brace/theme/chrome'
     import Vue from 'vue'
 
-    let DataModelAttributeDataTypeEnum = Vue.prototype.Constant.DataModelAttributeDataTypeEnum;
-    let dataModelValidateShowRule = {
-        [DataModelAttributeDataTypeEnum.NONE.value] : {
-            isShowEnum:true,
-            isShowValue:true,
-            isShowLength:true,
-            isShowRegex:true
-        },
-        [DataModelAttributeDataTypeEnum.BOOLEAN.value] : {
-            isShowEnum:false,
-            isShowValue:false,
-            isShowLength:false,
-            isShowRegex:false
-        },
-        [DataModelAttributeDataTypeEnum.INTEGER.value] : {
-            isShowEnum:false,
-            isShowValue:true,
-            isShowLength:false,
-            isShowRegex:false
-        },
-        [DataModelAttributeDataTypeEnum.DECIMAL.value] : {
-            isShowEnum:false,
-            isShowValue:true,
-            isShowLength:false,
-            isShowRegex:false
-        },
-        [DataModelAttributeDataTypeEnum.STRING.value] : {
-            isShowEnum:true,
-            isShowValue:false,
-            isShowLength:true,
-            isShowRegex:true
-        },
-        [DataModelAttributeDataTypeEnum.DATE.value] : {
-            isShowEnum:false,
-            isShowValue:true,
-            isShowLength:false,
-            isShowRegex:false
-        },
-        [DataModelAttributeDataTypeEnum.TIME.value] : {
-            isShowEnum:false,
-            isShowValue:true,
-            isShowLength:false,
-            isShowRegex:false
-        },
-        [DataModelAttributeDataTypeEnum.DATETIME.value] : {
-            isShowEnum:false,
-            isShowValue:true,
-            isShowLength:false,
-            isShowRegex:false
-        },
-        [DataModelAttributeDataTypeEnum.MODEL_REF.value] : {
-            isShowEnum:false,
-            isShowValue:false,
-            isShowLength:false,
-            isShowRegex:false
-        },
-    };
-
     export default {
         name: "DataModelValidateEditModal",
         components: {
@@ -205,22 +166,10 @@
         },
         data () {
             return {
-                sourceAttribute:null,
+                currentTabName:this.Constant.DataModelAttributeDataTypeEnum.NONE.value + "",
+                sourceAttribute:{},
                 isShow:false,
-                request: {
-                    dataType:null,
-                    isEnum:false,
-                    enumList:[],
-                    isRequired:false,
-                    minValue:null,
-                    maxValue:null,
-                    length:null,
-                    minLength:null,
-                    maxLength:null,
-                    regex:null,
-                    regexMessage:null,
-                    validateScript:""
-                },
+                request: this.resetRequest(),
                 validRule: {
                     name: [
                         { required: true, message: '请填写', trigger: 'blur' },
@@ -233,13 +182,13 @@
                         { type:"number", min: Number.MIN_VALUE, max: Number.MAX_VALUE, message: '输入数值超过范围', trigger: 'blur' }
                     ],
                     length: [
-                        { type:"integer", min: Number.MIN_SAFE_INTEGER, max: Number.MAX_SAFE_INTEGER, message: '输入数值超过范围', trigger: 'blur' }
+                        { type:"integer", min: 1, max: Number.MAX_SAFE_INTEGER, message: '输入数值超过范围', trigger: 'blur' }
                     ],
                     minLength: [
-                        { type:"integer", min: Number.MIN_SAFE_INTEGER, max: Number.MAX_SAFE_INTEGER, message: '输入数值超过范围', trigger: 'blur' }
+                        { type:"integer", min: 1, max: Number.MAX_SAFE_INTEGER, message: '输入数值超过范围', trigger: 'blur' }
                     ],
                     maxLength: [
-                        { type:"integer", min: Number.MIN_SAFE_INTEGER, max: Number.MAX_SAFE_INTEGER, message: '输入数值超过范围', trigger: 'blur' }
+                        { type:"integer", min: 1, max: Number.MAX_SAFE_INTEGER, message: '输入数值超过范围', trigger: 'blur' }
                     ],
                     regex: [
                         { type: 'string', max: 255, message: '不能大于255', trigger: 'blur' }
@@ -269,7 +218,7 @@
             submit () {
                 this.$refs.form.validate((valid) => {
                     if (valid) {
-                        this.copyAttribute(this.sourceAttribute, this.request);
+                        this.copyAttribute(this.sourceAttribute.dataValidatorMap, this.request);
                         this.close();
                         this.$emit('on-confirm');
                     }
@@ -278,49 +227,70 @@
             open({attribute}){
                 this.isShow = true;
                 this.sourceAttribute = attribute;
-                this.resetRequest();
-                this.copyAttribute(this.request, this.sourceAttribute);
+                this.currentTabName = attribute.dataType + '';
+                this.request = this.resetRequest();
+                this.copyAttribute(this.request, this.sourceAttribute.dataValidatorMap);
             },
             copyAttribute(target, source){
-                Object.assign(target, source);
-                target.enumList = !source.enumList || !source.enumList.length ? [] : [...source.enumList];
+                for(let k in this.Constant.DataModelAttributeDataTypeEnum){
+                    let dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum[k];
+                    let targetValue = target[dataTypeEnum.value];
+                    let sourceValue = source[dataTypeEnum.value];
+                    if(sourceValue === null){
+                        continue;
+                    }
+                    targetValue.isRequired = sourceValue.isRequired;
+                    targetValue.isEnum = sourceValue.isEnum;
+                    targetValue.minValue = sourceValue.minValue;
+                    targetValue.maxValue = sourceValue.maxValue;
+                    targetValue.length = sourceValue.length;
+                    targetValue.minLength = sourceValue.minLength;
+                    targetValue.maxLength = sourceValue.maxLength;
+                    targetValue.regex = sourceValue.regex;
+                    targetValue.regexMessage = sourceValue.regexMessage;
+                    targetValue.validateScript = sourceValue.validateScript ? sourceValue.validateScript : "";
+                    targetValue.enumList = [];
+                    if(sourceValue.enumList && sourceValue.enumList.length){
+                        sourceValue.enumList.forEach(value => {
+                            targetValue.enumList.push({
+                                ...value
+                            });
+                        })
+                    }
+                }
             },
             resetRequest(){
-                this.request = {
-                    dataType:null,
-                    isEnum:false,
-                    enumList:[],
-                    isRequired:false,
-                    minValue:null,
-                    maxValue:null,
-                    length:null,
-                    minLength:null,
-                    maxLength:null,
-                    regex:null,
-                    regexMessage:null,
-                    validateScript:""
+                let request = {};
+                for(let k in this.Constant.DataModelAttributeDataTypeEnum){
+                    let dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum[k];
+                    request[dataTypeEnum.value] = {
+                        isEnum:false,
+                        enumList:[],
+                        isRequired:false,
+                        minValue:null,
+                        maxValue:null,
+                        length:null,
+                        minLength:null,
+                        maxLength:null,
+                        regex:null,
+                        regexMessage:null,
+                        validateScript:""
+                    }
                 }
+                return request;
             },
             close(){
                 this.isShow = false;
-                this.resetRequest();
+                this.request = this.resetRequest();
                 this.$refs.form.resetFields();
             },
-            addEnumItem(){
-                this.request.enumList.push({value:null, label:null});
+            addEnumItem(dataTypeEnum){
+                this.request[dataTypeEnum.value].enumList.push({value:null, label:null});
             },
             removeEnumItem(enumItem, $index){
                 this.request.enumList.splice($index, 1);
             }
         },
-        computed: {
-            validateShow: function () {
-                if(!this.request.dataType){
-                    return {};
-                }
-                return dataModelValidateShowRule[this.request.dataType];
-            }
-        }
     }
 </script>
 

@@ -140,9 +140,9 @@
                                                     <el-input v-model.number="row.defaultValue" />
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
-                                                    <el-input v-if="!row.isEnum" v-model="row.defaultValue" />
+                                                    <el-input v-if="!row.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="row.defaultValue" />
                                                     <el-select v-else v-model="row.defaultValue">
-                                                        <el-option v-for="enumItem in row.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
+                                                        <el-option v-for="enumItem in row.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                     </el-select>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.DATE.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
@@ -273,9 +273,9 @@
                                                     <el-input v-model.number="row.defaultValue" />
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
-                                                    <el-input v-if="!row.isEnum" v-model="row.defaultValue" />
+                                                    <el-input v-if="!row.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="row.defaultValue" />
                                                     <el-select v-else v-model="row.defaultValue">
-                                                        <el-option v-for="enumItem in row.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
+                                                        <el-option v-for="enumItem in row.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                     </el-select>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.DATE.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
@@ -453,7 +453,30 @@
                 );
                 return []
             },
+            buildDataValidatorMap(){
+                let dataValidatorMap = {};
+                for(let k in this.Constant.DataModelAttributeDataTypeEnum){
+                    let dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum[k];
+                    dataValidatorMap[dataTypeEnum.value] = {
+                        isEnum:false,
+                        enumList:[],
+                        isRequired:false,
+                        minValue:null,
+                        maxValue:null,
+                        length:null,
+                        minLength:null,
+                        maxLength:null,
+                        regex:null,
+                        regexMessage:null,
+                        validateScript:""
+                    }
+                }
+                return dataValidatorMap;
+            },
             create(){
+                let stringTypeValue = this.Constant.DataModelAttributeDataTypeEnum.STRING.value;
+                let buildDataValidatorMap = this.buildDataValidatorMap();
+                buildDataValidatorMap[stringTypeValue].isRequired = true;
                 let id = this.incrementer.next();
                 let model = {
                     id: "$" + id,
@@ -466,11 +489,10 @@
                         isPrimary:true,
                         comment:"名称",
                         displayType:this.Constant.DataModelAttributeDisplayTypeEnum.DISPLAY_ONLY.value,
-                        dataType:this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
+                        dataType:stringTypeValue,
                         displayWidth:100,
-                        isRequired:true,
-                        isEnum:false,
-                        defaultValue:null
+                        defaultValue:null,
+                        dataValidatorMap:buildDataValidatorMap
                     }],
                     fieldList: []
                 };
@@ -488,7 +510,6 @@
             },
             update(item){
                 this.$refs['form' + item.id][0].validate((valid) => {
-                    console.info(valid)
                     if (valid) {
                         this.Api.DataModel.update(item.model).then((data) => {
                             item.name = item.model.name;
@@ -601,8 +622,8 @@
                     isPrimary:false,
                     displayType:this.Constant.DataModelAttributeDisplayTypeEnum.DISPLAY_DEFAULT.value,
                     dataType:null,//this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
-                    isEnum:false,
-                    defaultValue:null
+                    defaultValue:null,
+                    dataValidatorMap:this.buildDataValidatorMap(),
                 });
             },
             removeProperty(item, property, index){
@@ -614,8 +635,8 @@
                     id:this.Method.generateId(),
                     displayType:this.Constant.DataModelAttributeDisplayTypeEnum.DISPLAY_DEFAULT.value,
                     dataType:null,//this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
-                    isEnum:false,
-                    defaultValue:null
+                    defaultValue:null,
+                    dataValidatorMap:this.buildDataValidatorMap(),
                 });
             },
             removeField(item, field, index){
