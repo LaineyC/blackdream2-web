@@ -130,7 +130,7 @@
                                             <div class="group-label">
                                                 <el-form-item>{{group.model.comment}}</el-form-item>
                                             </div>
-                                            <div class="group-item">
+                                            <div class="group-item" :style="{ width: group.model.displayWidth ? group.model.displayWidth + 'px' : '' }">
                                                 <el-form-item v-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value" :prop="'properties.' + group.model.name + '.value'" :rules="buildAttributeValidator(group.model, item.model.properties[group.model.name], item.model.properties, item.model)">
                                                     <el-checkbox v-model="item.model.properties[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)"></el-checkbox>
                                                     <template slot="error" slot-scope="{ error }">
@@ -625,7 +625,7 @@
                         return;
                     }
                     else if(i + 1 === children.length){
-                        this.$refs.tree.append(item);
+                        this.$refs.tree.append(item, parent);
                         return;
                     }
                 }
