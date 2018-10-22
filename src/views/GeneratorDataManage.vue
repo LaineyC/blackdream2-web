@@ -723,149 +723,181 @@
                     //do nothing
                 }
 
-                dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum.BOOLEAN;
-                dataType = dataTypeEnum.value;
-                dataValidator = dataValidatorMap[dataType];
-                ruleList = ruleListMap[dataType] = [];
-                if(dataValidator != null){
-                    if(dataValidator.isRequired){
-                        ruleList.push({ required: true, message: '必输项', trigger: 'change' });
+                let dataTypeEnumBoolean = this.Constant.DataModelAttributeDataTypeEnum.BOOLEAN;
+                let dataTypeBoolean = dataTypeEnumBoolean.value;
+                let dataValidatorBoolean = dataValidatorMap[dataTypeBoolean];
+                let ruleListBoolean = ruleListMap[dataTypeBoolean] = [];
+                if(dataValidatorBoolean != null){
+                    if(dataValidatorBoolean.isRequired){
+                        ruleListBoolean.push({ required: true, message: '必输项', trigger: 'change' });
                     }
-                    if(dataValidator.validateScript){
-                        dataValidator.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidator.validateScript);
-                    }
-                }
-
-                dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum.INTEGER;
-                dataType = dataTypeEnum.value;
-                dataValidator = dataValidatorMap[dataType];
-                ruleList = ruleListMap[dataType] = [];
-                if(dataValidator != null){
-                    if(dataValidator.isRequired){
-                        ruleList.push({ required: true, message: '必输项', trigger: 'change' });
-                    }
-                    if(dataValidator.minValue !== null && dataValidator.minValue !== undefined){
-                        ruleList.push( { type:"integer", min: dataValidator.minValue, message: '最小' + dataValidator.minValue , trigger: 'blur' });
-                    }
-                    if(dataValidator.maxValue !== null && dataValidator.maxValue !== undefined){
-                        ruleList.push({ type:"integer", max: dataValidator.maxValue, message: '最大' + dataValidator.maxValue, trigger: 'blur' });
-                    }
-                    if(dataValidator.validateScript){
-                        dataValidator.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidator.validateScript);
+                    if(dataValidatorBoolean.validateScript){
+                        dataValidatorBoolean.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorBoolean.validateScript);
                     }
                 }
 
-                dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum.DECIMAL;
-                dataType = dataTypeEnum.value;
-                dataValidator = dataValidatorMap[dataType];
-                ruleList = ruleListMap[dataType] = [];
-                if(dataValidator != null){
-                    if(dataValidator.isRequired){
-                        ruleList.push({ required: true, message: '必输项', trigger: 'change' });
+                let dataTypeEnumInteger = this.Constant.DataModelAttributeDataTypeEnum.INTEGER;
+                let dataTypeInteger = dataTypeEnumInteger.value;
+                let dataValidatorInteger = dataValidatorMap[dataTypeInteger];
+                let ruleListInteger = ruleListMap[dataTypeInteger] = [];
+                if(dataValidatorInteger != null){
+                    ruleListInteger.push({ type: 'integer', message: '必须整型', trigger: 'blur' });
+                    if(dataValidatorInteger.isRequired){
+                        ruleListInteger.push({ required: true, message: '必输项', trigger: 'blur' });
                     }
-                    if(dataValidator.minValue !== null && dataValidator.minValue !== undefined){
-                        ruleList.push( { type:"number", min: dataValidator.minValue, message: '最小' + dataValidator.minValue , trigger: 'blur' });
+                    if(dataValidatorInteger.minValue !== null && dataValidatorInteger.minValue !== undefined){
+                        ruleListInteger.push( { type:"integer", min: dataValidatorInteger.minValue, message: '最小' + dataValidatorInteger.minValue , trigger: 'blur' });
                     }
-                    if(dataValidator.maxValue !== null && dataValidator.maxValue !== undefined){
-                        ruleList.push({ type:"number", max: dataValidator.maxValue, message: '最大' + dataValidator.maxValue, trigger: 'blur' });
+                    if(dataValidatorInteger.maxValue !== null && dataValidatorInteger.maxValue !== undefined){
+                        ruleListInteger.push({ type:"integer", max: dataValidatorInteger.maxValue, message: '最大' + dataValidatorInteger.maxValue, trigger: 'blur' });
                     }
-                    if(dataValidator.validateScript){
-                        dataValidator.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidator.validateScript);
-                    }
-                }
-
-                dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum.STRING;
-                dataType = dataTypeEnum.value;
-                dataValidator = dataValidatorMap[dataType];
-                ruleList = ruleListMap[dataType] = [];
-                if(dataValidator != null){
-                    if(dataValidator.isRequired){
-                        ruleList.push({ required: true, message: '必输项', trigger: 'change' });
-                    }
-                    if(dataValidator.length !== null && dataValidator.length !== undefined){
-                        ruleList.push( { type:"string", len: dataValidator.length, message: '长度' + dataValidator.length , trigger: 'blur' });
-                    }
-                    if(dataValidator.minLength !== null && dataValidator.minLength !== undefined){
-                        ruleList.push( { type:"string", min: dataValidator.minLength, message: '最短' + dataValidator.minLength , trigger: 'blur' });
-                    }
-                    if(dataValidator.maxLength !== null && dataValidator.maxLength !== undefined){
-                        ruleList.push( { type:"string", max: dataValidator.maxLength, message: '最短' + dataValidator.maxLength , trigger: 'blur' });
-                    }
-                    if( dataValidator.regex !== null && dataValidator.regex !== undefined){
-                        ruleList.push( { type:"string", pattern: dataValidator.regex, message:dataValidator.regexMessage ? dataValidator.regexMessage : "格式不匹配" + dataValidator.pattern , trigger: 'blur' });
-                    }
-                    if(dataValidator.validateScript){
-                        dataValidator.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidator.validateScript);
+                    if(dataValidatorInteger.validateScript){
+                        dataValidatorInteger.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorInteger.validateScript);
                     }
                 }
 
-                dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum.DATE;
-                dataType = dataTypeEnum.value;
-                dataValidator = dataValidatorMap[dataType];
-                ruleList = ruleListMap[dataType] = [];
-                if(dataValidator != null){
-                    if(dataValidator.isRequired){
-                        ruleList.push({ required: true, message: '必输项', trigger: 'change' });
+                let dataTypeEnumDecimal = this.Constant.DataModelAttributeDataTypeEnum.DECIMAL;
+                let dataTypeDecimal = dataTypeEnumDecimal.value;
+                let dataValidatorDecimal = dataValidatorMap[dataTypeDecimal];
+                let ruleListDecimal = ruleListMap[dataTypeDecimal] = [];
+                if(dataValidatorDecimal != null){
+                    ruleListDecimal.push({ type: 'number', message: '必须数字', trigger: 'blur' });
+                    if(dataValidatorDecimal.isRequired){
+                        ruleListDecimal.push({ required: true, message: '必输项', trigger: 'blur' });
                     }
-                    if(dataValidator.minValue !== null && dataValidator.minValue !== undefined){
-                        ruleList.push( { type:"number", min: dataValidator.minValue, message: '最小' + dataValidator.minValue , trigger: 'blur' });
+                    if(dataValidatorDecimal.minValue !== null && dataValidatorDecimal.minValue !== undefined){
+                        ruleListDecimal.push( { type:"number", min: dataValidatorDecimal.minValue, message: '最小' + dataValidatorDecimal.minValue , trigger: 'blur' });
                     }
-                    if(dataValidator.maxValue !== null && dataValidator.maxValue !== undefined){
-                        ruleList.push({ type:"number", max: dataValidator.maxValue, message: '最大' + dataValidator.maxValue, trigger: 'blur' });
+                    if(dataValidatorDecimal.maxValue !== null && dataValidatorDecimal.maxValue !== undefined){
+                        ruleListDecimal.push({ type:"number", max: dataValidatorDecimal.maxValue, message: '最大' + dataValidatorDecimal.maxValue, trigger: 'blur' });
                     }
-                    if(dataValidator.validateScript){
-                        dataValidator.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidator.validateScript);
-                    }
-                }
-
-                dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum.TIME;
-                dataType = dataTypeEnum.value;
-                dataValidator = dataValidatorMap[dataType];
-                ruleList = ruleListMap[dataType] = [];
-                if(dataValidator != null){
-                    if(dataValidator.isRequired){
-                        ruleList.push({ required: true, message: '必输项', trigger: 'change' });
-                    }
-                    if(dataValidator.minValue !== null && dataValidator.minValue !== undefined){
-                        ruleList.push( { type:"number", min: dataValidator.minValue, message: '最小' + dataValidator.minValue , trigger: 'blur' });
-                    }
-                    if(dataValidator.maxValue !== null && dataValidator.maxValue !== undefined){
-                        ruleList.push({ type:"number", max: dataValidator.maxValue, message: '最大' + dataValidator.maxValue, trigger: 'blur' });
-                    }
-                    if(dataValidator.validateScript){
-                        dataValidator.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidator.validateScript);
+                    if(dataValidatorDecimal.validateScript){
+                        dataValidatorDecimal.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorDecimal.validateScript);
                     }
                 }
 
-                dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum.DATETIME;
-                dataType = dataTypeEnum.value;
-                dataValidator = dataValidatorMap[dataType];
-                ruleList = ruleListMap[dataType] = [];
-                if(dataValidator != null){
-                    if(dataValidator.isRequired){
-                        ruleList.push({ required: true, message: '必输项', trigger: 'change' });
+                let dataTypeEnumString = this.Constant.DataModelAttributeDataTypeEnum.STRING;
+                let dataTypeString = dataTypeEnumString.value;
+                let dataValidatorString = dataValidatorMap[dataTypeString];
+                let ruleListString = ruleListMap[dataTypeString] = [];
+                if(dataValidatorString != null){
+                    if(dataValidatorString.isRequired){
+                        ruleListString.push({ required: true, message: '必输项', trigger: dataValidatorString.isEnum ? 'change' : 'blur' });
                     }
-                    if(dataValidator.minValue !== null && dataValidator.minValue !== undefined){
-                        ruleList.push( { type:"number", min: dataValidator.minValue, message: '最小' + dataValidator.minValue , trigger: 'blur' });
+                    if(dataValidatorString.length !== null && dataValidatorString.length !== undefined){
+                        ruleListString.push( { type:"string", len: dataValidatorString.length, message: '长度' + dataValidatorString.length , trigger: 'blur' });
                     }
-                    if(dataValidator.maxValue !== null && dataValidator.maxValue !== undefined){
-                        ruleList.push({ type:"number", max: dataValidator.maxValue, message: '最大' + dataValidator.maxValue, trigger: 'blur' });
+                    if(dataValidatorString.minLength !== null && dataValidatorString.minLength !== undefined){
+                        ruleListString.push( { type:"string", min: dataValidatorString.minLength, message: '最短' + dataValidatorString.minLength , trigger: 'blur' });
                     }
-                    if(dataValidator.validateScript){
-                        dataValidator.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidator.validateScript);
+                    if(dataValidatorString.maxLength !== null && dataValidatorString.maxLength !== undefined){
+                        ruleListString.push( { type:"string", max: dataValidatorString.maxLength, message: '最短' + dataValidatorString.maxLength , trigger: 'blur' });
+                    }
+                    if( dataValidatorString.regex !== null && dataValidatorString.regex !== undefined){
+                        ruleListString.push( { type:"string", pattern: dataValidatorString.regex, message:dataValidatorString.regexMessage ? dataValidatorString.regexMessage : "格式不匹配" + dataValidatorString.pattern , trigger: 'blur' });
+                    }
+                    if(dataValidatorString.validateScript){
+                        dataValidatorString.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorString.validateScript);
                     }
                 }
 
-                dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum.MODEL_REF;
-                dataType = dataTypeEnum.value;
-                dataValidator = dataValidatorMap[dataType];
-                ruleList = ruleListMap[dataType] = [];
-                if(dataValidator != null){
-                    if(dataValidator.isRequired){
-                        ruleList.push({ required: true, message: '必输项', trigger: 'change' });
+                let dataTypeEnumDate = this.Constant.DataModelAttributeDataTypeEnum.DATE;
+                let dataTypeDate = dataTypeEnumDate.value;
+                let dataValidatorDate = dataValidatorMap[dataTypeDate];
+                let ruleListDate = ruleListMap[dataTypeDate] = [];
+                if(dataValidatorDate != null){
+                    if(dataValidatorDate.isRequired){
+                        ruleListDate.push({ required: true, message: '必输项', trigger: 'change' });
                     }
-                    if(dataValidator.validateScript){
-                        dataValidator.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidator.validateScript);
+                    ruleListDate.push({
+                        validator(rule, value, callback, source, options) {
+                            let errors = [];
+                            if(dataValidatorDate.minValue !== null && dataValidatorDate.minValue !== undefined){
+                                if(value < dataValidatorDate.minValue){
+                                    errors.push( '最小' + dataValidatorDate.minValue);
+                                }
+                            }
+                            if(dataValidatorDate.maxValue !== null && dataValidatorDate.maxValue !== undefined){
+                                if(value > dataValidatorDate.maxValue){
+                                    errors.push( '最大' + dataValidatorDate.maxValue);
+                                }
+                            }
+                            callback(errors);
+                        }, trigger: 'change'
+                    });
+                    if(dataValidatorDate.validateScript){
+                        dataValidatorDate.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorDate.validateScript);
+                    }
+                }
+
+                let dataTypeEnumTime = this.Constant.DataModelAttributeDataTypeEnum.TIME;
+                let dataTypeTime = dataTypeEnumTime.value;
+                let dataValidatorTime = dataValidatorMap[dataTypeTime];
+                let ruleListTime = ruleListMap[dataTypeTime] = [];
+                if(dataValidatorTime != null){
+                    if(dataValidatorTime.isRequired){
+                        ruleListTime.push({ required: true, message: '必输项', trigger: 'change' });
+                    }
+                    ruleListTime.push({
+                        validator(rule, value, callback, source, options) {
+                            let errors = [];
+                            if(dataValidatorTime.minValue !== null && dataValidatorTime.minValue !== undefined){
+                                if(value < dataValidatorTime.minValue){
+                                    errors.push( '最小' + dataValidatorTime.minValue);
+                                }
+                            }
+                            if(dataValidatorTime.maxValue !== null && dataValidatorTime.maxValue !== undefined){
+                                if(value > dataValidatorTime.maxValue){
+                                    errors.push( '最大' + dataValidatorTime.maxValue);
+                                }
+                            }
+                            callback(errors);
+                        }, trigger: 'change'
+                    });
+                    if(dataValidatorTime.validateScript){
+                        dataValidatorTime.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorTime.validateScript);
+                    }
+                }
+
+                let dataTypeEnumDateTime = this.Constant.DataModelAttributeDataTypeEnum.DATETIME;
+                let dataTypeDateTime = dataTypeEnumDateTime.value;
+                let dataValidatorDateTime = dataValidatorMap[dataTypeDateTime];
+                let ruleListDateTime = ruleListMap[dataTypeDateTime] = [];
+                if(dataValidatorDateTime != null){
+                    if(dataValidatorDateTime.isRequired){
+                        ruleListDateTime.push({ required: true, message: '必输项', trigger: 'change' });
+                    }
+                    ruleListDateTime.push({
+                        validator(rule, value, callback, source, options) {
+                            let errors = [];
+                            if(dataValidatorDateTime.minValue !== null && dataValidatorDateTime.minValue !== undefined){
+                                if(value < dataValidatorDateTime.minValue){
+                                    errors.push( '最小' + dataValidatorDateTime.minValue);
+                                }
+                            }
+                            if(dataValidatorDateTime.maxValue !== null && dataValidatorDateTime.maxValue !== undefined){
+                                if(value > dataValidatorDateTime.maxValue){
+                                    errors.push( '最大' + dataValidatorDateTime.maxValue);
+                                }
+                            }
+                            callback(errors);
+                        }, trigger: 'change'
+                    });
+                    if(dataValidatorDateTime.validateScript){
+                        dataValidatorDateTime.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorDateTime.validateScript);
+                    }
+                }
+
+                let dataTypeEnumModel = this.Constant.DataModelAttributeDataTypeEnum.MODEL_REF;
+                let dataTypeModel = dataTypeEnumModel.value;
+                let dataValidatorModel = dataValidatorMap[dataTypeModel];
+                let ruleListModel = ruleListMap[dataTypeModel] = [];
+                if(dataValidatorModel != null){
+                    if(dataValidatorModel.isRequired){
+                        ruleListModel.push({ required: true, message: '必输项', trigger: 'change' });
+                    }
+                    if(dataValidatorModel.validateScript){
+                        dataValidatorModel.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorModel.validateScript);
                     }
                 }
             }

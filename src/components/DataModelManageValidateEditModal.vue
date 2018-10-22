@@ -101,36 +101,36 @@
                     </el-row>
                     <el-row v-if="dataTypeEnum.value === Constant.DataModelAttributeDataTypeEnum.DATE.value">
                         <el-col :span="12">
-                            <el-form-item label="最小值" :prop="dataTypeEnum.value + '.minValue'" :rules="validRule.minValue">
+                            <el-form-item label="最小值" :prop="dataTypeEnum.value + '.minValue'">
                                 <el-date-picker v-model="request[dataTypeEnum.value].minValue" type="date" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="最大值" :prop="dataTypeEnum.value + '.maxValue'" :rules="validRule.maxValue">
+                            <el-form-item label="最大值" :prop="dataTypeEnum.value + '.maxValue'">
                                 <el-date-picker v-model="request[dataTypeEnum.value].maxValue" type="date" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row v-if="dataTypeEnum.value === Constant.DataModelAttributeDataTypeEnum.TIME.value">
                         <el-col :span="12">
-                            <el-form-item label="最小值" :prop="dataTypeEnum.value + '.minValue'" :rules="validRule.minValue">
+                            <el-form-item label="最小值" :prop="dataTypeEnum.value + '.minValue'">
                                 <el-time-picker v-model="request[dataTypeEnum.value].minValue" value-format="yyyy-MM-dd HH:mm:ss"></el-time-picker>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="最大值" :prop="dataTypeEnum.value + '.maxValue'" :rules="validRule.maxValue">
+                            <el-form-item label="最大值" :prop="dataTypeEnum.value + '.maxValue'">
                                 <el-time-picker v-model="request[dataTypeEnum.value].maxValue" value-format="yyyy-MM-dd HH:mm:ss"></el-time-picker>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row v-if="dataTypeEnum.value === Constant.DataModelAttributeDataTypeEnum.DATETIME.value">
                         <el-col :span="12">
-                            <el-form-item label="最小值" :prop="dataTypeEnum.value + '.minValue'" :rules="validRule.minValue">
+                            <el-form-item label="最小值" :prop="dataTypeEnum.value + '.minValue'">
                                 <el-date-picker v-model="request[dataTypeEnum.value].minValue" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="最大值" :prop="dataTypeEnum.value + '.maxValue'" :rules="validRule.maxValue">
+                            <el-form-item label="最大值" :prop="dataTypeEnum.value + '.maxValue'">
                                 <el-date-picker v-model="request[dataTypeEnum.value].maxValue" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
                             </el-form-item>
                         </el-col>
