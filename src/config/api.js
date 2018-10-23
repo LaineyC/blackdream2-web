@@ -91,6 +91,8 @@ export default Vue.prototype.Api = {
         signUpEmailValidCodeSend: doPost('/user/signUpEmailValidCodeSend'),
         infoGet: doPost('/user/infoGet'),
         get: doPost('/user/get'),
+        passwordChange: doPost('/user/passwordChange'),
+        profileChange: doPost('/user/profileChange'),
     },
     Generator: {
         create: doPost('/generator/create'),

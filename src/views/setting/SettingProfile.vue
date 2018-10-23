@@ -7,6 +7,7 @@
                         <strong>公众形象</strong>
                     </div>
                     <el-form ref="form" :model="request" :rules="validRule" size="small" label-width="120px">
+                        <!--
                         <el-form-item label="头像" prop="password">
                             <el-upload
                                 drag
@@ -22,8 +23,9 @@
                                 <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
                             </el-upload>
                         </el-form-item>
-                        <el-form-item label="昵称" prop="username" style="width: 300px;">
-                            <el-input v-model="request.username" type="text"></el-input>
+                        -->
+                        <el-form-item label="昵称" prop="nickname" style="width: 300px;">
+                            <el-input v-model="request.nickname" type="text"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="handleSignIn()">保存</el-button>
@@ -42,18 +44,13 @@
             return {
                 imageUrl: '',
                 request: {
-                    username: null,
-                    password: null
+                    nickname: this.Auth.body.nickname,
                 },
                 validRule: {
                     username: [
-                        { type: 'string', required: true, message: '请输入用户名或邮箱', trigger: 'blur'},
-                        { type: 'string', pattern: /^[0-9A-Za-z]{4,100}$/, message: '用户名或邮箱（4到100位字母、数字）', trigger: 'blur'}
+                        { required: true, message: '请输入昵称', trigger: 'blur'},
+                        { type: 'string', pattern: /^[0-9A-Za-z]{4,100}$/, message: '4到100位字母、数字', trigger: 'blur'}
                     ],
-                    password: [
-                        { required: true, message: '请输入密码', trigger: 'blur'},
-                        { type: 'string', pattern: /^[0-9A-Za-z]{6,24}$/, message: '密码格式不正确（6到24位字母、数字）', trigger: 'blur'}
-                    ]
                 }
             }
         },
@@ -61,14 +58,12 @@
             handleSignIn () {
                 this.$refs.form.validate((valid) => {
                     if (valid) {
-                        this.Api.User.signIn(this.request).then((data) => {
-                            this.linkToGeneratorInstanceManage();
+                        this.Api.User.profileChange(this.request).then((data) => {
+                            this.Auth.body.nickname = this.request.nickname;
+                            this.$message({type: 'success', message: '修改成功！'});
                         });
                     }
                 })
-            },
-            linkToGeneratorInstanceManage(){
-                this.$router.push({ name: 'generatorInstanceManage'});
             },
             handleAvatarSuccess(res, file) {
                 this.imageUrl = URL.createObjectURL(file.raw);

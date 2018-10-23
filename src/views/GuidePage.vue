@@ -2,27 +2,13 @@
     <div id="guide" class="container">
         <el-row>
             <el-col :span="4" style="position: fixed; top:65px;width: 200px">
-                <el-menu default-active="1-1" :default-openeds="['1','2']">
-                    <el-submenu index="1">
+                <el-menu default-active="activeNav" :default-openeds="[navs[0].linkName, navs[1].linkName]">
+                    <el-submenu :index="nav.linkName" v-for="nav in navs" :key="nav.linkName">
                         <template slot="title">
                             <i class="el-icon-location"></i>
-                            <strong>开发手册</strong>
+                            <strong>{{nav.title}}</strong>
                         </template>
-                        <el-menu-item index="1-1" @click="goAnchor('#a1')">我的生成器</el-menu-item>
-                        <el-menu-item index="1-2">数据模型</el-menu-item>
-                        <el-menu-item index="1-3">模板文件</el-menu-item>
-                        <el-menu-item index="1-4">生成策略</el-menu-item>
-                        <el-menu-item index="1-5">数据结构</el-menu-item>
-                        <el-menu-item index="1-6">注意事项</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="2">
-                        <template slot="title">
-                            <i class="el-icon-location"></i>
-                            <strong>用户手册</strong>
-                        </template>
-                        <el-menu-item index="2-1">他们的生成器</el-menu-item>
-                        <el-menu-item index="2-2">我的实例</el-menu-item>
-                        <el-menu-item index="2-3">注意事项</el-menu-item>
+                        <el-menu-item :index="subnav.linkName" v-for="subnav in nav.children" @click="linkTo(nav)">{{subnav.title}}</el-menu-item>
                     </el-submenu>
                 </el-menu>
             </el-col>
@@ -40,14 +26,32 @@
         name: "GuidePage",
         data() {
             return {
-
+                activeNav:this.$route.name,
+                navs:[
+                    {title:"开发手册", linkName:"settingProfilea",
+                        children:[
+                            {title:"我的生成器", linkName:"settingProfile"},
+                            {title:"数据模型", linkName:"settingProfile1"},
+                            {title:"模板文件", linkName:"settingProfile2"},
+                            {title:"生成策略", linkName:"settingProfile3"},
+                            {title:"数据结构", linkName:"settingProfile4"},
+                            {title:"注意事项", linkName:"settingProfile5"},
+                        ]
+                    },
+                    {title:"用户手册", linkName:"settingProfileb",
+                        children:[
+                            {title:"他们的生成器", linkName:"settingProfile6"},
+                            {title:"我的实例", linkName:"settingProfil7e"},
+                            {title:"注意事项", linkName:"settingProfil77e"},
+                        ]
+                    },
+                    //{title:"Key", linkName:"settingKey"},
+                ]
             }
         },
         methods: {
-            goAnchor(selector) {
-                let anchor = this.$el.querySelector(selector);
-                console.info(anchor.width);
-                document.body.scrollTop = anchor.offsetTop
+            linkTo(nav){
+                this.$router.push({ name: nav.linkName,});
             }
         }
     }

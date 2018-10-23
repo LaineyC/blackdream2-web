@@ -2,9 +2,9 @@
     <div id="setting" class="container">
         <el-row>
             <el-col :span="4" style="position: fixed; top:65px;width: 200px">
-                <el-menu :default-active="activeLink">
-                    <el-menu-item :index="tab.linkName" v-for="tab in tabs" :key="tab.linkName" @click="linkTo(tab)">
-                        <strong slot="title">{{tab.title}}</strong>
+                <el-menu :default-active="activeNav">
+                    <el-menu-item :index="nav.linkName" v-for="nav in navs" :key="nav.linkName" @click="linkTo(nav)">
+                        <strong slot="title">{{nav.title}}</strong>
                     </el-menu-item>
                 </el-menu>
             </el-col>
@@ -20,17 +20,17 @@
         name: "SettingPage",
         data(){
             return {
-                activeLink:this.$route.name,
-                tabs:[
+                activeNav:this.$route.name,
+                navs:[
                     {title:"形象", linkName:"settingProfile"},
                     {title:"账号", linkName:"settingAccount"},
-                    {title:"Key", linkName:"settingKey"},
+                    //{title:"Key", linkName:"settingKey"},
                 ]
             }
         },
         methods:{
-            linkTo(tab){
-                this.$router.push({ name: tab.linkName,});
+            linkTo(nav){
+                this.$router.push({ name: nav.linkName,});
             }
         },
         mounted(){

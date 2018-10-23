@@ -27,7 +27,7 @@
                     <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
                         <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">
                             <span><i :class="data.model.dataModel.iconStyle"></i> {{ node.label }}</span>
-                            <el-dropdown trigger="click">
+                            <el-dropdown trigger="click" v-if="schemeRuleMap[data.model.dataModel.id].length">
                                 <span class="el-dropdown-link"><i class="el-icon-circle-plus"></i></span>
                                 <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item v-for="dataModel in schemeRuleMap[data.model.dataModel.id]" :key="dataModel.id"><div @click="create(data, dataModel)"><i :class="dataModel.iconStyle"></i> {{dataModel.name}}</div></el-dropdown-item>
@@ -433,7 +433,7 @@
                 }
                 this.$set(this.currentChange.control, "value", item.id);
                 this.currentChange.fn && this.currentChange.fn(this.currentChange.control, this.currentChange.attribute, this.currentChange.model, this.global);
-                this.$refs['form' + this.currentChange.model.id][0].validate(this.currentChange.name)
+                this.$refs['form' + this.currentChange.model.id][0].validateField(this.currentChange.name)
             },
             showDataModelChooseModal(fn, name, control, attribute, model){
                 this.currentChange = {fn, name, attribute, model, control};
@@ -445,7 +445,7 @@
             clearDataModelChoose(fn, name, control, attribute, model){
                 this.$set(control, "value", null);
                 fn && fn(control, attribute, model, this.global);
-                this.$refs['form' + model.id][0].validate(name)
+                this.$refs['form' + model.id][0].validateField(name)
             },
             create(parent, dataModel){
                 let id = this.incrementer.next();
