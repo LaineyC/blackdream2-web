@@ -88,7 +88,7 @@
                                                         </template>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="item.model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.DATE.value" :prop="'properties.' + property.name + '.value'" :rules="buildAttributeValidator(property, item.model.properties[property.name], item.model.properties, item.model)">
-                                                        <el-date-picker v-model="item.model.properties[property.name].value" :style="{ width: property.displayWidth ? property.displayWidth + 'px' : '' }" type="date" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)"></el-date-picker>
+                                                        <el-date-picker v-model="item.model.properties[property.name].value" :style="{ width: property.displayWidth ? property.displayWidth + 'px' : '' }" type="date" value-format="yyyy-MM-dd" @change="cascadeFunction(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)"></el-date-picker>
                                                         <template slot="error" slot-scope="{ error }">
                                                             <el-popover placement="bottom" trigger="manual" :value="true">
                                                                 <el-alert :title="error" type="error" :closable="false"></el-alert>
@@ -96,7 +96,7 @@
                                                         </template>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="item.model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.TIME.value" :prop="'properties.' + property.name + '.value'" :rules="buildAttributeValidator(property, item.model.properties[property.name], item.model.properties, item.model)">
-                                                        <el-time-picker v-model="item.model.properties[property.name].value" :style="{ width: property.displayWidth ? property.displayWidth + 'px' : '' }" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)"></el-time-picker>
+                                                        <el-time-picker v-model="item.model.properties[property.name].value" :style="{ width: property.displayWidth ? property.displayWidth + 'px' : '' }" value-format="HH:mm:ss" @change="cascadeFunction(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)"></el-time-picker>
                                                         <template slot="error" slot-scope="{ error }">
                                                             <el-popover placement="bottom" trigger="manual" :value="true">
                                                                 <el-alert :title="error" type="error" :closable="false"></el-alert>
@@ -167,7 +167,7 @@
                                                     </template>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.DATE.value" :prop="'properties.' + group.model.name + '.value'" :rules="buildAttributeValidator(group.model, item.model.properties[group.model.name], item.model.properties, item.model)">
-                                                    <el-date-picker v-model="item.model.properties[group.model.name].value" :style="{ width: group.model.displayWidth ? group.model.displayWidth + 'px' : '' }" type="date" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)"></el-date-picker>
+                                                    <el-date-picker v-model="item.model.properties[group.model.name].value" :style="{ width: group.model.displayWidth ? group.model.displayWidth + 'px' : '' }" type="date" value-format="yyyy-MM-dd" @change="cascadeFunction(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)"></el-date-picker>
                                                     <template slot="error" slot-scope="{ error }">
                                                         <el-popover placement="bottom" trigger="manual" :value="true">
                                                             <el-alert :title="error" type="error" :closable="false"></el-alert>
@@ -175,7 +175,7 @@
                                                     </template>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.TIME.value" :prop="'properties.' + group.model.name + '.value'" :rules="buildAttributeValidator(group.model, item.model.properties[group.model.name], item.model.properties, item.model)">
-                                                    <el-time-picker v-model="item.model.properties[group.model.name].value" :style="{ width: group.model.displayWidth ? group.model.displayWidth + 'px' : '' }" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)"></el-time-picker>
+                                                    <el-time-picker v-model="item.model.properties[group.model.name].value" :style="{ width: group.model.displayWidth ? group.model.displayWidth + 'px' : '' }" value-format="HH:mm:ss" @change="cascadeFunction(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)"></el-time-picker>
                                                     <template slot="error" slot-scope="{ error }">
                                                         <el-popover placement="bottom" trigger="manual" :value="true">
                                                             <el-alert :title="error" type="error" :closable="false"></el-alert>
@@ -207,12 +207,30 @@
                                     </template>
                                 </div>
                                 <el-card shadow="hover">
-                                    <el-button-group slot="header">
-                                        <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
-                                        <el-button type="success" size="mini" @click="addTuple(item)">添加记录</el-button>
-                                    </el-button-group>
+                                    <div slot="header">
+                                        <el-button-group>
+                                            <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
+                                            <el-button type="success" size="mini" @click="addTuple(item)">添加</el-button>
+                                        </el-button-group>
+<!--
+                                        <el-dropdown trigger="click" split-button type="success" @click="addTuple(item)" size="mini" style="margin-left: 5px;vertical-align: middle;">
+                                            从设置添加
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item>加入设置</el-dropdown-item>
+                                                <el-dropdown-item>打开设置</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+-->
+                                        <el-dropdown trigger="click" split-button type="success" @click="addTupleFromClipboard(item)" size="mini" style="margin-left: 5px;vertical-align: middle;">
+                                            从粘贴板添加
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item><div @click="copyTupleInClipboard(item)">加入粘贴板</div></el-dropdown-item>
+                                                <el-dropdown-item><div @click="showClipboardModel(item)">打开粘贴板</div></el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </div>
                                     <div class="tupleList" style="width: 100%">
-                                    <el-table class="field-table" row-key="__id__.value" :data="item.model.tupleList" style="width: 100%">
+                                    <el-table :ref="'table' + item.id" class="field-table" row-key="__id__.value" :data="item.model.tupleList" style="width: 100%">
                                         <el-table-column type="index" width="28" class-name="sort-handle"></el-table-column>
                                         <el-table-column type="selection" width="25"></el-table-column>
                                         <el-table-column :width="group.isGroup ? '' : group.model.displayWidth" :label="group.name" v-for="group in dataModelCache[item.model.dataModel.id].fieldGroup" :key="group.id" :align="group.isGroup?'center':'left'">
@@ -254,7 +272,7 @@
                                                         </template>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="row[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.DATE.value" :prop="'tupleList.' + $index + '.' + field.name + '.value'" :rules="buildAttributeValidator(field, row[field.name], row, item.model)">
-                                                        <el-date-picker v-model="row[field.name].value" :style="{ width: field.displayWidth ? (field.displayWidth - 10) + 'px' : '' }" type="date" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(field.cascadeFunction, row[field.name], row, item.model)"></el-date-picker>
+                                                        <el-date-picker v-model="row[field.name].value" :style="{ width: field.displayWidth ? (field.displayWidth - 10) + 'px' : '' }" type="date" value-format="yyyy-MM-dd" @change="cascadeFunction(field.cascadeFunction, row[field.name], row, item.model)"></el-date-picker>
                                                         <template slot="error" slot-scope="{ error }">
                                                             <el-popover placement="bottom" trigger="manual" :value="true">
                                                                 <el-alert :title="error" type="error" :closable="false"></el-alert>
@@ -262,7 +280,7 @@
                                                         </template>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="row[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.TIME.value" :prop="'tupleList.' + $index + '.' + field.name + '.value'" :rules="buildAttributeValidator(field, row[field.name], row, item.model)">
-                                                        <el-time-picker v-model="row[field.name].value" :style="{ width: field.displayWidth ? (field.displayWidth - 10) + 'px' : '' }" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(field.cascadeFunction, row[field.name], row, item.model)"></el-time-picker>
+                                                        <el-time-picker v-model="row[field.name].value" :style="{ width: field.displayWidth ? (field.displayWidth - 10) + 'px' : '' }" value-format="HH:mm:ss" @change="cascadeFunction(field.cascadeFunction, row[field.name], row, item.model)"></el-time-picker>
                                                         <template slot="error" slot-scope="{ error }">
                                                             <el-popover placement="bottom" trigger="manual" :value="true">
                                                                 <el-alert :title="error" type="error" :closable="false"></el-alert>
@@ -328,7 +346,7 @@
                                                     </template>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.DATE.value" :prop="'tupleList.' + $index + '.' + group.model.name + '.value'" :rules="buildAttributeValidator(group.model, row[group.model.name], row, item.model)">
-                                                    <el-date-picker v-model="row[group.model.name].value" :style="{ width: group.model.displayWidth ? (group.model.displayWidth - 10) + 'px' : '' }" type="date" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(group.model.cascadeFunction, row[group.model.name], row, item.model)"></el-date-picker>
+                                                    <el-date-picker v-model="row[group.model.name].value" :style="{ width: group.model.displayWidth ? (group.model.displayWidth - 10) + 'px' : '' }" type="date" value-format="yyyy-MM-dd" @change="cascadeFunction(group.model.cascadeFunction, row[group.model.name], row, item.model)"></el-date-picker>
                                                     <template slot="error" slot-scope="{ error }">
                                                         <el-popover placement="bottom" trigger="manual" :value="true">
                                                             <el-alert :title="error" type="error" :closable="false"></el-alert>
@@ -336,7 +354,7 @@
                                                     </template>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.TIME.value" :prop="'tupleList.' + $index + '.' + group.model.name + '.value'" :rules="buildAttributeValidator(group.model, row[group.model.name], row, item.model)">
-                                                    <el-time-picker v-model="row[group.model.name].value" :style="{ width: group.model.displayWidth ? (group.model.displayWidth - 10) + 'px' : '' }" value-format="yyyy-MM-dd HH:mm:ss" @change="cascadeFunction(group.model.cascadeFunction, row[group.model.name], row, item.model)"></el-time-picker>
+                                                    <el-time-picker v-model="row[group.model.name].value" :style="{ width: group.model.displayWidth ? (group.model.displayWidth - 10) + 'px' : '' }" value-format="HH:mm:ss" @change="cascadeFunction(group.model.cascadeFunction, row[group.model.name], row, item.model)"></el-time-picker>
                                                     <template slot="error" slot-scope="{ error }">
                                                         <el-popover placement="bottom" trigger="manual" :value="true">
                                                             <el-alert :title="error" type="error" :closable="false"></el-alert>
@@ -382,6 +400,7 @@
         </div>
         <DataModelChooseModal ref="dataModelChooseModal" @on-success="handleDataModelChooseSuccess"/>
         <GeneratorInstanceMakeModal ref="generatorInstanceMakeModal"/>
+        <TupleClipboardModal ref="tupleClipboardModal"/>
     </div>
 </template>
 
@@ -391,6 +410,7 @@
     export default {
         name: "GeneratorDataManage",
         components:{
+            TupleClipboardModal:() => import('@/components/TupleClipboardModal.vue'),
             DataModelChooseModal:() => import('@/components/DataModelChooseModal.vue'),
             GeneratorInstanceMakeModal:() => import('@/components/GeneratorInstanceMakeModal.vue'),
         },
@@ -414,6 +434,75 @@
             }
         },
         methods:{
+            copyTupleInClipboard(item){
+                let model = item.model;
+                let tupleClipboard = this.Storage.getTupleClipboard(model.dataModel.id);
+                let table = this.$refs['table' + model.id][0];
+                let selection = table.selection;
+                let dataModel = this.dataModelCache[model.dataModel.id];
+                let fieldList = dataModel.fieldList;
+                selection.forEach(value => {
+                    let tuple = {};
+                    fieldList.forEach(field => {
+                        let control = value[field.name];
+                        if(control.dataType === this.Constant.DataModelAttributeDataTypeEnum.MODEL_REF.value){
+                            let generatorData = this.generatorDataCache[control.value];
+                            tuple[field.name] = {
+                                dataType:control.dataType,
+                                value: control.value,
+                                label:generatorData ? generatorData.name : null
+                            }
+                        }
+                        else{
+                            tuple[field.name] = {
+                                dataType:control.dataType,
+                                value: control.value,
+                            }
+                        }
+                    });
+                    tuple.__id__ = {
+                        dataType:this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
+                        value:this.Method.generateId() + ""
+                    };
+                    tupleClipboard.push(tuple);
+                });
+                table.clearSelection();
+            },
+            addTupleFromClipboard(item){
+                let model = item.model;
+                let tupleClipboard = this.Storage.getTupleClipboard(model.dataModel.id);
+                let dataModel = this.dataModelCache[model.dataModel.id];
+                let fieldList = dataModel.fieldList;
+                tupleClipboard.forEach(value => {
+                    let tuple = {};
+                    fieldList.forEach(field => {
+                        let control = value[field.name];
+                        if(control.dataType === this.Constant.DataModelAttributeDataTypeEnum.MODEL_REF.value){
+                            let generatorData = this.generatorDataCache[control.value];
+                            tuple[field.name] = {
+                                dataType:control.dataType,
+                                value: generatorData ? control.value : null,
+                            }
+                        }
+                        else{
+                            tuple[field.name] = {
+                                dataType:control.dataType,
+                                value: control.value,
+                            }
+                        }
+                    });
+                    tuple.__id__ = {
+                        dataType:this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
+                        value:this.Method.generateId() + ""
+                    };
+                    model.tupleList.push(tuple);
+                });
+            },
+            showClipboardModel(item){
+                this.$refs.tupleClipboardModal.open({
+                    dataModel:item.model.dataModel,
+                });
+            },
             cascadeFunction(fn, control, row, model){
                 //("$control","$properties", "$data", "$global",
                 fn && fn(control, row, model, this.global);

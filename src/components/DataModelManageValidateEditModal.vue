@@ -102,12 +102,12 @@
                     <el-row v-if="dataTypeEnum.value === Constant.DataModelAttributeDataTypeEnum.DATE.value">
                         <el-col :span="12">
                             <el-form-item label="最小值" :prop="dataTypeEnum.value + '.minValue'">
-                                <el-date-picker v-model="request[dataTypeEnum.value].minValue" type="date" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                                <el-date-picker v-model="request[dataTypeEnum.value].minValue" type="date" value-format="yyyy-MM-dd"></el-date-picker>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="最大值" :prop="dataTypeEnum.value + '.maxValue'">
-                                <el-date-picker v-model="request[dataTypeEnum.value].maxValue" type="date" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                                <el-date-picker v-model="request[dataTypeEnum.value].maxValue" type="date" value-format="HH:mm:ss"></el-date-picker>
                             </el-form-item>
                         </el-col>
                     </el-row>

@@ -279,10 +279,10 @@
                                                     </el-select>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.DATE.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
-                                                    <el-date-picker v-model="row.defaultValue" type="date" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                                                    <el-date-picker v-model="row.defaultValue" type="date" value-format="yyyy-MM-dd"></el-date-picker>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.TIME.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
-                                                    <el-time-picker v-model="row.defaultValue" value-format="yyyy-MM-dd HH:mm:ss"></el-time-picker>
+                                                    <el-time-picker v-model="row.defaultValue" value-format="HH:mm:ss"></el-time-picker>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.DATETIME.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
                                                     <el-date-picker v-model="row.defaultValue" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
