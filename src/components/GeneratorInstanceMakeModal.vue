@@ -199,15 +199,16 @@
                         this.checkAll(true);
                         this.isInit = true;
                     });
+                    this.Api.CreationStrategy.query({generatorId: config.generatorInstance.generator.id}).then((creationStrategyList) => {
+                        this.creationStrategyList = [];
+                        creationStrategyList.forEach(value => {
+                            this.creationStrategyList.push(value);
+                        });
+                    });
                 }
                 this.generatorInstance = config.generatorInstance;
                 this.isShow = true;
-                this.Api.CreationStrategy.query({generatorId: this.generatorInstance.generator.id}).then((creationStrategyList) => {
-                    this.creationStrategyList = [];
-                    creationStrategyList.forEach(value => {
-                        this.creationStrategyList.push(value);
-                    });
-                });
+
             },
             close(){
                 this.isShow = false;

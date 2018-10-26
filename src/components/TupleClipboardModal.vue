@@ -79,7 +79,7 @@
             </el-card>
         </el-form>
         <div slot="footer">
-            <el-button @click="submit" type="primary">确定</el-button>
+            <el-button @click="submit" type="primary">关闭</el-button>
         </div>
     </el-dialog>
 </template>

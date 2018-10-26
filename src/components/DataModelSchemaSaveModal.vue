@@ -7,13 +7,13 @@
         :close-on-press-escape="false"
         :visible.sync="isShow">
         <el-form ref="form" :model="request" :rules="validRule" label-width="125px" size="small">
-            <el-form-item label="ROOT">
-                <el-checkbox-group v-model="request.ruleMap['']">
+            <el-form-item label="ROOT" v-if="request.ruleItemMap['']">
+                <el-checkbox-group v-model="request.ruleItemMap[''].children">
                     <el-checkbox v-for="dm in dataModelList" :label="dm.id" :key="dm.id" name="type" border>{{dm.name}}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
             <el-form-item :label="dataModel.name" v-for="dataModel in dataModelList" :key="dataModel.id">
-                <el-checkbox-group v-model="request.ruleMap[dataModel.id]">
+                <el-checkbox-group v-model="request.ruleItemMap[dataModel.id].children">
                     <el-checkbox v-for="dm in dataModelList" :label="dm.id" :key="dm.id" name="type" border>{{dm.name}}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
@@ -34,9 +34,12 @@
                 dataModelList:[],
                 request: {
                     generatorId: null,
-                    ruleMap:{}
+                    ruleItemMap:{
+
+                    }
                 },
                 validRule: {
+
                 }
             }
         },
@@ -61,31 +64,31 @@
                     let dataModelList = data[1];
                     let dataModelCache = {};
                     dataModelList.forEach(item => {
-                        dataModelCache[item.id] = [];
-                        this.$set(this.request.ruleMap, item.id, []);
+                        dataModelCache[item.id] = item;
+                        this.$set(this.request.ruleItemMap, item.id, {children:[]});
                     });
                     if(schema){
-                        let ruleMap = {};
-                        for(let k in schema.ruleMap){
+                        let ruleItemMap = {};
+                        for(let k in schema.ruleItemMap){
                             if(dataModelCache[k] || k === ""){
-                                let ruleArray = ruleMap[k] = [];
-                                schema.ruleMap[k].forEach(rule => {
+                                let ruleItem = ruleItemMap[k] = {children:[]};
+                                schema.ruleItemMap[k].children.forEach(rule => {
                                     if(dataModelCache[rule]){
-                                        ruleArray.push(rule);
+                                        ruleItem.children.push(rule);
                                     }
                                 });
                             }
                         }
                         Object.assign(this.request, schema);
-                        this.$set(this.request, "ruleMap", ruleMap);
+                        this.$set(this.request, "ruleItemMap", ruleItemMap);
                     }
                     dataModelList.forEach(item => {
-                        if(!this.request.ruleMap[item.id]){
-                            this.$set(this.request.ruleMap, item.id, []);
+                        if(!this.request.ruleItemMap[item.id]){
+                            this.$set(this.request.ruleItemMap, item.id, {children:[]});
                         }
                     });
-                    if(!this.request.ruleMap['']){
-                        this.$set(this.request.ruleMap, '', []);
+                    if(!this.request.ruleItemMap['']){
+                        this.$set(this.request.ruleItemMap, '', {children:[]});
                     }
                     this.dataModelList = dataModelList.sort((a, b) => {
                         if(a.name > b.name){

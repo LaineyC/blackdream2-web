@@ -9,7 +9,7 @@
                     <el-dropdown trigger="click">
                         <el-button size="small" type="success">新建</el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item v-for="dataModel in schemeRuleMap['']" :key="dataModel.id"><div @click="create(null, dataModel)"><i :class="dataModel.iconStyle"></i> {{dataModel.name}}</div></el-dropdown-item>
+                            <el-dropdown-item v-for="dataModel in schemeRuleItemMap[''].children" :key="dataModel.id"><div @click="create(null, dataModel)"><i :class="dataModel.iconStyle"></i> {{dataModel.name}}</div></el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </el-menu-item>
@@ -27,10 +27,10 @@
                     <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
                         <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">
                             <span><i :class="data.model.dataModel.iconStyle"></i> {{ node.label }}</span>
-                            <el-dropdown trigger="click" v-if="schemeRuleMap[data.model.dataModel.id].length">
+                            <el-dropdown trigger="click" v-if="schemeRuleItemMap[data.model.dataModel.id].children.length">
                                 <span class="el-dropdown-link"><i class="el-icon-circle-plus"></i></span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item v-for="dataModel in schemeRuleMap[data.model.dataModel.id]" :key="dataModel.id"><div @click="create(data, dataModel)"><i :class="dataModel.iconStyle"></i> {{dataModel.name}}</div></el-dropdown-item>
+                                    <el-dropdown-item v-for="dataModel in schemeRuleItemMap[data.model.dataModel.id].children" :key="dataModel.id"><div @click="create(data, dataModel)"><i :class="dataModel.iconStyle"></i> {{dataModel.name}}</div></el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -416,7 +416,7 @@
         },
         data () {
             return {
-                schemeRuleMap:{"":[]},
+                schemeRuleItemMap:{"":{children:[]}},
                 incrementer: this.Method.newIncrementer(),
                 split: 0.15,
                 generatorInstanceId:this.$route.params.generatorInstanceId,
@@ -1089,19 +1089,24 @@
                             this.buildValidRuleList(field, false);
                         });
                     });
-                    this.schemeRuleMap = {};
-                    let schemeRuleMap = scheme.ruleMap || {};
-                    for(let k in schemeRuleMap){
-                        let ruleArray = [];
-                        if(k in this.dataModelCache || k === ""){
-                            schemeRuleMap[k].forEach(value => {
+
+                    this.schemeRuleItemMap = {};
+                    let schemeRuleItemMap = scheme ? scheme.ruleItemMap : {};
+                    let keys = [""];
+                    for(let k in this.dataModelCache){
+                        keys.push(k);
+                    }
+                    keys.forEach(k => {
+                        let children = [];
+                        if(schemeRuleItemMap[k]){
+                            schemeRuleItemMap[k].children.forEach(value => {
                                 if(value in this.dataModelCache){
-                                    ruleArray.push(this.dataModelCache[value]);
+                                    children.push(this.dataModelCache[value]);
                                 }
                             });
-                            this.schemeRuleMap[k] = ruleArray;
                         }
-                    }
+                        this.schemeRuleItemMap[k] = {children};
+                    });
 
                     let that = this;
                     this.generatorDataCache = {};
@@ -1115,6 +1120,7 @@
                         });
                     };
                     init(generatorDataTree);
+
                     this.global = {
                         dataCache:this.generatorDataCache
                     };
