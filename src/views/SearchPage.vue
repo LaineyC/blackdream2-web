@@ -80,7 +80,7 @@
                     page: 1,
                     pageSize: 10,
                     name: null,
-                    status: this.GeneratorStatusEnum.RELEASE.value,
+                    status: this.Constant.GeneratorStatusEnum.RELEASE.value,
                     engineType: null
                 },
                 searchResult:{
@@ -110,13 +110,19 @@
                 this.$router.push({ name: 'generatorDetail', params: { generatorId: item.id }});
             },
         },
+        watch: {
+            '$route.params.searchText' (to, from) {
+                this.searchRequest.name = this.$route.params.searchText;
+                this.search();
+            }
+        },
         mounted(){
             this.searchRequest.name = this.$route.params.searchText;
+            this.search();
 
             this.Api.Generator.query({}).then((data) => {
                 this.generatorList = data;
             });
-            this.search();
         }
     }
 </script>

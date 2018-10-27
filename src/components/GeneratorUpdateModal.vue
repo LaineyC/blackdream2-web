@@ -58,6 +58,7 @@
                         this.Api.Generator.update(this.request).then(() => {
                             this.$emit('on-success');
                             this.close();
+                            this.$message({type: 'success', message: '保存成功！'});
                         });
                     }
                 });

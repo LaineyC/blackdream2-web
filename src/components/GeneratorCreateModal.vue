@@ -58,6 +58,7 @@
                         this.Api.Generator.create(this.request).then((data) => {
                             this.$emit('on-success');
                             this.close();
+                            this.$message({type: 'success', message: '创建成功！'});
                         });
                     }
                 });

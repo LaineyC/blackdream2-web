@@ -130,7 +130,7 @@
             },
             release(item){
                 this.Api.Generator.release({id:item.id}).then((data) => {
-
+                    this.$message({type: 'success', message: '发布成功！'});
                 });
             },
             search(){

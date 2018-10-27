@@ -576,7 +576,12 @@
             },
             removeFromTab(item){
                 let index = -1;
-                index = this.tabs.indexOf(item);
+                if(typeof item === "string"){
+                    index = this.tabs.findIndex(tab => tab.id === item);
+                }
+                else{
+                    index = this.tabs.indexOf(item);
+                }
                 if (index > -1) {
                     this.tabs.splice(index, 1);
                 }
