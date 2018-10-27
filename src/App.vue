@@ -65,7 +65,7 @@
                 this.$router.push({ name: 'signUp'});
             },
             linkToGuide(){
-                this.$router.push({ name: 'guide'});
+                this.$router.push({ name: 'guideUserGenerator'});
             },
             linkToSetting(){
                 this.$router.push({ name: 'settingProfile'});

@@ -65,7 +65,19 @@ let router = new Router({
         {
             path: '/guide',
             name: 'guide',
-            component: () => import('../views/GuidePage.vue')
+            component: () => import('../views/GuidePage.vue'),
+            children: [
+                {path: '', redirect:"userGenerator"},
+                {path: 'developerGenerator', name: 'guideDeveloperGenerator', component: () => import('../views/guide/GuideDeveloperGenerator.vue'),},
+                {path: 'developerDataModel', name: 'guideDeveloperDataModel', component: () => import('../views/guide/GuideDeveloperDataModel.vue'),},
+                {path: 'developerTemplateFile', name: 'guideDeveloperTemplateFile', component: () => import('../views/guide/GuideDeveloperTemplateFile.vue'),},
+                {path: 'developerCreationStrategy', name: 'guideDeveloperCreationStrategy', component: () => import('../views/guide/GuideDeveloperCreationStrategy.vue'),},
+                {path: 'developerDataStructure', name: 'guideDeveloperDataStructure', component: () => import('../views/guide/GuideDeveloperDataStructure.vue'),},
+                {path: 'developerNote', name: 'guideDeveloperNote', component: () => import('../views/guide/GuideDeveloperNote.vue'),},
+                {path: 'userGenerator', name: 'guideUserGenerator', component: () => import('../views/guide/GuideUserGenerator.vue'),},
+                {path: 'userGeneratorInstance', name: 'guideUserGeneratorInstance', component: () => import('../views/guide/GuideUserGeneratorInstance.vue'),},
+                {path: 'userNote', name: 'guideUserNote', component: () => import('../views/guide/GuideUserNote.vue'),},
+            ]
         },
         {
             path: '/search/:searchText',
@@ -78,25 +90,10 @@ let router = new Router({
             meta: { isRequiredAuth: true},
             component: () => import('../views/SettingPage.vue'),
             children: [
-                {
-                    path: '',
-                    redirect:'profile'
-                },
-                {
-                    path: 'account',
-                    name: 'settingAccount',
-                    component: () => import('../views/setting/SettingAccount.vue'),
-                },
-                {
-                    path: 'key',
-                    name: 'settingKey',
-                    component: () => import('../views/setting/SettingKey.vue'),
-                },
-                {
-                    path: 'profile',
-                    name: 'settingProfile',
-                    component: () => import('../views/setting/SettingProfile.vue'),
-                },
+                {path: '', redirect:'profile'},
+                {path: 'account', name: 'settingAccount', component: () => import('../views/setting/SettingAccount.vue'),},
+                {path: 'key', name: 'settingKey', component: () => import('../views/setting/SettingKey.vue'),},
+                {path: 'profile', name: 'settingProfile', component: () => import('../views/setting/SettingProfile.vue'),},
             ]
         },
         {

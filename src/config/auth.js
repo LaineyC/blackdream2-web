@@ -9,7 +9,7 @@ export default Vue.prototype.Auth = {
         return this[isCertifiedField];
     },
     [bodyField]:{
-        userId: null,
+        id: null,
 
         type: null,
 

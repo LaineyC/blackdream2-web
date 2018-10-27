@@ -72,7 +72,7 @@
         methods: {
             sendValidCode(){
                 this.Api.User.signUpEmailValidCodeSend({email: this.request.email}).then((data) => {
-
+                    this.$router.push({ name: 'signIn'});
                 });
             },
             handleSignUp () {

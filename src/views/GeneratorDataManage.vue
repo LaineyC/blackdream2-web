@@ -1006,6 +1006,24 @@
         mounted(){
             this.Api.GeneratorInstance.get({id: this.generatorInstanceId}).then((generatorInstance) => {
                 this.generatorInstance = generatorInstance;
+                this.Api.Generator.get({id:generatorInstance.generator.id}).then((generator) => {
+                    if(generator.status === this.Constant.GeneratorStatusEnum.DEVELOP.value && generator.user.id !== generatorInstance.user.id){
+                        this.$message({message: "当前生成器正在维护，请暂停操作等待发布！", type: 'error'});
+                    }
+                    else{
+                        if(generatorInstance.releaseVersion !== generator.releaseVersion){
+                            this.$alert("当前生成器已升级发布，请确认！", {
+                                confirmButtonText: '确定',
+                                callback: (action) => {
+                                    this.Api.GeneratorInstance.versionSync({id:this.generatorInstanceId}).then((data) => {
+                                        this.$message({type: 'success', message: '同步成功！'});
+                                    })
+                                }
+                            });
+                        }
+                    }
+                });
+
                 let infoQueryRequest = this.Api.DataModel.infoQuery({generatorId: generatorInstance.generator.id, fetchLazy:false});
                 let treeRequest = this.Api.GeneratorData.tree({generatorInstanceId: this.generatorInstanceId});
                 let schemeRequest = this.Api.DataModelSchema.get({generatorId: generatorInstance.generator.id});

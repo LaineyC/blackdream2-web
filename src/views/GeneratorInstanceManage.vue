@@ -31,7 +31,7 @@
                                 </div>
                                 <el-button-group>
                                     <el-button size="mini" type="primary" @click="showGeneratorInstanceUpdateModal(item)">编辑</el-button>
-                                    <el-button size="mini" :disabled="item.generator.status===Constant.GeneratorStatusEnum.DEVELOP.value" type="success" @click="linkToGeneratorDataManage(item)">工作台</el-button>
+                                    <el-button size="mini" :disabled="item.generator.status===Constant.GeneratorStatusEnum.DEVELOP.value&&item.generator.user.id!==Auth.body.id" type="success" @click="linkToGeneratorDataManage(item)">工作台</el-button>
                                     <el-button size="mini" type="danger" @click="deleteItem(item)">删除</el-button>
                                 </el-button-group>
                             </div>

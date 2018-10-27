@@ -27,7 +27,7 @@
         },
         methods:{
             linkToGuide(){
-                this.$router.push({ name: 'guide'});
+                this.$router.push({ name: 'guideUserGenerator'});
             },
         }
     }

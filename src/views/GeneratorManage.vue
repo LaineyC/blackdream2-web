@@ -47,7 +47,7 @@
                                 <div>
                                     <el-button-group>
                                         <el-button size="mini" type="primary" @click="showGeneratorUpdateModal(item)">编辑</el-button>
-                                        <el-button size="mini" type="primary" @click="release(item)">发布</el-button>
+                                        <el-button :disabled="item.status===Constant.GeneratorStatusEnum.RELEASE.value" size="mini" type="primary" @click="release(item)">发布</el-button>
                                     </el-button-group>
                                     <el-button-group style="margin-left: 5px;">
                                         <el-button size="mini" type="success" @click="linkToDataModelManage(item)">模型</el-button>
@@ -60,7 +60,7 @@
                             </div>
                             <p>当前状态 {{item.status | enumFormat(Constant.GeneratorStatusEnum)}}</p>
                             <p>模板引擎 {{item.engineType | enumFormat(Constant.TemplateEngineTypeEnum)}}</p>
-                            <p>最后更新  <Time :time="item.updateTime" :interval="60"/></p>
+                            <p>最后更新 <Time :time="item.updateTime" :interval="60"/></p>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -130,6 +130,7 @@
             },
             release(item){
                 this.Api.Generator.release({id:item.id}).then((data) => {
+                    item.status = this.Constant.GeneratorStatusEnum.RELEASE.value;
                     this.$message({type: 'success', message: '发布成功！'});
                 });
             },

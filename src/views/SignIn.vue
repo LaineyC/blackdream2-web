@@ -37,7 +37,7 @@
                 validRule: {
                     username: [
                         { type: 'string', required: true, message: '请输入用户名或邮箱', trigger: 'blur'},
-                        { type: 'string', pattern: /^[0-9A-Za-z]{4,100}$/, message: '用户名或邮箱（4到100位字母、数字）', trigger: 'blur'}
+                        { type: 'string', pattern: /^[0-9A-Za-z\\.@]{4,100}$/, message: '用户名或邮箱（4到100位字母、数字）', trigger: 'blur'}
                     ],
                     password: [
                         { required: true, message: '请输入密码', trigger: 'blur'},
