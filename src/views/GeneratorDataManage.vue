@@ -823,7 +823,7 @@
                         ruleListBoolean.push({ required: true, message: '必输项', trigger: 'change' });
                     }
                     if(dataValidatorBoolean.validateScript){
-                        dataValidatorBoolean.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorBoolean.validateScript);
+                        dataValidatorBoolean.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorBoolean.validateScript);
                     }
                 }
 
@@ -843,7 +843,7 @@
                         ruleListInteger.push({ type:"integer", max: dataValidatorInteger.maxValue, message: '最大' + dataValidatorInteger.maxValue, trigger: 'blur' });
                     }
                     if(dataValidatorInteger.validateScript){
-                        dataValidatorInteger.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorInteger.validateScript);
+                        dataValidatorInteger.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorInteger.validateScript);
                     }
                 }
 
@@ -863,7 +863,7 @@
                         ruleListDecimal.push({ type:"number", max: dataValidatorDecimal.maxValue, message: '最大' + dataValidatorDecimal.maxValue, trigger: 'blur' });
                     }
                     if(dataValidatorDecimal.validateScript){
-                        dataValidatorDecimal.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorDecimal.validateScript);
+                        dataValidatorDecimal.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorDecimal.validateScript);
                     }
                 }
 
@@ -889,7 +889,7 @@
                         ruleListString.push( { type:"string", pattern: dataValidatorString.regex, message:dataValidatorString.regexMessage ? dataValidatorString.regexMessage : "格式不匹配" + dataValidatorString.pattern , trigger: 'blur' });
                     }
                     if(dataValidatorString.validateScript){
-                        dataValidatorString.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorString.validateScript);
+                        dataValidatorString.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorString.validateScript);
                     }
                 }
 
@@ -918,7 +918,7 @@
                         }, trigger: 'change'
                     });
                     if(dataValidatorDate.validateScript){
-                        dataValidatorDate.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorDate.validateScript);
+                        dataValidatorDate.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorDate.validateScript);
                     }
                 }
 
@@ -947,7 +947,7 @@
                         }, trigger: 'change'
                     });
                     if(dataValidatorTime.validateScript){
-                        dataValidatorTime.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorTime.validateScript);
+                        dataValidatorTime.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorTime.validateScript);
                     }
                 }
 
@@ -976,7 +976,7 @@
                         }, trigger: 'change'
                     });
                     if(dataValidatorDateTime.validateScript){
-                        dataValidatorDateTime.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorDateTime.validateScript);
+                        dataValidatorDateTime.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorDateTime.validateScript);
                     }
                 }
 
@@ -989,7 +989,7 @@
                         ruleListModel.push({ required: true, message: '必输项', trigger: 'change' });
                     }
                     if(dataValidatorModel.validateScript){
-                        dataValidatorModel.validateFunction =  new Function("$control", rowVarName, "$data", "$global", dataValidatorModel.validateScript);
+                        dataValidatorModel.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorModel.validateScript);
                     }
                 }
             }

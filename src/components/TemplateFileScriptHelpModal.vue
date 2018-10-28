@@ -2,15 +2,6 @@
     <div class="template-file-script-help-modal" v-show="isShow">
         <el-card class="box-card">
             <div slot="header" class="card-header-flex">
-                <strong>API</strong>
-            </div>
-            <div>
-                dadadadadada
-            </div>
-        </el-card>
-        <br/>
-        <el-card class="box-card">
-            <div slot="header" class="card-header-flex">
                 <strong>模板代码</strong>
             </div>
             <el-collapse>

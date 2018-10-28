@@ -43,8 +43,9 @@
                                 </div>
                             </div>
                             <p>{{item.description}}</p>
+                            <p>当前状态 {{item.status | enumFormat(Constant.GeneratorStatusEnum)}}</p>
                             <p>模板引擎 {{item.engineType | enumFormat(Constant.TemplateEngineTypeEnum)}}</p>
-                            <p>最后更新  <Time :time="item.updateTime" :interval="60"/></p>
+                            <p>最后更新 <Time :time="item.updateTime" :interval="60"/></p>
                         </el-card>
                     </el-col>
                 </el-row>

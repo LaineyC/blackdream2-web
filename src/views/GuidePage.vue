@@ -4,10 +4,7 @@
             <el-col :span="4" style="position: fixed; top:65px;width: 200px">
                 <el-menu :default-active="activeNav" :default-openeds="[navs[0].linkName, navs[1].linkName]">
                     <el-submenu :index="nav.linkName" v-for="nav in navs" :key="nav.linkName">
-                        <template slot="title">
-                            <i class="el-icon-location"></i>
-                            <strong>{{nav.title}}</strong>
-                        </template>
+                        <template slot="title"><strong>{{nav.title}}</strong></template>
                         <el-menu-item :index="subnav.linkName" v-for="subnav in nav.children" @click="linkTo(subnav)">{{subnav.title}}</el-menu-item>
                     </el-submenu>
                 </el-menu>

@@ -7,8 +7,25 @@
                         <strong>模板文件</strong>
                     </div>
                    <div>
-                       <p>模板文件定义了生成文件的模板，采用<span class="text-warning">Velocity</span>模板实现。</p>
-                       <p><span class="text-warning">Velocity</span>模板所能访问的变量由生成策略的<span class="text-warning">TemplateContext</span>标签定义。</p>
+                       <p>模板文件定义了生成文件的模板。</p>
+                       <el-card class="box-card">
+                           <div slot="header" class="clearfix"><label>名称</label></div>
+                           <p>模板文件的名称。</p>
+                       </el-card>
+                       <el-card class="box-card">
+                           <div slot="header" class="clearfix"><label>模板语言</label></div>
+                           <p>目前支持以下模板引擎：</p>
+                           <p><span class="text-warning">Velocity</span></p>
+                           <p><span class="text-warning">FreeMarker</span></p>
+                       </el-card>
+                       <el-card class="box-card">
+                           <div slot="header" class="clearfix"><label>分组</label></div>
+                           <p>模板文件的分组。</p>
+                       </el-card>
+                       <el-card class="box-card">
+                           <div slot="header" class="clearfix"><label>Code</label></div>
+                           <p>模板文件的唯一编码。</p>
+                       </el-card>
                    </div>
                 </el-card>
             </el-col>
@@ -38,8 +55,25 @@
             align-items: center;
             justify-content: space-between;
         }
+        label {
+            display: inline-block;
+            max-width: 100%;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
         p{
             padding: 5px;
+        }
+        .el-card__body{
+            .el-card__header{
+                padding: 10px;
+            }
+            .el-card__body{
+                padding: 10px;
+            }
+            .el-card{
+                margin-top: 5px;
+            }
         }
     }
 </style>
