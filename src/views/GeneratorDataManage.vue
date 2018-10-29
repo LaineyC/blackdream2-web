@@ -504,8 +504,8 @@
                 });
             },
             cascadeFunction(fn, control, row, model){
-                //("$control","$properties", "$data", "$global",
-                fn && fn(control, row, model, this.global);
+                //("$control","$properties", "$data", "$dataTree", $global",
+                fn && fn(control, row, model, this.treeData, this.global);
             },
             showGeneratorInstanceMakeModal(){
                 if(!this.generatorInstance){
@@ -521,11 +521,11 @@
                     return;
                 }
                 this.$set(this.currentChange.control, "value", item.id);
-                this.currentChange.fn && this.currentChange.fn(this.currentChange.control, this.currentChange.attribute, this.currentChange.model, this.global);
+                this.currentChange.fn && this.currentChange.fn(this.currentChange.control, this.currentChange.attribute, this.currentChange.model, this.treeData, this.global);
                 this.$refs['form' + this.currentChange.model.id][0].validateField(this.currentChange.name)
             },
             showDataModelChooseModal(fn, name, control, attribute, model){
-                this.currentChange = {fn, name, attribute, model, control};
+                this.currentChange = {fn, name, control, attribute, model};
                 this.$refs.dataModelChooseModal.open({
                     currentKey:control.value,
                     treeData:this.treeData
@@ -533,7 +533,7 @@
             },
             clearDataModelChoose(fn, name, control, attribute, model){
                 this.$set(control, "value", null);
-                fn && fn(control, attribute, model, this.global);
+                fn && fn(control, attribute, model, this.treeData, this.global);
                 this.$refs['form' + model.id][0].validateField(name)
             },
             create(parent, dataModel){
@@ -779,7 +779,7 @@
                     ruleArray.push(
                         {
                             validator(rule, value, callback, source, options) {
-                                let error = dataValidator.validateFunction(control, row, model, this.global);
+                                let error = dataValidator.validateFunction(control, row, model, this.treeData, this.global);
                                 if(error !== null && error !== undefined){
                                     if(Array.isArray(error)){
                                         callback(error);
@@ -823,7 +823,7 @@
                         ruleListBoolean.push({ required: true, message: '必输项', trigger: 'change' });
                     }
                     if(dataValidatorBoolean.validateScript){
-                        dataValidatorBoolean.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorBoolean.validateScript);
+                        dataValidatorBoolean.validateFunction = new Function("$control", rowVarName, "$data", "$dataTree", "$global", dataValidatorBoolean.validateScript);
                     }
                 }
 
@@ -843,7 +843,7 @@
                         ruleListInteger.push({ type:"integer", max: dataValidatorInteger.maxValue, message: '最大' + dataValidatorInteger.maxValue, trigger: 'blur' });
                     }
                     if(dataValidatorInteger.validateScript){
-                        dataValidatorInteger.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorInteger.validateScript);
+                        dataValidatorInteger.validateFunction = new Function("$control", rowVarName, "$data", "$dataTree", "$global", dataValidatorInteger.validateScript);
                     }
                 }
 
@@ -863,7 +863,7 @@
                         ruleListDecimal.push({ type:"number", max: dataValidatorDecimal.maxValue, message: '最大' + dataValidatorDecimal.maxValue, trigger: 'blur' });
                     }
                     if(dataValidatorDecimal.validateScript){
-                        dataValidatorDecimal.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorDecimal.validateScript);
+                        dataValidatorDecimal.validateFunction = new Function("$control", rowVarName, "$data", "$dataTree", "$global", dataValidatorDecimal.validateScript);
                     }
                 }
 
@@ -889,7 +889,7 @@
                         ruleListString.push( { type:"string", pattern: dataValidatorString.regex, message:dataValidatorString.regexMessage ? dataValidatorString.regexMessage : "格式不匹配" + dataValidatorString.pattern , trigger: 'blur' });
                     }
                     if(dataValidatorString.validateScript){
-                        dataValidatorString.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorString.validateScript);
+                        dataValidatorString.validateFunction = new Function("$control", rowVarName, "$data", "$dataTree", "$global", dataValidatorString.validateScript);
                     }
                 }
 
@@ -918,7 +918,7 @@
                         }, trigger: 'change'
                     });
                     if(dataValidatorDate.validateScript){
-                        dataValidatorDate.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorDate.validateScript);
+                        dataValidatorDate.validateFunction = new Function("$control", rowVarName, "$data", "$dataTree", "$global", dataValidatorDate.validateScript);
                     }
                 }
 
@@ -947,7 +947,7 @@
                         }, trigger: 'change'
                     });
                     if(dataValidatorTime.validateScript){
-                        dataValidatorTime.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorTime.validateScript);
+                        dataValidatorTime.validateFunction = new Function("$control", rowVarName, "$data", "$dataTree", "$global", dataValidatorTime.validateScript);
                     }
                 }
 
@@ -976,7 +976,7 @@
                         }, trigger: 'change'
                     });
                     if(dataValidatorDateTime.validateScript){
-                        dataValidatorDateTime.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorDateTime.validateScript);
+                        dataValidatorDateTime.validateFunction = new Function("$control", rowVarName, "$data", "$dataTree", "$global", dataValidatorDateTime.validateScript);
                     }
                 }
 
@@ -989,7 +989,7 @@
                         ruleListModel.push({ required: true, message: '必输项', trigger: 'change' });
                     }
                     if(dataValidatorModel.validateScript){
-                        dataValidatorModel.validateFunction = new Function("$control", rowVarName, "$data", "$global", dataValidatorModel.validateScript);
+                        dataValidatorModel.validateFunction = new Function("$control", rowVarName, "$data", "$dataTree", "$global", dataValidatorModel.validateScript);
                     }
                 }
             }
@@ -1066,7 +1066,7 @@
                                 model.primaryProperty = property;
                             }
                             if(property.cascadeScript){
-                                property.cascadeFunction = new Function("$control","$properties", "$data", "$global", property.cascadeScript);
+                                property.cascadeFunction = new Function("$control","$properties", "$data", "$dataTree", "$global", property.cascadeScript);
                             }
 
                             this.buildValidRuleList(property, true);
@@ -1101,7 +1101,7 @@
                                 model.fieldGroup.push(fieldGroupPrevious);
                             }
                             if(field.cascadeScript){
-                                field.cascadeFunction = new Function("$control", "$tuple", "$data", "$global", field.cascadeScript);
+                                field.cascadeFunction = new Function("$control", "$tuple", "$data", "$dataTree", "$global", field.cascadeScript);
                             }
 
                             this.buildValidRuleList(field, false);

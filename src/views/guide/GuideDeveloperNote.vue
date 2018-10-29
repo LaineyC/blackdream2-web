@@ -11,7 +11,7 @@
                        <p>2. 通过对用户数据的抽象封装成一组<span class="text-warning">数据模型</span>来接收用户输入的<span class="text-warning">生成器数据</span>。</p>
                        <p>3. 通过对生成文件结构的抽象封装成一组<span class="text-warning">模板文件</span>和<span class="text-warning">生成策略</span>。</p>
                        <p>4. <span class="text-warning">生成策略</span>结合<span class="text-warning">数据模型</span>和<span class="text-warning">模板文件</span>生成相应的文件和文件结构。</p>
-                       <p>5. 在开发设计生成器取变量名时（特别是定义数据模型普通属性名称和联合属性名称时），<strong class="text-warning">不要用关键字（<span class="text-warning">__id__</span>、<span class="text-warning">__ob__</span>、<span class="text-warning">__proto__</span>）</strong>。</p>
+                       <p>5. 在开发设计生成器取变量名时（特别是定义数据模型普通属性名称和联合属性名称时），<strong class="text-warning">不要用关键字（__id__、__ob__、__proto__）</strong>。</p>
                    </div>
                 </el-card>
             </el-col>
