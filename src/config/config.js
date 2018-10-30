@@ -7,15 +7,10 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
 import '@/assets/css/style.css';
-
-import VueCodeMirror from 'vue-codemirror'
-import 'codemirror/lib/codemirror.css'
 //
 Vue.use(ElementUI);
 //
 Vue.use(iView);
-//
-Vue.use(VueCodeMirror);
 //
 Vue.config.productionTip = false;
 

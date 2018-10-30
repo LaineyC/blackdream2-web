@@ -204,6 +204,9 @@
                         creationStrategyList.forEach(value => {
                             this.creationStrategyList.push(value);
                         });
+                        if(this.creationStrategyList.length){
+                            this.request.creationStrategyId = this.creationStrategyList[0].id;
+                        }
                     });
                 }
                 this.generatorInstance = config.generatorInstance;
