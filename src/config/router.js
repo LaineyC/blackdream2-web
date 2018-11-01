@@ -97,6 +97,11 @@ let router = new Router({
             ]
         },
         {
+            path: '/password-reset',
+            name: 'passwordReset',
+            component: () => import('../views/PasswordReset.vue')
+        },
+        {
             path: '/sign-in',
             name: 'signIn',
             component: () => import('../views/SignIn.vue')

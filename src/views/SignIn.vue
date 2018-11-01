@@ -16,7 +16,7 @@
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="handleSignIn()">登陆</el-button>
-                            <el-button style="float: right;" type="text" @click="linkToSignUp()">忘记密码？</el-button>
+                            <el-button style="float: right;" type="text" @click="linkToPasswordReset()">忘记密码？</el-button>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -61,6 +61,9 @@
             },
             linkToSignUp(){
                 this.$router.push({ name: 'signUp'});
+            },
+            linkToPasswordReset(){
+                this.$router.push({ name: 'passwordReset'});
             }
         }
     }

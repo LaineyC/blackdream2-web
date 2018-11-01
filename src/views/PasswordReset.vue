@@ -1,18 +1,18 @@
 <template>
-    <div id="sign-up">
+    <div id="password-reset">
         <el-row>
             <el-col :span="8" :offset="8">
                 <el-card>
                     <div slot="header" class="card-header-flex">
-                        <strong>注册</strong>
-                        <el-button size="small" type="text" @click="linkToSignIn()">已有账号，去登陆</el-button>
+                        <strong>密码找回</strong>
+                        <div>
+                        <el-button size="small" type="text" @click="linkToSignUp()">注册</el-button>
+                        <el-button size="small" type="text" @click="linkToSignIn()">登陆</el-button>
+                        </div>
                     </div>
-                    <el-form ref="form" :model="request" :rules="validRule" size="small" label-width="80px">
-                        <el-form-item label="用户名" prop="username">
+                    <el-form ref="form" :model="request" :rules="validRule" size="small" label-width="120px">
+                        <el-form-item label="用户名或邮箱" prop="username">
                             <el-input v-model="request.username" type="text"></el-input>
-                        </el-form-item>
-                        <el-form-item label="邮箱" prop="email">
-                            <el-input v-model="request.email" type="text"></el-input>
                         </el-form-item>
                         <el-form-item label="验证码" prop="validCode">
                             <el-row>
@@ -24,12 +24,11 @@
                                 </el-col>
                             </el-row>
                         </el-form-item>
-                        <el-form-item label="密码" prop="password">
-                            <el-input v-model="request.password" type="password"></el-input>
+                        <el-form-item label="新密码" prop="newPassword">
+                            <el-input v-model="request.newPassword" type="newPassword"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="handleSignUp()">提交</el-button>
-                            <el-button style="float: right;" type="text" @click="linkToPasswordReset()">忘记密码？</el-button>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -40,34 +39,29 @@
 
 <script>
     export default {
-        name: "SignUp",
+        name: "PasswordReset",
         data () {
             return {
                 request: {
                     username: null,
-                    email: null,
                     validCode: null,
-                    password: null
+                    newPassword: null
                 },
                 validRule: {
                     username: [
-                        { type: 'string', required: true, message: '请输入用户名', trigger: 'blur'},
-                        { type: 'string', pattern: /^[A-Za-z][0-9A-Za-z]{3,16}$/, message: '用户名格式不正确（4到16位字母开头、数字）', trigger: 'blur'}
-                    ],
-                    email: [
-                        { required: true, message: '请输入邮箱', trigger: 'blur'},
-                        { type: 'email', message: '邮箱格式不正确', trigger: 'blur'}
+                        { type: 'string', required: true, message: '请输入用户名或邮箱', trigger: 'blur'},
+                        { type: 'string', pattern: /^[0-9A-Za-z\\.@]{4,100}$/, message: '用户名或邮箱（4到100位字母、数字）', trigger: 'blur'}
                     ],
                     validCode: [
                         { required: true, message: '请输入验证码', trigger: 'blur'},
                         { type: 'string', pattern: /^[0-9]{6}$/, message: '验证码格式不正确（6位数字）', trigger: 'blur'}
                     ],
-                    password: [
-                        { required: true, message: '请输入密码', trigger: 'blur'},
+                    newPassword: [
+                        { required: true, message: '请输入新密码', trigger: 'blur'},
                         { type: 'string', pattern: /^[0-9A-Za-z]{6,24}$/, message: '密码格式不正确（6到24位字母、数字）', trigger: 'blur'}
                     ]
                 },
-                timerInterval:null,
+                timerInterval:null
             }
         },
         methods: {
@@ -87,9 +81,10 @@
                 if(this.timerInterval){
                     return;
                 }
-                this.$refs.form.validateField("email",(error) => {
+
+                this.$refs.form.validateField("username",(error) => {
                     if (!error) {
-                        this.Api.User.signUpValidCodeSend({email: this.request.email}).then((data) => {
+                        this.Api.User.passwordResetValidCodeSend({username: this.request.username}).then((data) => {
                             this.setTimer(data.interval);
                         });
                     }
@@ -98,18 +93,18 @@
             handleSignUp () {
                 this.$refs.form.validate((valid) => {
                     if (valid) {
-                        this.Api.User.signUp(this.request).then((data) => {
-                            this.$message({type: 'success', message: '注册成功！'});
+                        this.Api.User.passwordReset(this.request).then((data) => {
+                            this.$message({type: 'success', message: '重置成功！'});
                             this.linkToSignIn();
                         });
                     }
                 })
             },
+            linkToSignUp(){
+                this.$router.push({ name: 'signUp'});
+            },
             linkToSignIn(){
                 this.$router.push({ name: 'signIn'});
-            },
-            linkToPasswordReset(){
-                this.$router.push({ name: 'passwordReset'});
             }
         },
         mounted() {
@@ -122,7 +117,7 @@
 </script>
 
 <style scoped lang="less">
-    #sign-up{
+    #password-reset{
         padding-top: 64px;
         .card-header-flex{
             flex: 1;
