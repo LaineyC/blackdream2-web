@@ -131,7 +131,7 @@
                 }
             },
             downloadUrl(url){
-                return this.Config.serverUrl + "/web/generatorInstance/download?url=" + url;
+                return this.Config.serverUrl + this.Api.GeneratorInstance.downloadUri + "?url=" + url;
             },
             download(url){
                 //
