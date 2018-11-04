@@ -11,7 +11,7 @@
             </el-menu>
         </div>
         <div class="split-box">
-            <Split v-model="split">
+            <Split v-model="split" :min="0.25" :max="0.5">
                 <div slot="left" class="left-split-pane">
                     <AceEditor v-model="guide.content" lang="markdown" theme="chrome" width="100%" height="100%" @init="initAceEditor"/>
                 </div>

@@ -3,7 +3,7 @@
         title="构建"
         :show-close="false"
         @close="close"
-        width="1000px"
+        width="1200px"
         :close-on-press-escape="false"
         custom-class="generator-instance-make-modal"
         :visible.sync="isShow">

@@ -17,7 +17,7 @@
             </el-menu>
         </div>
         <div class="split-box">
-            <Split v-model="split">
+            <Split v-model="split" :min="0.1" :max="0.5">
                 <div slot="left" class="left-split-pane">
                     <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
                         <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">

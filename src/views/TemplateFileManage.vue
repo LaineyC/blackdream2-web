@@ -14,7 +14,7 @@
             </el-menu>
         </div>
         <div class="split-box">
-            <Split v-model="split">
+            <Split v-model="split" :min="0.1" :max="0.5">
                 <div slot="left" class="left-split-pane">
                     <div style="padding: 5px;"><el-input placeholder="输入关键字进行过滤" v-model="filterText" size="mini"></el-input></div>
                     <el-tree ref="tree" :filter-node-method="filterNode" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
