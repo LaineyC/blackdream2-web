@@ -426,12 +426,15 @@
                                     break;
                                 }
                             }
+                            if(value === "__id__" || value === "__ob__" || value === "__proto__"){
+                                errors.push("不要用关键字（__id__、__ob__、__proto__）");
+                            }
                             callback(errors);
                         },
                         trigger: 'blur'
                     }
                 );
-                return ruleArray
+                return ruleArray;
             },
             buildFieldNameValidator(field, item, rules){
                 let ruleArray = [...rules];
@@ -446,12 +449,15 @@
                                     break;
                                 }
                             }
+                            if(value === "__id__" || value === "__ob__" || value === "__proto__"){
+                                errors.push("不要用关键字（__id__、__ob__、__proto__）");
+                            }
                             callback(errors);
                         },
                         trigger: 'blur'
                     }
                 );
-                return []
+                return ruleArray;
             },
             buildDataValidatorMap(){
                 let dataValidatorMap = {};

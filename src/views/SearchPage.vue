@@ -120,7 +120,9 @@
             this.searchRequest.name = this.$route.params.searchText;
             this.search();
 
-            this.Api.Generator.query({}).then((data) => {
+            this.Api.Generator.query({
+                status: this.Constant.GeneratorStatusEnum.RELEASE.value,
+            }).then((data) => {
                 this.generatorList = data;
             });
         }

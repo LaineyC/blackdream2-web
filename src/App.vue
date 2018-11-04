@@ -41,10 +41,10 @@
         },
         methods: {
             search(){
-                if(this.searchText !== ""){
+                //if(this.searchText !== ""){
                     this.$router.push({ name: 'search', params: { searchText: this.searchText }});
                     this.searchText = "";
-                }
+                //}
             },
             signOut(){
                 this.$confirm('确定退出系统？', {type: 'warning'})

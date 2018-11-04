@@ -77,9 +77,9 @@
                                                         </template>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="item.model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'properties.' + property.name + '.value'" :rules="buildAttributeValidator(property, item.model.properties[property.name], item.model.properties, item.model)">
-                                                        <el-input v-if="!property.isEnum" v-model="item.model.properties[property.name].value" @change="cascadeFunction(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)"/>
+                                                        <el-input v-if="!property.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="item.model.properties[property.name].value" @change="cascadeFunction(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)"/>
                                                         <el-select v-else v-model="item.model.properties[property.name].value" @change="cascadeFunction(property.cascadeFunction, item.model.properties[property.name], item.model.properties, item.model)">
-                                                            <el-option v-for="enumItem in property.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
+                                                            <el-option v-for="enumItem in property.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                         </el-select>
                                                         <template slot="error" slot-scope="{ error }">
                                                             <el-popover placement="bottom" trigger="manual" :value="true">
@@ -156,9 +156,9 @@
                                                     </template>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="item.model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'properties.' + group.model.name + '.value'" :rules="buildAttributeValidator(group.model, item.model.properties[group.model.name], item.model.properties, item.model)">
-                                                    <el-input v-if="!group.model.isEnum" v-model="item.model.properties[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)"/>
+                                                    <el-input v-if="!group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="item.model.properties[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)"/>
                                                     <el-select v-else v-model="item.model.properties[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, item.model.properties[group.model.name], item.model.properties, item.model)">
-                                                        <el-option v-for="enumItem in group.model.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
+                                                        <el-option v-for="enumItem in group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                     </el-select>
                                                     <template slot="error" slot-scope="{ error }">
                                                         <el-popover placement="bottom" trigger="manual" :value="true">
@@ -261,9 +261,9 @@
                                                         </template>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="row[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'tupleList.' + $index + '.' + field.name + '.value'" :rules="buildAttributeValidator(field, row[field.name], row, item.model)">
-                                                        <el-input v-if="!field.isEnum" v-model="row[field.name].value" @change="cascadeFunction(field.cascadeFunction, row[field.name], row, item.model)"/>
+                                                        <el-input v-if="!field.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="row[field.name].value" @change="cascadeFunction(field.cascadeFunction, row[field.name], row, item.model)"/>
                                                         <el-select v-else v-model="row[field.name].value" @change="cascadeFunction(field.cascadeFunction, row[field.name], row, item.model)">
-                                                            <el-option v-for="enumItem in field.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
+                                                            <el-option v-for="enumItem in field.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                         </el-select>
                                                         <template slot="error" slot-scope="{ error }">
                                                             <el-popover placement="bottom" trigger="manual" :value="true">
@@ -335,9 +335,9 @@
                                                     </template>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'tupleList.' + $index + '.' + group.model.name + '.value'" :rules="buildAttributeValidator(group.model, row[group.model.name], row, item.model)">
-                                                    <el-input v-if="!group.model.name.isEnum" v-model="row[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, row[group.model.name], row, item.model)"/>
+                                                    <el-input v-if="!group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="row[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, row[group.model.name], row, item.model)"/>
                                                     <el-select v-else v-model="row[group.model.name].value" @change="cascadeFunction(group.model.cascadeFunction, row[group.model.name], row, item.model)">
-                                                        <el-option v-for="enumItem in group.model.name.enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
+                                                        <el-option v-for="enumItem in group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                     </el-select>
                                                     <template slot="error" slot-scope="{ error }">
                                                         <el-popover placement="bottom" trigger="manual" :value="true">

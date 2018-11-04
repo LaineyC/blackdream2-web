@@ -4,6 +4,7 @@ import config from '@/config/config'
 import api from '@/config/api'
 import auth from '@/config/auth'
 import constant from '@/config/constant'
+import method from '@/config/method'
 //
 Vue.use(Router);
 
@@ -138,6 +139,15 @@ router.beforeEach((to, from, next) => {
         else{
             next();
         }
+        return;
+    }
+
+    let accessToken = method.cookie.get("ACCESS_TOKEN");
+    if(!accessToken){
+        if(to.meta.isRequiredAuth){
+            next({name: "signIn"});
+        }
+        next();
         return;
     }
 
