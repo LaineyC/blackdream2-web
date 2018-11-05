@@ -79,7 +79,8 @@
                                             <td><div class="cell"><label>验证规则</label></div></td>
                                             <td>
                                                 <div class="cell">
-                                                   <span class="text-info">properties</span>对应<span class="text-info">Key</span>的值的验证规则。
+                                                    <p><span class="text-info">properties</span>对应<span class="text-info">Key</span>的值的验证规则。</p>
+                                                    <p>自定义脚本用<span class="text-warning">JavaScript</span>编写， 脚本内置变量<span class="text-info">$control</span>、<span class="text-info">$properties</span>、<span class="text-info">$data</span>、<span class="text-info">$dataTree</span>、<span class="text-info">$global</span>。同下。</p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -150,7 +151,10 @@
                                         </tr>
                                         <tr class="el-table__row">
                                             <td><div class="cell"><label>验证规则</label></div></td>
-                                            <td><div class="cell">集合元素对应<span class="text-info">Key</span>的值的验证规则。</div></td>
+                                            <td><div class="cell">
+                                                <p>集合元素对应<span class="text-info">Key</span>的值的验证规则。</p>
+                                                <p>自定义脚本用<span class="text-warning">JavaScript</span>编写， 脚本内置变量<span class="text-info">$control</span>、<span class="text-info">$tuple</span>、<span class="text-info">$data</span>、<span class="text-info">$dataTree</span>、<span class="text-info">$global</span>。同下。</p>
+                                            </div></td>
                                         </tr>
                                         <tr class="el-table__row">
                                             <td><div class="cell"><label>级联脚本</label></div></td>

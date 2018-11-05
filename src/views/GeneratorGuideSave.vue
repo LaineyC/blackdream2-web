@@ -42,7 +42,7 @@
                 guide:{
                     generatorId:this.$route.params.generatorId,
                     docType: this.Constant.GeneratorGuideDocTypeEnum.MARKDOWN.value,
-                    content: "Hello BlackDream"
+                    content: ""
                 }
             }
         },

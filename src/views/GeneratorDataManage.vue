@@ -401,6 +401,7 @@
         <DataModelChooseModal ref="dataModelChooseModal" @on-success="handleDataModelChooseSuccess"/>
         <GeneratorInstanceMakeModal ref="generatorInstanceMakeModal"/>
         <TupleClipboardModal ref="tupleClipboardModal"/>
+        <GeneratorDataCreateModal ref="generatorDataCreateModal"  @on-success="handleGeneratorDataCreateModalSuccess"/>
     </div>
 </template>
 
@@ -413,6 +414,7 @@
             TupleClipboardModal:() => import('@/components/TupleClipboardModal.vue'),
             DataModelChooseModal:() => import('@/components/DataModelChooseModal.vue'),
             GeneratorInstanceMakeModal:() => import('@/components/GeneratorInstanceMakeModal.vue'),
+            GeneratorDataCreateModal:() => import('@/components/GeneratorDataCreateModal.vue'),
         },
         data () {
             return {
@@ -539,15 +541,28 @@
             create(parent, dataModel){
                 let id = this.incrementer.next();
                 let model = {
-                    //id: "$" + id,
+                    id: "$" + id,
                     name: "新建" + dataModel.name + id,
                     generatorInstanceId: this.generatorInstanceId,
                     dataModelId: dataModel.id,
                     parentId: !parent ? null : parent.id,
                     properties: this.buildProperties(dataModel),
-                    tupleList: []
+                    tupleList: [],
+                    parent:{id:!parent ? null : parent.id},
+                    dataModel: {id:dataModel.id},
+                    generatorInstance: {id:this.generatorInstanceId},
                 };
                 model.properties[dataModel.primaryProperty.name].value = model.name;
+                this.$refs.generatorDataCreateModal.open({
+                    model,
+                    parent,
+                    dataModel,
+                    generatorDataCache:this.generatorDataCache,
+                    dataModelCache:this.dataModelCache,
+                    treeData:this.treeData,
+                    global:this.global,
+                });
+/*
                 this.Api.GeneratorData.create(model).then((data) => {
                     let m = {
                         id: data.id,
@@ -564,6 +579,13 @@
                     this.selectNode(item);
                     this.$message({type: 'success', message: '创建成功！'});
                 });
+ */
+            },
+            handleGeneratorDataCreateModalSuccess(model, parent){
+                this.generatorDataCache[model.id] = model;
+                let item = this.wrapToItem(model);
+                this.addToTreeData(item, parent);
+                this.selectNode(item);
             },
             setDirty(item){
                 item.isDirty = true;
@@ -625,7 +647,7 @@
                     let dataModel = this.dataModelCache[model.dataModel.id];
                     item.model.properties = this.compatibleProperty(model.properties, dataModel);
                     model.tupleList.forEach(tuple => {
-                        tuple = this.compatibleTuple(tuple, dataModel)
+                        tuple = this.compatibleTuple(tuple, dataModel);
                         tuple.__id__ = {
                             dataType:this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
                             value:this.Method.generateId() + ""
@@ -1220,6 +1242,8 @@
         }
         .el-card__body{
             padding: 5px;
+        }
+        .tupleList{
             .el-form-item--small.el-form-item, .el-form-item--mini.el-form-item{
                 margin: 0;
             }
@@ -1252,10 +1276,10 @@
             }
 
             .properties .el-form-item,
-              .tupleList .el-form-item,
-              .tupleList .el-form-item__content{
-                  width: 100%;
-              }
+            .tupleList .el-form-item,
+            .tupleList .el-form-item__content{
+                width: 100%;
+            }
         }
     }
 </style>

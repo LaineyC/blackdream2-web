@@ -115,7 +115,7 @@
                     id: "$" + id,
                     name: "新建模板" + id,
                     displayGroup: group != null ? group.name : "默认分组",
-                    script:"Hello BlackDream",
+                    script:"",
                     generatorId: this.generatorId,
                     engineType: this.generator == null ? this.Constant.TemplateEngineTypeEnum.VELOCITY.value : this.generator.engineType
                 };

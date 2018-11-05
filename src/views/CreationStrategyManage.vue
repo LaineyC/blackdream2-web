@@ -11,9 +11,6 @@
                 <el-menu-item index="2">
                     <el-button type="danger" size="small" @click="deleteAll">删除</el-button>
                 </el-menu-item>
-                <el-menu-item index="3">
-                    <el-button type="info" size="small" @click="showTemplateFileScriptHelp">帮助</el-button>
-                </el-menu-item>
             </el-menu>
         </div>
         <div class="split-box">
@@ -63,7 +60,6 @@
                 </div>
             </Split>
         </div>
-        <TemplateFileScriptHelpModal ref="templateFileScriptHelpModal"/>
     </div>
 </template>
 
@@ -77,7 +73,6 @@
         name: "CreationStrategyManage",
         components: {
             AceEditor,
-            TemplateFileScriptHelpModal:() => import('@/components/TemplateFileScriptHelpModal.vue'),
         },
         data () {
             return {
@@ -108,7 +103,7 @@
                 let model = {
                     id: "$" + id,
                     name: "新建策略" + id,
-                    script:"Hello BlackDream",
+                    script:"",
                     generatorId: this.generatorId,
                     scriptLanguage: this.Constant.CreationStrategyLanguageEnum.JAVASCRIPT.value
                 };
@@ -264,9 +259,6 @@
             removeFromTreeData(item){
                 this.$refs.tree.remove(item);
             },
-            showTemplateFileScriptHelp(){
-                this.$refs.templateFileScriptHelpModal.toggle({generatorId: this.generatorId});
-            }
         },
         mounted(){
             this.Api.CreationStrategy.infoQuery({generatorId: this.generatorId}).then((models) => {
