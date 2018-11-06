@@ -9,7 +9,7 @@
         append-to-body>
         <el-tree ref="tree" node-key="id" :data="treeData" :props="treeProps" :expand-on-click-node="false" highlight-current>
             <div slot-scope="{ node, data }" @dblclick.stop="submit">
-                <div><i :class="data.model.dataModel.iconStyle"></i> {{ node.label }}</div>
+                <div><i :class="data.dataModel.iconStyle"></i> {{ node.label }}</div>
             </div>
         </el-tree>
         <div slot="footer">
