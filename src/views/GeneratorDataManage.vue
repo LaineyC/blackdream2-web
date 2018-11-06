@@ -551,6 +551,7 @@
                     parent:{id:!parent ? null : parent.id},
                     dataModel: {id:dataModel.id},
                     generatorInstance: {id:this.generatorInstanceId},
+                    children:[]
                 };
                 model.properties[dataModel.primaryProperty.name].value = model.name;
                 this.$refs.generatorDataCreateModal.open({
@@ -613,7 +614,7 @@
                 });
             },
             deleteAll(){
-                let ids = this.$refs.tree.getCheckedKeys(true);
+                let ids = this.$refs.tree.getCheckedKeys();
                 if(!ids.length){
                     return;
                 }
@@ -1290,12 +1291,16 @@
             .group-label, .group-item{
                 display: inline-block;
             }
-
+/*
             .group-label.is-required .el-form-item__content::before{
                 display: inline-block;
                 content: "*";
                 color: #f56c6c;
                 margin-right: 2px;
+            }
+*/
+            .group-label.is-required .el-form-item__content{
+                color: #f56c6c;
             }
 
             .tupleList{

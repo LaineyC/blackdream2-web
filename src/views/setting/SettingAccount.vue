@@ -65,7 +65,7 @@
                 this.$refs.form.validate((valid) => {
                     if (valid) {
                         this.Api.User.passwordChange(this.request).then((data) => {
-                            this.$message({type: 'success', message: '修改成功！'});
+                            this.$message({type: 'success', message: '保存成功！'});
                         });
                     }
                 })

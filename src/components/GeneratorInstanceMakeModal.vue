@@ -18,7 +18,7 @@
                     <div id="tree-body">
                         <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
                             <div slot-scope="{ node, data }">
-                                <div><i :class="data.model.dataModel.iconStyle"></i> {{ node.label }}</div>
+                                <div><i :class="data.dataModel.iconStyle"></i> {{ node.label }}</div>
                             </div>
                         </el-tree>
                     </div>

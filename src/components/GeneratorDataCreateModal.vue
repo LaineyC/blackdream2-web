@@ -314,11 +314,16 @@
         .group-label, .group-item{
             display: inline-block;
         }
+/*
         .group-label.is-required .el-form-item__content::before{
             display: inline-block;
             content: "*";
             color: #f56c6c;
             margin-right: 2px;
+        }
+*/
+        .group-label.is-required .el-form-item__content{
+            color: #f56c6c;
         }
     }
 </style>

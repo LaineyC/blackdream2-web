@@ -60,7 +60,7 @@
                     if (valid) {
                         this.Api.User.profileChange(this.request).then((data) => {
                             this.Auth.body.nickname = this.request.nickname;
-                            this.$message({type: 'success', message: '修改成功！'});
+                            this.$message({type: 'success', message: '保存成功！'});
                         });
                     }
                 })

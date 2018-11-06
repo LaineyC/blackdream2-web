@@ -8,7 +8,7 @@
                     </div>
                     <CellGroup>
                         <Cell v-for="generator in generatorList" :title="generator.name" :key="generator.id">
-                            <Badge :count="10" slot="extra" />
+                            <!--<Badge :count="10" slot="extra" />-->
                         </Cell>
                     </CellGroup>
                 </el-card>

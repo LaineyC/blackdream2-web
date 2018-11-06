@@ -86,6 +86,11 @@ let router = new Router({
             component: () => import('../views/SearchPage.vue')
         },
         {
+            path: '/search',
+            name: 'searchEmpty',
+            component: () => import('../views/SearchPage.vue')
+        },
+        {
             path: '/setting',
             name: 'setting',
             meta: { isRequiredAuth: true},
