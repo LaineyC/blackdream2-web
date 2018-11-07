@@ -666,7 +666,8 @@
             },
             showDataModelSchemaSaveModal(){
                 this.$refs.dataModelSchemaSaveModal.open({
-                    generatorId: this.generatorId
+                    generatorId: this.generatorId,
+                    dataModelList:this.treeData
                 })
             },
             //行拖拽

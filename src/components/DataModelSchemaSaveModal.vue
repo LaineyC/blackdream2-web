@@ -55,14 +55,9 @@
                     }
                 });
             },
-            open({generatorId}){
+            open({generatorId,dataModelList}){
                 this.request.generatorId = generatorId;
-                let getRequest = this.Api.DataModelSchema.get({generatorId: generatorId});
-                let infoQueryRequest = this.Api.DataModel.infoQuery({generatorId: generatorId});
-                this.$http.all([getRequest, infoQueryRequest])
-                .then((data) => {
-                    let schema = data[0];
-                    let dataModelList = data[1];
+                this.Api.DataModelSchema.get({generatorId: generatorId}).then((schema) => {
                     let dataModelCache = {};
                     dataModelList.forEach(item => {
                         dataModelCache[item.id] = item;
@@ -91,23 +86,17 @@
                     if(!this.request.ruleItemMap['']){
                         this.$set(this.request.ruleItemMap, '', {children:[]});
                     }
-                    this.dataModelList = dataModelList.sort((a, b) => {
-                        if(a.name > b.name){
-                            return 1;
-                        }
-                        else if(a.name === b.name){
-                            return 0;
-                        }
-                        else{
-                            return -1;
-                        }
-                    });
+                    this.dataModelList = dataModelList;
                 });
                 this.isShow = true;
             },
-            close(){
-                this.isShow = false;
+            reset(){
+                this.dataModelList = [];
                 this.$refs.form.resetFields();
+            },
+            close(){
+                this.reset();
+                this.isShow = false;
             }
         },
     }

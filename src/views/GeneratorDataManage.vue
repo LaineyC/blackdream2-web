@@ -24,7 +24,8 @@
         <div class="split-box">
             <Split v-model="split" :min="0.1" :max="0.5">
                 <div slot="left" class="left-split-pane">
-                    <el-tree ref="tree" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
+                    <div style="padding: 5px;"><el-input placeholder="输入名称进行过滤" v-model="filterText" size="mini"></el-input></div>
+                    <el-tree ref="tree" :filter-node-method="filterNode" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
                         <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">
                             <span><i :class="dataModelCache[data.dataModel.id].iconStyle"></i> {{ node.label }}</span>
                             <el-dropdown trigger="click" v-if="schemeRuleItemMap[data.dataModel.id].children.length">
@@ -420,6 +421,7 @@
         },
         data () {
             return {
+                filterText: '',
                 schemeRuleItemMap:{"":{children:[]}},
                 incrementer: this.Method.newIncrementer(),
                 split: 0.15,
@@ -635,6 +637,12 @@
                             this.$message({type: 'success', message: '删除成功！'});
                         });
                     });
+            },
+            filterNode(value, data) {
+                if (!value) {
+                    return true;
+                }
+                return data.name.indexOf(value) !== -1;
             },
             selectNode(model){
                 if(model.isLoaded != null && model.isLoaded){
@@ -1029,6 +1037,11 @@
                 return cache;
             }*/
         },
+        watch: {
+            filterText(val) {
+                this.$refs.tree.filter(val);
+            }
+        },
         mounted(){
             this.Api.GeneratorInstance.get({id: this.generatorInstanceId}).then((generatorInstance) => {
                 this.generatorInstance = generatorInstance;
@@ -1165,7 +1178,7 @@
                             else{
                                 return 0;
                             }
-                        })
+                        });
                         children.forEach(child => {
                             child.dataModel = that.dataModelCache[child.dataModel.id];
                             that.wrapToItem(child);

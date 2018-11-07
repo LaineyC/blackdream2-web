@@ -16,7 +16,7 @@
         <div class="split-box">
             <Split v-model="split" :min="0.1" :max="0.5">
                 <div slot="left" class="left-split-pane">
-                    <div style="padding: 5px;"><el-input placeholder="输入关键字进行过滤" v-model="filterText" size="mini"></el-input></div>
+                    <div style="padding: 5px;"><el-input placeholder="输入名称进行过滤" v-model="filterText" size="mini"></el-input></div>
                     <el-tree ref="tree" :filter-node-method="filterNode" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
                         <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">
                             <strong v-if="!data.model">{{ node.label }}</strong>
@@ -186,7 +186,9 @@
                 this.currentTabItem = item;
             },
             filterNode(value, data) {
-                if (!value) return true;
+                if (!value) {
+                    return true;
+                }
                 return data.name.indexOf(value) !== -1;
             },
             selectNode(item){

@@ -213,7 +213,11 @@
                 this.isShow = true;
 
             },
+            reset(){
+                this.treeData = [];
+            },
             close(){
+                this.reset();
                 this.isShow = false;
             }
         },
