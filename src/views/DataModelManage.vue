@@ -129,8 +129,8 @@
                                             <template slot-scope="{ row, column, $index }">
                                                 <span v-if="row.isPrimary"></span>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
-                                                    <el-select v-model="row.defaultValue">
-                                                        <el-option v-for="item in [{'label':'Null','value':null},{'label':'True','value':true},{'label':'False','value':false}]" :value="item.value" :key="item.value" :label="item.label"></el-option>
+                                                    <el-select v-model="row.defaultValue" clearable>
+                                                        <el-option v-for="item in [{'label':'True','value':true},{'label':'False','value':false}]" :value="item.value" :key="item.value" :label="item.label"></el-option>
                                                     </el-select>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
@@ -262,8 +262,8 @@
                                         <el-table-column label="默认值" width="230">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item v-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
-                                                    <el-select v-model="row.defaultValue">
-                                                        <el-option v-for="item in [{'label':'Null','value':null},{'label':'True','value':true},{'label':'False','value':false}]" :value="item.value" :key="item.value" :label="item.label"></el-option>
+                                                    <el-select v-model="row.defaultValue" clearable>
+                                                        <el-option v-for="item in [{'label':'True','value':true},{'label':'False','value':false}]" :value="item.value" :key="item.value" :label="item.label"></el-option>
                                                     </el-select>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.INTEGER.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">

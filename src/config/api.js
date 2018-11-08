@@ -113,9 +113,9 @@ export default Vue.prototype.Api = {
         infoSearch: doPost('/generator/generatorInstance/infoSearch'),
         make: doPost('/generator/generatorInstance/make'),
         makeTest: doPost('/generator/generatorInstance/makeTest'),
-        download: doPost('/generator/generatorInstance/download'),
-        get downloadUri(){
-            return getServerUrl('/generator/generatorInstance/download');
+        makeDownloadUrl: doPost('/generator/generatorInstance/makeDownload'),
+        buildMakeDownloadUrl(url){
+            return getServerUrl('/generator/generatorInstance/makeDownload') + "?url=" + url;
         },
         versionSync: doPost('/generator/generatorInstance/versionSync'),
     },

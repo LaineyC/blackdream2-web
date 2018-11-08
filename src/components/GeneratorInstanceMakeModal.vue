@@ -62,7 +62,7 @@
                         </div>
                         <div class="result-item" v-show="request.runFunction==='make'" v-for="item in prodResultList">
                             <el-card style="margin: 2px;" v-if="item.type==='prod'">
-                                <el-button type="text" ><i class="el-icon-download"></i><a :href="downloadUrl(item.data.url)">{{item.data.fileName}}</a></el-button>
+                                <el-button type="text" ><i class="el-icon-download"></i><a :href="Api.GeneratorInstance.buildMakeDownloadUrl(item.data.url)">{{item.data.fileName}}</a></el-button>
                             </el-card>
                             <el-card style="margin: 2px;" v-else-if="item.type==='message'">
                                 <el-tree node-key="id" :data="item.data" :props="messageTreeProps" default-expand-all :expand-on-click-node="false" highlight-current></el-tree>
@@ -129,12 +129,6 @@
                 else{
                     this.prodResultList = [];
                 }
-            },
-            downloadUrl(url){
-                return this.Config.serverUrl + this.Api.GeneratorInstance.downloadUri + "?url=" + url;
-            },
-            download(url){
-                //
             },
             run(){
                 this.$refs.form.validate((valid) => {
