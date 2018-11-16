@@ -40,3 +40,14 @@
 .text-info{
     color: #909399;
 }
+
+/**
+Loading时css的bug
+ */
+body.el-loading-parent--relative{
+    position: static!important;
+}
+
+.bd-loading .el-loading-spinner{
+    font-size: 4em;
+}

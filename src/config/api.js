@@ -9,12 +9,22 @@ Vue.use(VueAxios, axios);
 axios.defaults.withCredentials = true;
 axios.defaults.timeout = 60 * 1000;
 let messageDuration = 6 * 1000;
+let loadingOptions = {
+    lock: true,
+    fullscreen:true,
+    //text: '正在加载',
+    spinner: 'el-icon-loading',
+    background: 'rgba(0, 0, 0, 0.0625)',
+    customClass:"bd-loading"
+};
 //http请求拦截
 axios.interceptors.request.use(config => {
-    Vue.prototype.$Loading.start();
+    Vue.prototype.$loading(loadingOptions);
+    //Vue.prototype.$Loading.start();
     return config;
 }, error => {
-    Vue.prototype.$Loading.error();
+    Vue.prototype.$loading(loadingOptions).close();
+    //Vue.prototype.$Loading.error();
     Vue.prototype.$message({
         showClose: true,
         duration: messageDuration,
@@ -25,7 +35,10 @@ axios.interceptors.request.use(config => {
 });
 //http响应拦截
 axios.interceptors.response.use(data => {
-    Vue.prototype.$Loading.finish();
+    setTimeout(() => {
+        Vue.prototype.$loading(loadingOptions).close();
+    }, 200);
+    //Vue.prototype.$Loading.finish();
     let error = data.data.error;
     if(error != null && error !== undefined){
         if(!data.config.isCustomHandle){
@@ -42,7 +55,8 @@ axios.interceptors.response.use(data => {
         return data.data.body;
     }
 }, error => {
-    Vue.prototype.$Loading.error();
+    Vue.prototype.$loading(loadingOptions).close();
+    //Vue.prototype.$Loading.error();
     if (error.response && error.response.status === 500) {
         Vue.prototype.$message({
             showClose: true,

@@ -210,7 +210,6 @@
                                 <el-card shadow="hover">
                                     <div slot="header">
                                         <el-button-group>
-                                            <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
                                             <el-button type="success" size="mini" @click="addTuple(item)">添加</el-button>
                                         </el-button-group>
 <!--
@@ -229,6 +228,9 @@
                                                 <el-dropdown-item><div @click="showClipboardModel(item)">打开粘贴板</div></el-dropdown-item>
                                             </el-dropdown-menu>
                                         </el-dropdown>
+                                        <el-button-group style="margin-left: 5px;vertical-align: middle;">
+                                            <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
+                                        </el-button-group>
                                     </div>
                                     <div class="tupleList" style="width: 100%">
                                     <el-table :ref="'table' + item.id" class="field-table" row-key="__id__.value" :data="item.tupleList" style="width: 100%">

@@ -28,9 +28,6 @@
                 <div slot="right" class="right-split-pane">
                     <div v-for="item in tabs" :key="item.id" v-show="item===currentTabItem" class="tab-pane" :class="'tab-pane-' + item.id">
                         <el-form :ref="'form' + item.id" label-width="80px" :model="item.model" :rules="validRule" inline size="small">
-                            <el-form-item label=" " label-width="20px">
-                                <el-button type="primary" size="small" @click="update(item)">保存</el-button>
-                            </el-form-item>
                             <el-form-item label="名称" prop="name">
                                 <el-input v-model="item.model.name" placeholder="" />
                             </el-form-item>
@@ -44,9 +41,14 @@
                                 <el-input readonly v-model="item.model.code" placeholder="" />
                             </el-form-item>
                             <el-card shadow="hover">
-                                <el-button-group slot="header">
-                                    <el-button type="success" size="mini" @click="addProperty(item)">添加属性</el-button>
-                                </el-button-group>
+                                <div slot="header">
+                                    <el-button-group>
+                                        <el-button type="success" size="mini" @click="addProperty(item)">添加属性</el-button>
+                                    </el-button-group>
+                                    <el-button-group style="margin-left: 5px;">
+                                        <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
+                                    </el-button-group>
+                                </div>
                                 <el-table class="property-table" :data="item.model.propertyList" row-key="id" style="width: 100%">
                                     <el-table-column type="index" width="28" class-name="sort-handle">
                                     </el-table-column>

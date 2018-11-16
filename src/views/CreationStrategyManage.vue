@@ -40,13 +40,13 @@
                         <el-card shadow="hover">
                             <div slot="header">
                                 <el-button-group>
-                                    <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
-                                </el-button-group>
-                                <el-button-group style="margin-left: 5px;">
                                     <el-button type="success" size="mini" @click="insertVarScript(item)">插入变量</el-button>
                                     <el-button type="success" size="mini" @click="insertTemplateScript(item)">插入模板</el-button>
                                     <el-button type="success" size="mini" @click="insertFileScript(item)">插入文件</el-button>
                                     <el-button type="success" size="mini" @click="insertDirectoryScript(item)">插入目录</el-button>
+                                </el-button-group>
+                                <el-button-group style="margin-left: 5px;">
+                                    <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
                                 </el-button-group>
                             </div>
                             <div class="code-box">
