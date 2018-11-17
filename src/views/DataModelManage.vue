@@ -77,6 +77,18 @@
                                                 </el-form-item>
                                             </template>
                                         </el-table-column>
+                                        <el-table-column label="占位文本">
+                                            <template slot-scope="{ row, column, $index }">
+                                                <el-form-item :prop="'propertyList.' + $index + '.placeholder'" :rules="validRule.property.placeholder">
+                                                    <el-input v-model="row.placeholder" />
+                                                    <template slot="error" slot-scope="{ error }">
+                                                        <el-popover placement="bottom" trigger="manual" :value="true">
+                                                            <el-alert :title="error" type="error" :closable="false"></el-alert>
+                                                        </el-popover>
+                                                    </template>
+                                                </el-form-item>
+                                            </template>
+                                        </el-table-column>
                                         <el-table-column label="显示宽度" width="100">
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'propertyList.' + $index + '.displayWidth'" :rules="validRule.property.displayWidth">
@@ -204,6 +216,18 @@
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'fieldList.' + $index + '.comment'" :rules="validRule.field.comment">
                                                     <el-input v-model="row.comment" />
+                                                    <template slot="error" slot-scope="{ error }">
+                                                        <el-popover placement="bottom" trigger="manual" :value="true">
+                                                            <el-alert :title="error" type="error" :closable="false"></el-alert>
+                                                        </el-popover>
+                                                    </template>
+                                                </el-form-item>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column label="占位文本">
+                                            <template slot-scope="{ row, column, $index }">
+                                                <el-form-item :prop="'fieldList.' + $index + '.placeholder'" :rules="validRule.field.placeholder">
+                                                    <el-input v-model="row.placeholder" />
                                                     <template slot="error" slot-scope="{ error }">
                                                         <el-popover placement="bottom" trigger="manual" :value="true">
                                                             <el-alert :title="error" type="error" :closable="false"></el-alert>
@@ -375,6 +399,9 @@
                             { required: true, message: '请填写显示标题', trigger: 'blur' },
                             { type: 'string', max: 255, message: '显示标题长度不能大于255', trigger: 'blur' }
                         ],
+                        placeholder: [
+                            { type: 'string', max: 255, message: '占位文本长度不能大于255', trigger: 'blur' }
+                        ],
                         displayWidth: [
                             { type:"number", min: 0, max: 1000, message: '请输入0到1000的数字', trigger: 'blur' }
                         ],
@@ -396,6 +423,9 @@
                         comment: [
                             { required: true, message: '请填写显示标题', trigger: 'blur' },
                             { type: 'string', max: 255, message: '显示标题长度不能大于255', trigger: 'blur' }
+                        ],
+                        placeholder: [
+                            { type: 'string', max: 255, message: '占位文本长度不能大于255', trigger: 'blur' }
                         ],
                         displayWidth: [
                             { type:"number", min: 0, max: 1000, message: '请输入0到1000的数字', trigger: 'blur' }
