@@ -677,7 +677,9 @@
                     model.isLoaded = true;
                     this.addToTab(model);
                     this.selectTab(model);
-                    this.rowDrop(model);
+                    if(dataModel.fieldGroup.length){
+                        this.rowDrop(model);
+                    }
                 });
             },
             //后添加的属性也能兼容
@@ -1064,7 +1066,7 @@
                     }
                     else{
                         if(generatorInstance.releaseVersion !== generator.releaseVersion){
-                            this.$alert("当前生成器已升级发布，请确认！", {
+                            this.$alert("当前生成器已经升级，请确认！", {
                                 confirmButtonText: '确定',
                                 callback: (action) => {
                                     this.Api.GeneratorInstance.versionSync({id:this.generatorInstanceId}).then((data) => {
