@@ -621,7 +621,7 @@
                             model.name = model.properties[dataModel.primaryProperty.name].value;
                             model.isDirty = false;
                             this.removeFromTreeData(model);
-                            this.addToTreeData(model, parent != null ? this.$refs.tree.getNode(parent.id).data : null);
+                            this.addToTreeData(model, parent !== null && parent.id !== null ? this.$refs.tree.getNode(parent.id).data : null);
                             this.$refs.tree.setCurrentKey(model.id);
                             this.$message({type: 'success', message: '保存成功！'});
                         });
@@ -1078,10 +1078,10 @@
                     }
                 });
 
-                let infoQueryRequest = this.Api.DataModel.infoQuery({generatorId: generatorInstance.generator.id, fetchLazy:false});
+                let dataModelRequest = this.Api.DataModel.query({generatorId: generatorInstance.generator.id, fetchLazy:false});
                 let treeRequest = this.Api.GeneratorData.tree({generatorInstanceId: this.generatorInstanceId});
                 let schemeRequest = this.Api.DataModelSchema.get({generatorId: generatorInstance.generator.id});
-                this.$http.all([infoQueryRequest, treeRequest, schemeRequest])
+                this.$http.all([dataModelRequest, treeRequest, schemeRequest])
                 .then(([dataModelList, generatorDataTree, scheme]) => {
                     this.dataModelCache = {};
                     this.dataModelList = dataModelList;

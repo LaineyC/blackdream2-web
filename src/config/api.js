@@ -153,6 +153,7 @@ export default Vue.prototype.Api = {
         update: doPost('/generator/dataModel/update'),
         delete: doPost('/generator/dataModel/delete'),
         get: doPost('/generator/dataModel/get'),
+        query: doPost('/generator/dataModel/query'),
         infoQuery: doPost('/generator/dataModel/infoQuery'),
     },
     GeneratorGuide: {
