@@ -81,13 +81,8 @@ let router = new Router({
             ]
         },
         {
-            path: '/search/:searchText',
-            name: 'search',
-            component: () => import('../views/SearchPage.vue')
-        },
-        {
             path: '/search',
-            name: 'searchEmpty',
+            name: 'search',
             component: () => import('../views/SearchPage.vue')
         },
         {
@@ -150,7 +145,7 @@ router.beforeEach((to, from, next) => {
     let accessToken = method.cookie.get("ACCESS_TOKEN");
     if(!accessToken){
         if(to.meta.isRequiredAuth){
-            next({name: "signIn"});
+            next({name: "signIn", query:{redirectUri: JSON.stringify({name:to.name, query:to.query, params:to.params})}});
         }
         next();
         return;
@@ -174,7 +169,7 @@ router.beforeEach((to, from, next) => {
         if(to.meta.isRequiredAuth){
             if (errorCode === 1002) {
                 auth.body = null;
-                next({name: "signIn"});
+                next({name: "signIn", query:{redirectUri: JSON.stringify({name:to.name, query:to.query, params:to.params})}});
             }
             else {
                 next();

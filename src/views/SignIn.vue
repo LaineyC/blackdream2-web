@@ -51,7 +51,12 @@
                 this.$refs.signInForm.validate((valid) => {
                     if (valid) {
                         this.Api.User.signIn(this.request).then((data) => {
-                            this.linkToGeneratorInstanceManage();
+                            if(this.redirectUri){
+                                this.$router.push(JSON.parse(this.redirectUri));
+                            }
+                            else{
+                                this.linkToHome();
+                            }
                         });
                     }
                 })
@@ -62,9 +67,15 @@
             linkToSignUp(){
                 this.$router.push({ name: 'signUp'});
             },
+            linkToHome(){
+                this.$router.push({ name: 'home'});
+            },
             linkToPasswordReset(){
                 this.$router.push({ name: 'passwordReset'});
             }
+        },
+        mounted(){
+            this.redirectUri = this.$route.query.redirectUri;
         }
     }
 </script>

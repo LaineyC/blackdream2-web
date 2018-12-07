@@ -18,7 +18,7 @@
                     <el-col :span="24">
                         <el-form :inline="true" size="small">
                             <el-form-item>
-                                <el-input v-model="searchRequest.name" type="text" placeholder="输入名称搜索"></el-input>
+                                <el-input v-model="searchRequest.name" type="text" placeholder="输入名称搜索" clearable></el-input>
                             </el-form-item>
                             <el-form-item style="width: 120px;">
                                 <el-select v-model="searchRequest.engineType" placeholder="模板语言" clearable>
@@ -110,13 +110,13 @@
             },
         },
         watch: {
-            '$route.params.searchText' (to, from) {
-                this.searchRequest.name = this.$route.params.searchText;
+            '$route.query.keyword' (to, from) {
+                this.searchRequest.name = this.$route.query.keyword;
                 this.search();
             }
         },
         mounted(){
-            this.searchRequest.name = this.$route.params.searchText;
+            this.searchRequest.name = this.$route.query.keyword;
             this.search();
 
             this.Api.Generator.query({

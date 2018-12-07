@@ -14,7 +14,7 @@
                     <el-col :span="24">
                         <el-form :inline="true" size="small">
                             <el-form-item>
-                                <el-input v-model="searchRequest.name" type="text" placeholder="输入名称搜索"></el-input>
+                                <el-input v-model="searchRequest.name" type="text" placeholder="输入名称搜索" clearable></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" @click="search">搜索</el-button>
