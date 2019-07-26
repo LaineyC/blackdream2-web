@@ -881,15 +881,15 @@
                 let dataValidatorInteger = dataValidatorMap[dataTypeInteger];
                 let ruleListInteger = ruleListMap[dataTypeInteger] = [];
                 if(dataValidatorInteger != null){
-                    ruleListInteger.push({ type: 'integer', message: '必须整型', trigger: 'blur' });
+                    ruleListInteger.push({ type: 'integer', message: '必须整型', trigger: 'blur', transform :this.Method.validator.transform});
                     if(dataValidatorInteger.isRequired){
                         ruleListInteger.push({ required: true, message: '必输项', trigger: 'blur' });
                     }
                     if(dataValidatorInteger.minValue !== null && dataValidatorInteger.minValue !== undefined){
-                        ruleListInteger.push( { type:"integer", min: dataValidatorInteger.minValue, message: '最小' + dataValidatorInteger.minValue , trigger: 'blur' });
+                        ruleListInteger.push( { type:"integer", min: dataValidatorInteger.minValue, message: '最小' + dataValidatorInteger.minValue , trigger: 'blur', transform :this.Method.validator.transform});
                     }
                     if(dataValidatorInteger.maxValue !== null && dataValidatorInteger.maxValue !== undefined){
-                        ruleListInteger.push({ type:"integer", max: dataValidatorInteger.maxValue, message: '最大' + dataValidatorInteger.maxValue, trigger: 'blur' });
+                        ruleListInteger.push({ type:"integer", max: dataValidatorInteger.maxValue, message: '最大' + dataValidatorInteger.maxValue, trigger: 'blur', transform :this.Method.validator.transform});
                     }
                     if(dataValidatorInteger.validateScript){
                         dataValidatorInteger.validateFunction = new Function("$control", rowVarName, "$data", "$dataTree", "$global", dataValidatorInteger.validateScript);
@@ -901,15 +901,15 @@
                 let dataValidatorDecimal = dataValidatorMap[dataTypeDecimal];
                 let ruleListDecimal = ruleListMap[dataTypeDecimal] = [];
                 if(dataValidatorDecimal != null){
-                    ruleListDecimal.push({ type: 'number', message: '必须数字', trigger: 'blur' });
+                    ruleListDecimal.push({ type: 'number', message: '必须数字', trigger: 'blur', transform :this.Method.validator.transform});
                     if(dataValidatorDecimal.isRequired){
                         ruleListDecimal.push({ required: true, message: '必输项', trigger: 'blur' });
                     }
                     if(dataValidatorDecimal.minValue !== null && dataValidatorDecimal.minValue !== undefined){
-                        ruleListDecimal.push( { type:"number", min: dataValidatorDecimal.minValue, message: '最小' + dataValidatorDecimal.minValue , trigger: 'blur' });
+                        ruleListDecimal.push( { type:"number", min: dataValidatorDecimal.minValue, message: '最小' + dataValidatorDecimal.minValue , trigger: 'blur', transform :this.Method.validator.transform});
                     }
                     if(dataValidatorDecimal.maxValue !== null && dataValidatorDecimal.maxValue !== undefined){
-                        ruleListDecimal.push({ type:"number", max: dataValidatorDecimal.maxValue, message: '最大' + dataValidatorDecimal.maxValue, trigger: 'blur' });
+                        ruleListDecimal.push({ type:"number", max: dataValidatorDecimal.maxValue, message: '最大' + dataValidatorDecimal.maxValue, trigger: 'blur', transform :this.Method.validator.transform});
                     }
                     if(dataValidatorDecimal.validateScript){
                         dataValidatorDecimal.validateFunction = new Function("$control", rowVarName, "$data", "$dataTree", "$global", dataValidatorDecimal.validateScript);

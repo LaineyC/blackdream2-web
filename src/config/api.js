@@ -31,7 +31,7 @@ axios.interceptors.request.use(config => {
         message: '请求失败',
         type: 'error'
     });
-    return Promise.reject(error)
+    return Promise.reject(error);
 });
 //http响应拦截
 axios.interceptors.response.use(data => {
@@ -49,7 +49,7 @@ axios.interceptors.response.use(data => {
                 type: 'error'
             });
         }
-        return Promise.reject(data.data.error)
+        return Promise.reject(data.data.error);
     }
     else{
         return data.data.body;
@@ -93,7 +93,7 @@ let getServerUrl = function(uri){
 
 let doPost = function(uri){
     return function(request, config){
-        return axios.post(getServerUrl(uri), request, config)
+        return axios.post(getServerUrl(uri), request, config);
     }
 };
 

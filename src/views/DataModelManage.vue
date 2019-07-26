@@ -403,7 +403,7 @@
                             { type: 'string', max: 255, message: '占位文本长度不能大于255', trigger: 'blur' }
                         ],
                         displayWidth: [
-                            { type:"number", min: 0, max: 1000, message: '请输入0到1000的数字', trigger: 'blur' }
+                            { type:"number", min: 0, max: 1000, message: '请输入0到1000的数字', trigger: 'blur', transform :this.Method.validator.transform}
                         ],
                         name: [
                             { required: true, message: '请填写属性名称', trigger: 'blur' },
@@ -428,7 +428,7 @@
                             { type: 'string', max: 255, message: '占位文本长度不能大于255', trigger: 'blur' }
                         ],
                         displayWidth: [
-                            { type:"number", min: 0, max: 1000, message: '请输入0到1000的数字', trigger: 'blur' }
+                            { type:"number", min: 0, max: 1000, message: '请输入0到1000的数字', trigger: 'blur', transform :this.Method.validator.transform}
                         ],
                         name: [
                             { required: true, message: '请填写字段名称', trigger: 'blur' },

@@ -14,6 +14,11 @@ export default Vue.prototype.Method = {
              }
          }
     },
+    validator: {
+        transform: function(value) {
+            return (value==='') ? null : value
+        }
+    },
     cookie:{
         set: function (name, value, days) {
             let date = new Date();

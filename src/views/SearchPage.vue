@@ -40,7 +40,7 @@
                                     <span> / </span>
                                     <el-button type="text" size="mini" @click="linkToGeneratorDetail(item)"><strong>{{item.name}}</strong></el-button>
                                 </div>
-                                <el-button-group>
+                                <el-button-group v-if="Auth.isCertified">
                                     <el-button size="mini" type="success" @click="showGeneratorInstanceCreateModal(item)">创建实例</el-button>
                                 </el-button-group>
                             </div>
