@@ -631,6 +631,7 @@
                     id: model.id,
                     name: model.name,
                     iconStyle:model.iconStyle,
+                    code:model.code,
                     model: model,
                     children: []
                 };

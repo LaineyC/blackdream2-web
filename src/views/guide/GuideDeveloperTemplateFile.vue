@@ -24,7 +24,8 @@
                        </el-card>
                        <el-card class="box-card">
                            <div slot="header" class="clearfix"><label>Code</label></div>
-                           <p>模板文件的唯一编码。</p>
+                           <p>模板文件的唯一编码，不会改变。</p>
+                           <p>在<span class="text-warning">生成策略</span>里，通过Code来引用模板文件。</p>
                        </el-card>
                    </div>
                 </el-card>

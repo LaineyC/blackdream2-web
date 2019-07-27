@@ -29,14 +29,14 @@
                     <el-tree ref="tree" :filter-node-method="filterNode" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
                         <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">
                             <span><i :class="dataModelCache[data.dataModel.id].iconStyle"></i> {{ node.label }}</span>
-                            <el-dropdown trigger="click" v-if="schemeRuleItemMap[data.dataModel.id].children.length>1">
+                            <el-dropdown trigger="click" v-if="schemeRuleItemMap[data.dataModel.code].children.length>1">
                                 <span class="el-dropdown-link"><i class="el-icon-circle-plus"></i></span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item v-for="dataModel in schemeRuleItemMap[data.dataModel.id].children" :key="dataModel.id"><div @click="create(data, dataModel)"><i :class="dataModel.iconStyle"></i> {{dataModel.name}}</div></el-dropdown-item>
+                                    <el-dropdown-item v-for="dataModel in schemeRuleItemMap[data.dataModel.code].children" :key="dataModel.id"><div @click="create(data, dataModel)"><i :class="dataModel.iconStyle"></i> {{dataModel.name}}</div></el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
-                            <span v-if="schemeRuleItemMap[data.dataModel.id].children.length===1">
-                                <span class="el-dropdown-link" @click="create(data, schemeRuleItemMap[data.dataModel.id].children[0])"><i class="el-icon-circle-plus"></i></span>
+                            <span v-if="schemeRuleItemMap[data.dataModel.code].children.length===1">
+                                <span class="el-dropdown-link" @click="create(data, schemeRuleItemMap[data.dataModel.code].children[0])"><i class="el-icon-circle-plus"></i></span>
                             </span>
                         </div>
                     </el-tree>
@@ -621,7 +621,7 @@
                             model.name = model.properties[dataModel.primaryProperty.name].value;
                             model.isDirty = false;
                             this.removeFromTreeData(model);
-                            this.addToTreeData(model, parent !== null && parent.id !== null ? this.$refs.tree.getNode(parent.id).data : null);
+                            this.addToTreeData(model, !!parent && !!parent.id ? this.$refs.tree.getNode(parent.id).data : null);
                             this.$refs.tree.setCurrentKey(model.id);
                             this.$message({type: 'success', message: '保存成功！'});
                         });
@@ -1164,20 +1164,23 @@
 
                     this.schemeRuleItemMap = {};
                     let schemeRuleItemMap = scheme ? scheme.ruleItemMap : {};
-                    let keys = [""];
+                    let dataModelCodes = [""];
+                    let code_dataModelCache = {};
                     for(let k in this.dataModelCache){
-                        keys.push(k);
+                        let dataModel = this.dataModelCache[k];
+                        code_dataModelCache[dataModel.code] = dataModel;
+                        dataModelCodes.push(dataModel.code);
                     }
-                    keys.forEach(k => {
+                    dataModelCodes.forEach(code => {
                         let children = [];
-                        if(schemeRuleItemMap[k]){
-                            schemeRuleItemMap[k].children.forEach(value => {
-                                if(value in this.dataModelCache){
-                                    children.push(this.dataModelCache[value]);
+                        if(schemeRuleItemMap[code]){
+                            schemeRuleItemMap[code].children.forEach(value => {
+                                if(value in code_dataModelCache){
+                                    children.push(code_dataModelCache[value]);
                                 }
                             });
                         }
-                        this.schemeRuleItemMap[k] = {children};
+                        this.schemeRuleItemMap[code] = {children};
                     });
 
                     let that = this;

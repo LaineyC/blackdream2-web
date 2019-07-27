@@ -32,7 +32,7 @@
 
 <strong class="text-warning">$global</strong> <span class="text-success">Global类型</span>
 
-<strong class="text-warning">$dataTree</strong> <span class="text-success">TemplateFileContextData类型的树结构</span>
+<strong class="text-warning">$dataTree</strong> <span class="text-success">TemplateFileContextData类型的树结构，List&lt;TemplateFileContextData&gt;</span>
                            </pre>
                        </el-card>
                    </div>

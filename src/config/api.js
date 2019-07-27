@@ -40,7 +40,7 @@ axios.interceptors.response.use(data => {
     }, 200);
     //Vue.prototype.$Loading.finish();
     let error = data.data.error;
-    if(error != null && error !== undefined){
+    if(error != null){
         if(!data.config.isCustomHandle){
             Vue.prototype.$message({
                 showClose: true,

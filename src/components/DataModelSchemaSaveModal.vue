@@ -9,12 +9,12 @@
         <el-form ref="form" :model="request" :rules="validRule" label-width="125px" size="small">
             <el-form-item label="ROOT" v-if="request.ruleItemMap['']">
                 <el-checkbox-group v-model="request.ruleItemMap[''].children">
-                    <el-checkbox v-for="dm in dataModelList" :label="dm.id" :key="dm.id" name="type" border>{{dm.name}}</el-checkbox>
+                    <el-checkbox v-for="dm in dataModelList" :label="dm.code" :key="dm.id" name="type" border>{{dm.name}}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
-            <el-form-item :label="dataModel.name" v-for="dataModel in dataModelList" :key="dataModel.id">
-                <el-checkbox-group v-model="request.ruleItemMap[dataModel.id].children">
-                    <el-checkbox v-for="dm in dataModelList" :label="dm.id" :key="dm.id" name="type" border>{{dm.name}}</el-checkbox>
+            <el-form-item :label="dataModel.name" v-for="dataModel in dataModelList" :key="dataModel.code">
+                <el-checkbox-group v-model="request.ruleItemMap[dataModel.code].children">
+                    <el-checkbox v-for="dm in dataModelList" :label="dm.code" :key="dm.id" name="type" border>{{dm.name}}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
         </el-form>
@@ -58,18 +58,18 @@
             open({generatorId,dataModelList}){
                 this.request.generatorId = generatorId;
                 this.Api.DataModelSchema.get({generatorId: generatorId}).then((schema) => {
-                    let dataModelCache = {};
+                    let code_dataModelCache = {};
                     dataModelList.forEach(item => {
-                        dataModelCache[item.id] = item;
-                        this.$set(this.request.ruleItemMap, item.id, {children:[]});
+                        code_dataModelCache[item.code] = item;
+                        this.$set(this.request.ruleItemMap, item.code, {children:[]});
                     });
                     if(schema){
                         let ruleItemMap = {};
                         for(let k in schema.ruleItemMap){
-                            if(dataModelCache[k] || k === ""){
+                            if(code_dataModelCache[k] || k === ""){
                                 let ruleItem = ruleItemMap[k] = {children:[]};
                                 schema.ruleItemMap[k].children.forEach(rule => {
-                                    if(dataModelCache[rule]){
+                                    if(code_dataModelCache[rule]){
                                         ruleItem.children.push(rule);
                                     }
                                 });
@@ -79,8 +79,8 @@
                         this.$set(this.request, "ruleItemMap", ruleItemMap);
                     }
                     dataModelList.forEach(item => {
-                        if(!this.request.ruleItemMap[item.id]){
-                            this.$set(this.request.ruleItemMap, item.id, {children:[]});
+                        if(!this.request.ruleItemMap[item.code]){
+                            this.$set(this.request.ruleItemMap, item.code, {children:[]});
                         }
                     });
                     if(!this.request.ruleItemMap['']){
