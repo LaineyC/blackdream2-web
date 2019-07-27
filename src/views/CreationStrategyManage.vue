@@ -40,10 +40,12 @@
                         <el-card shadow="hover">
                             <div slot="header">
                                 <el-button-group>
+<!--
                                     <el-button type="success" size="mini" @click="insertVarScript(item)">插入变量</el-button>
-                                    <el-button type="success" size="mini" @click="insertTemplateScript(item)">插入模板</el-button>
-                                    <el-button type="success" size="mini" @click="insertFileScript(item)">插入文件</el-button>
-                                    <el-button type="success" size="mini" @click="insertDirectoryScript(item)">插入目录</el-button>
+-->
+                                    <el-button type="success" size="mini" @click="insertTemplateScript(item)">创建模板</el-button>
+                                    <el-button type="success" size="mini" @click="insertFileScript(item)">创建文件</el-button>
+                                    <el-button type="success" size="mini" @click="insertDirectoryScript(item)">创建目录</el-button>
                                 </el-button-group>
                                 <el-button-group style="margin-left: 5px;">
                                     <el-button type="primary" size="mini" @click="update(item)">保存</el-button>
@@ -179,13 +181,13 @@
             insertFileScript(item){
                 let aceEditor = this.$refs['aceEditor' + item.id][0];
                 aceEditor.editor.insert("\n");
-                aceEditor.editor.insert("var file_ = $tool.newFile(fileName, templateRef, templateContext);");
+                aceEditor.editor.insert("$tool.newFile(fileName, templateRef, templateContext);");
                 aceEditor.editor.insert("\n");
             },
             insertDirectoryScript(item){
                 let aceEditor = this.$refs['aceEditor' + item.id][0];
                 aceEditor.editor.insert("\n");
-                aceEditor.editor.insert("var dir_ = $tool.newDir(dirName);");
+                aceEditor.editor.insert("$tool.newDir(dirName);");
                 aceEditor.editor.insert("\n");
             },
             insertVarScript(item){

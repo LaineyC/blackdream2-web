@@ -18,6 +18,11 @@ let router = new Router({
             component: () => import('../views/HomePage.vue')
         },
         {
+            path: '/about',
+            name: 'about',
+            component: () => import('../views/AboutPage.vue')
+        },
+        {
             path: '/creation-strategy-manage/:generatorId',
             name: 'creationStrategyManage',
             meta: { isRequiredAuth: true, isDeveloper: true },

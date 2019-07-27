@@ -45,7 +45,7 @@
                                 <div>
                                     <el-button-group>
                                         <el-button size="mini" type="primary" @click="showGeneratorUpdateModal(item)">编辑</el-button>
-                                        <el-button :disabled="item.status===Constant.GeneratorStatusEnum.RELEASE.value" size="mini" type="primary" @click="release(item)">发布</el-button>
+                                        <el-button :disabled="item.status!==Constant.GeneratorStatusEnum.DEVELOP.value" size="mini" type="primary" @click="release(item)">发布</el-button>
                                     </el-button-group>
                                     <el-button-group style="margin-left: 5px;">
                                         <el-button size="mini" type="success" @click="linkToDataModelManage(item)">模型</el-button>

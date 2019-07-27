@@ -18,20 +18,13 @@
                            <p><span class="text-warning">JavaScript</span></p>
                            <p>有以下全局变量：</p>
                            <pre style="background-color:inherit;">
-<span class="text-success">//工具</span>
-<strong class="text-warning">$tool</strong> <span class="text-warning">{</span>
-    <span class="text-success">//定义变量 varName变量名 varValue变量值</span>
-    <span class="text-primary">newVar(varName, varValue)</span>
-    <span class="text-success">//定义模板 tmplCode模板code</span>
-    <span class="text-primary">newTmpl(tmplCode)</span>
-    <span class="text-success">//定义文件 fileName文件名 相对路径用'/'分割 templateRef模本对象 templateContext模板上下文Json结构</span>
-    <span class="text-primary">newFile(fileName, templateRef, templateContext)</span>
-    <span class="text-success">//定义目录 dirName目录名 相对路径用'/'分割</span>
-    <span class="text-primary">newDir(dirName)</span>
-<span class="text-warning">}</span>
+<span class="text-success">//工具类</span>
+<strong class="text-warning">$tool</strong> <span class="text-success">CreationStrategyScriptTool类型</span>
 
+<span class="text-success">//构建时的全局变量</span>
 <strong class="text-warning">$global</strong> <span class="text-success">Global类型</span>
 
+<span class="text-success">//用户数据</span>
 <strong class="text-warning">$dataTree</strong> <span class="text-success">TemplateFileContextData类型的树结构，List&lt;TemplateFileContextData&gt;</span>
                            </pre>
                        </el-card>

@@ -2,9 +2,7 @@
     <div id="bd-app">
         <el-container>
             <el-header id="bd-header">
-                <el-menu id="bd-header-menu" class="container" mode="horizontal" background-color="#545c64"
-                         text-color="#fff"
-                         active-text-color="#ffd04b">
+                <el-menu id="bd-header-menu" class="container" mode="horizontal" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
                     <el-menu-item index="1" @click="linkToHome"><img id="bd-logo" src="@/assets/image/logo.jpg"/></el-menu-item>
                     <el-menu-item index="2">
                         <el-input placeholder="搜索生成器" v-model="keyword" size="mini" clearable @keyup.enter.native="search">
@@ -13,14 +11,15 @@
                     </el-menu-item>
                     <el-menu-item index="3-1" @click="linkToGeneratorManage" v-if="Auth.isCertified && Auth.body.type === Constant.UserTypeEnum.DEVELOPER.value">我的生成器</el-menu-item>
                     <el-menu-item index="3-2" @click="linkToGeneratorInstanceManage" v-if="Auth.isCertified">我的实例</el-menu-item>
+                    <el-menu-item index="7" style="float: right;" @click="linkToAbout">关于</el-menu-item>
+                    <el-menu-item index="8" style="float: right;" @click="linkToGuide">指南</el-menu-item>
                     <el-submenu index="4" style="float: right;" v-if="Auth.isCertified">
                         <template slot="title">{{Auth.body.username}}</template>
-                        <el-menu-item index="4-1" @click="linkToGuide">指南</el-menu-item>
                         <el-menu-item index="4-2" @click="linkToSetting">设置</el-menu-item>
                         <el-menu-item index="4-3"  @click="signOut">退出</el-menu-item>
                     </el-submenu>
-                    <el-menu-item index="6" style="float: right;" @click="linkToSignUp" v-if="!Auth.isCertified">注册</el-menu-item>
-                    <el-menu-item index="5" style="float: right;" @click="linkToSignIn" v-if="!Auth.isCertified">登陆</el-menu-item>
+                    <el-menu-item index="5" style="float: right;" @click="linkToSignUp" v-if="!Auth.isCertified">注册</el-menu-item>
+                    <el-menu-item index="6" style="float: right;" @click="linkToSignIn" v-if="!Auth.isCertified">登陆</el-menu-item>
                 </el-menu>
             </el-header>
             <el-main id="bd-main">
@@ -61,6 +60,9 @@
             },
             linkToSignUp(){
                 this.$router.push({ name: 'signUp'});
+            },
+            linkToAbout(){
+                this.$router.push({ name: 'about'});
             },
             linkToGuide(){
                 this.$router.push({ name: 'guideUserGenerator'});

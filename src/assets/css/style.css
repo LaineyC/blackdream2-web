@@ -22,6 +22,19 @@
         width: 1370px;
     }
 }
+
+@media (min-width: 1600px){
+    .container {
+        width: 1570px;
+    }
+}
+
+@media (min-width: 1800px){
+    .container {
+        width: 1770px;
+    }
+}
+
 .text-primary{
     color: #409EFF;
 }
@@ -50,4 +63,8 @@ body.el-loading-parent--relative{
 
 .bd-loading .el-loading-spinner{
     font-size: 4em;
+}
+
+.el-tree-node__content>.el-checkbox {
+    margin-right: 4px;
 }

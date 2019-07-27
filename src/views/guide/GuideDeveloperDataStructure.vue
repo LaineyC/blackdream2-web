@@ -109,6 +109,20 @@
     <span class="text-success">//数据模型名称</span>
     <span class="text-primary">String</span> <span class="text-info">name</span>
 <span class="text-warning">}</span>
+
+<span class="text-success">//生成策略的工具类</span>
+<strong class="text-warning">CreationStrategyScriptTool</strong> <span class="text-warning">{</span>
+<!--
+    <span class="text-success">//定义变量 varName变量名 varValue变量值</span>
+    <span class="text-primary">newVar(varName, varValue)</span>
+-->
+    <span class="text-success">//定义模板 tmplCode模板code</span>
+    <span class="text-primary">$Template newTmpl(String tmplCode)</span>
+    <span class="text-success">//定义文件 fileName文件名 相对路径用'/'分割 templateRef模本对象 templateContext模板上下文Json结构</span>
+    <span class="text-primary">$File newFile(String fileName, $Template templateRef, Map templateContext)</span>
+    <span class="text-success">//定义目录 dirName目录名 相对路径用'/'分割</span>
+    <span class="text-primary">$Directory newDir(String dirName)</span>
+<span class="text-warning">}</span>
                             </pre>
                    </div>
                 </el-card>
