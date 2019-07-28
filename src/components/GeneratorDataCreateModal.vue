@@ -14,7 +14,7 @@
                             <el-form-item>{{group.name}}</el-form-item>
                         </div>
                         <div class="group-item" v-for="property in group.children" :key="property.id">
-                            <div class="group-label" :class="{'is-required':property.dataValidatorMap[model.properties[property.name].dataType].isRequired}" style="margin-left: 5px;">
+                            <div class="group-label" :class="{'is-required':property.dataValidatorMap[model.properties[property.name].dataType]&&property.dataValidatorMap[model.properties[property.name].dataType].isRequired}" style="margin-left: 5px;">
                                 <el-form-item>{{property.comment}}</el-form-item>
                             </div>
                             <div class="group-item" :style="{ width: property.displayWidth ? property.displayWidth + 'px' : '' }">
@@ -93,7 +93,7 @@
                         </div>
                     </div>
                     <div v-else>
-                        <div class="group-label" :class="{'is-required':group.model.dataValidatorMap[model.properties[group.model.name].dataType].isRequired}">
+                        <div class="group-label" :class="{'is-required':group.model.dataValidatorMap[model.properties[group.model.name].dataType]&&group.model.dataValidatorMap[model.properties[group.model.name].dataType].isRequired}">
                             <el-form-item>{{group.model.comment}}</el-form-item>
                         </div>
                         <div class="group-item" :style="{ width: group.model.displayWidth ? group.model.displayWidth + 'px' : '' }">
@@ -263,7 +263,7 @@
                 let ruleList = ruleListMap[dataType];
                 let dataValidator = dataValidatorMap[dataType];
                 let ruleArray = [...ruleList];
-                if(dataValidator.validateFunction){
+                if(dataValidator && dataValidator.validateFunction){
                     ruleArray.push(
                         {
                             validator(rule, value, callback, source, options) {
@@ -310,6 +310,9 @@
         }
         .el-card__body{
             padding: 5px;
+        }
+        .group-label .el-form-item__content{
+            font-weight: bold;
         }
         .group-label, .group-item{
             display: inline-block;

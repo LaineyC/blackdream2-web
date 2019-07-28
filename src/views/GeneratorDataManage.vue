@@ -29,13 +29,13 @@
                     <el-tree ref="tree" :filter-node-method="filterNode" show-checkbox node-key="id" :data="treeData" :props="treeProps" default-expand-all :expand-on-click-node="false" highlight-current>
                         <div class="custom-tree-node" slot-scope="{ node, data }" @dblclick.stop="selectNode(data)">
                             <span><i :class="dataModelCache[data.dataModel.id].iconStyle"></i> {{ node.label }}</span>
-                            <el-dropdown trigger="click" v-if="schemeRuleItemMap[data.dataModel.code].children.length>1">
+                            <el-dropdown trigger="click" v-if="schemeRuleItemMap[data.dataModel.code]&&schemeRuleItemMap[data.dataModel.code].children.length>1">
                                 <span class="el-dropdown-link"><i class="el-icon-circle-plus"></i></span>
                                 <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item v-for="dataModel in schemeRuleItemMap[data.dataModel.code].children" :key="dataModel.id"><div @click="create(data, dataModel)"><i :class="dataModel.iconStyle"></i> {{dataModel.name}}</div></el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
-                            <span v-if="schemeRuleItemMap[data.dataModel.code].children.length===1">
+                            <span v-if="schemeRuleItemMap[data.dataModel.code]&&schemeRuleItemMap[data.dataModel.code].children.length===1">
                                 <span class="el-dropdown-link" @click="create(data, schemeRuleItemMap[data.dataModel.code].children[0])"><i class="el-icon-circle-plus"></i></span>
                             </span>
                         </div>
@@ -53,7 +53,7 @@
                                                 <el-form-item>{{group.name}}</el-form-item>
                                             </div>
                                             <div class="group-item" v-for="property in group.children" :key="property.id">
-                                                <div class="group-label" :class="{'is-required':property.dataValidatorMap[item.properties[property.name].dataType].isRequired}" style="margin-left: 5px;">
+                                                <div class="group-label" :class="{'is-required':property.dataValidatorMap[item.properties[property.name].dataType]&&property.dataValidatorMap[item.properties[property.name].dataType].isRequired}" style="margin-left: 5px;">
                                                      <el-form-item>{{property.comment}}</el-form-item>
                                                 </div>
                                                 <div class="group-item" :style="{ width: property.displayWidth ? property.displayWidth + 'px' : '' }">
@@ -82,7 +82,7 @@
                                                         </template>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="item.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'properties.' + property.name + '.value'" :rules="buildAttributeValidator(property, item.properties[property.name], item.properties, item, property.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum?'change':'blur')">
-                                                        <el-input v-if="!property.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="item.properties[property.name].value" :placeholder="property.placeholder" @change="cascadeFunction(property.cascadeFunction, item.properties[property.name], item.properties, item)"/>
+                                                        <el-input v-if="!property.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value]||!property.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="item.properties[property.name].value" :placeholder="property.placeholder" @change="cascadeFunction(property.cascadeFunction, item.properties[property.name], item.properties, item)"/>
                                                         <el-select v-else v-model="item.properties[property.name].value" :placeholder="property.placeholder" @change="cascadeFunction(property.cascadeFunction, item.properties[property.name], item.properties, item)" clearable>
                                                             <el-option v-for="enumItem in property.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                         </el-select>
@@ -132,7 +132,7 @@
                                             </div>
                                         </div>
                                         <div v-else>
-                                            <div class="group-label" :class="{'is-required':group.model.dataValidatorMap[item.properties[group.model.name].dataType].isRequired}">
+                                            <div class="group-label" :class="{'is-required':group.model.dataValidatorMap[item.properties[group.model.name].dataType]&&group.model.dataValidatorMap[item.properties[group.model.name].dataType].isRequired}">
                                                 <el-form-item>{{group.model.comment}}</el-form-item>
                                             </div>
                                             <div class="group-item" :style="{ width: group.model.displayWidth ? group.model.displayWidth + 'px' : '' }">
@@ -161,7 +161,7 @@
                                                     </template>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="item.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'properties.' + group.model.name + '.value'" :rules="buildAttributeValidator(group.model, item.properties[group.model.name], item.properties, item,group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum?'change':'blur')">
-                                                    <el-input v-if="!group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="item.properties[group.model.name].value" :placeholder="group.model.placeholder" @change="cascadeFunction(group.model.cascadeFunction, item.properties[group.model.name], item.properties, item)"/>
+                                                    <el-input v-if="!group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value]||!group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="item.properties[group.model.name].value" :placeholder="group.model.placeholder" @change="cascadeFunction(group.model.cascadeFunction, item.properties[group.model.name], item.properties, item)"/>
                                                     <el-select v-else v-model="item.properties[group.model.name].value" :placeholder="group.model.placeholder" @change="cascadeFunction(group.model.cascadeFunction, item.properties[group.model.name], item.properties, item)" clearable>
                                                         <el-option v-for="enumItem in group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                     </el-select>
@@ -248,9 +248,9 @@
                                         <el-table-column type="index" width="28" class-name="sort-handle"></el-table-column>
                                         <el-table-column type="selection" width="25"></el-table-column>
                                         <el-table-column :width="group.isGroup ? '' : group.model.displayWidth" :label="group.name" v-for="group in dataModelCache[item.dataModel.id].fieldGroup" :key="group.id" :align="group.isGroup?'center':'left'">
-                                            <template slot="header" slot-scope="scope"><span :class="{'is-required':group.model.dataValidatorMap[group.model.dataType].isRequired}">{{group.name}}</span></template>
+                                            <template slot="header" slot-scope="scope"><span :class="{'is-required':group.model.dataValidatorMap[group.model.dataType]&&group.model.dataValidatorMap[group.model.dataType].isRequired}">{{group.name}}</span></template>
                                             <el-table-column v-if="group.isGroup" v-for="field in group.children" :label="field.comment" :width="field.displayWidth">
-                                                <template slot="header" slot-scope="scope"><span :class="{'is-required':field.dataValidatorMap[field.dataType].isRequired}">{{field.comment}}</span></template>
+                                                <template slot="header" slot-scope="scope"><span :class="{'is-required':field.dataValidatorMap[field.dataType]&&field.dataValidatorMap[field.dataType].isRequired}">{{field.comment}}</span></template>
                                                 <template slot-scope="{ row, column, $index }">
                                                     <el-form-item v-if="row[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.BOOLEAN.value" :prop="'tupleList.' + $index + '.' + field.name + '.value'" :rules="buildAttributeValidator(field, row[field.name], row, item)">
                                                         <el-checkbox v-model="row[field.name].value" @change="cascadeFunction(field.cascadeFunction, row[field.name], row, item)"></el-checkbox>
@@ -277,7 +277,7 @@
                                                         </template>
                                                     </el-form-item>
                                                     <el-form-item v-else-if="row[field.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'tupleList.' + $index + '.' + field.name + '.value'" :rules="buildAttributeValidator(field, row[field.name], row, item,field.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum?'change':'blur')">
-                                                        <el-input v-if="!field.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="row[field.name].value" :placeholder="field.placeholder" @change="cascadeFunction(field.cascadeFunction, row[field.name], row, item)"/>
+                                                        <el-input v-if="!field.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value]||!field.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="row[field.name].value" :placeholder="field.placeholder" @change="cascadeFunction(field.cascadeFunction, row[field.name], row, item)"/>
                                                         <el-select v-else v-model="row[field.name].value" :placeholder="field.placeholder" @change="cascadeFunction(field.cascadeFunction, row[field.name], row, item)" clearable>
                                                             <el-option v-for="enumItem in field.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                         </el-select>
@@ -351,7 +351,7 @@
                                                     </template>
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'tupleList.' + $index + '.' + group.model.name + '.value'" :rules="buildAttributeValidator(group.model, row[group.model.name], row, item,group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum?'change':'blur')">
-                                                    <el-input v-if="!group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="row[group.model.name].value" :placeholder="group.model.placeholder" @change="cascadeFunction(group.model.cascadeFunction, row[group.model.name], row, item)"/>
+                                                    <el-input v-if="!group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value]||!group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="row[group.model.name].value" :placeholder="group.model.placeholder" @change="cascadeFunction(group.model.cascadeFunction, row[group.model.name], row, item)"/>
                                                     <el-select v-else v-model="row[group.model.name].value" :placeholder="group.model.placeholder" @change="cascadeFunction(group.model.cascadeFunction, row[group.model.name], row, item)" clearable>
                                                         <el-option v-for="enumItem in group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                     </el-select>
@@ -564,7 +564,7 @@
                     properties: this.buildProperties(dataModel),
                     tupleList: [],
                     parent:{id:!parent ? null : parent.id},
-                    dataModel: {id:dataModel.id},
+                    dataModel: {id:dataModel.id, code:dataModel.code},
                     generatorInstance: {id:this.generatorInstanceId},
                     children:[]
                 };
@@ -824,7 +824,7 @@
                 let ruleList = ruleListMap[dataType];
                 let dataValidator = dataValidatorMap[dataType];
                 let ruleArray = [...ruleList];
-                if(dataValidator.validateFunction){
+                if(dataValidator && dataValidator.validateFunction){
                     ruleArray.push(
                         {
                             validator(rule, value, callback, source, options) {
@@ -895,6 +895,9 @@
                         dataValidatorInteger.validateFunction = new Function("$control", rowVarName, "$data", "$dataTree", "$global", dataValidatorInteger.validateScript);
                     }
                 }
+                else {
+                    ruleListInteger.push({ type: 'integer', message: '必须整型', trigger: 'blur', transform :this.Method.validator.transform});
+                }
 
                 let dataTypeEnumDecimal = this.Constant.DataModelAttributeDataTypeEnum.DECIMAL;
                 let dataTypeDecimal = dataTypeEnumDecimal.value;
@@ -914,6 +917,9 @@
                     if(dataValidatorDecimal.validateScript){
                         dataValidatorDecimal.validateFunction = new Function("$control", rowVarName, "$data", "$dataTree", "$global", dataValidatorDecimal.validateScript);
                     }
+                }
+                else {
+                    ruleListDecimal.push({ type: 'number', message: '必须数字', trigger: 'blur', transform :this.Method.validator.transform});
                 }
 
                 let dataTypeEnumString = this.Constant.DataModelAttributeDataTypeEnum.STRING;
@@ -1318,6 +1324,9 @@
                     bottom: 0;
                     overflow-y: auto;
                 }
+            }
+            .group-label .el-form-item__content{
+                font-weight: bold;
             }
             .group-label, .group-item{
                 display: inline-block;

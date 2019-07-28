@@ -234,11 +234,61 @@
             copyAttribute(target, source){
                 for(let k in this.Constant.DataModelAttributeDataTypeEnum){
                     let dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum[k];
-                    let targetValue = target[dataTypeEnum.value];
+                    //let targetValue = target[dataTypeEnum.value];
                     let sourceValue = source[dataTypeEnum.value];
-                    if(sourceValue === null){
+                    if(sourceValue == null){
                         continue;
                     }
+                    if(sourceValue.isRequired){
+                        target[dataTypeEnum.value] = target[dataTypeEnum.value] == null ? {} : target[dataTypeEnum.value];
+                        target[dataTypeEnum.value].isRequired = sourceValue.isRequired;
+                    }
+                    if(sourceValue.isEnum){
+                        target[dataTypeEnum.value] = target[dataTypeEnum.value] == null ? {} : target[dataTypeEnum.value];
+                        target[dataTypeEnum.value].isEnum = sourceValue.isEnum;
+                    }
+                    if(sourceValue.minValue != null){
+                        target[dataTypeEnum.value] = target[dataTypeEnum.value] == null ? {} : target[dataTypeEnum.value];
+                        target[dataTypeEnum.value].minValue = sourceValue.minValue;
+                    }
+                    if(sourceValue.maxValue != null){
+                        target[dataTypeEnum.value] = target[dataTypeEnum.value] == null ? {} : target[dataTypeEnum.value];
+                        target[dataTypeEnum.value].maxValue = sourceValue.maxValue;
+                    }
+                    if(sourceValue.length != null){
+                        target[dataTypeEnum.value] = target[dataTypeEnum.value] == null ? {} : target[dataTypeEnum.value];
+                        target[dataTypeEnum.value].length = sourceValue.length;
+                    }
+                    if(sourceValue.minLength != null){
+                        target[dataTypeEnum.value] = target[dataTypeEnum.value] == null ? {} : target[dataTypeEnum.value];
+                        target[dataTypeEnum.value].minLength = sourceValue.minLength;
+                    }
+                    if(sourceValue.maxLength != null){
+                        target[dataTypeEnum.value] = target[dataTypeEnum.value] == null ? {} : target[dataTypeEnum.value];
+                        target[dataTypeEnum.value].maxLength = sourceValue.maxLength;
+                    }
+                    if(sourceValue.regex != null){
+                        target[dataTypeEnum.value] = target[dataTypeEnum.value] == null ? {} : target[dataTypeEnum.value];
+                        target[dataTypeEnum.value].regex = sourceValue.regex;
+                    }
+                    if(sourceValue.regexMessage != null){
+                        target[dataTypeEnum.value] = target[dataTypeEnum.value] == null ? {} : target[dataTypeEnum.value];
+                        target[dataTypeEnum.value].regexMessage = sourceValue.regexMessage;
+                    }
+                    if(sourceValue.validateScript){
+                        target[dataTypeEnum.value] = target[dataTypeEnum.value] == null ? {} : target[dataTypeEnum.value];
+                        target[dataTypeEnum.value].validateScript = sourceValue.validateScript;
+                    }
+                    if(sourceValue.enumList && sourceValue.enumList.length > 0){
+                        target[dataTypeEnum.value] = target[dataTypeEnum.value] == null ? {} : target[dataTypeEnum.value];
+                        target[dataTypeEnum.value].enumList = [];
+                        sourceValue.enumList.forEach(value => {
+                            target[dataTypeEnum.value].enumList.push({
+                                ...value
+                            });
+                        })
+                    }
+/*
                     targetValue.isRequired = sourceValue.isRequired;
                     targetValue.isEnum = sourceValue.isEnum;
                     targetValue.minValue = sourceValue.minValue;
@@ -248,15 +298,16 @@
                     targetValue.maxLength = sourceValue.maxLength;
                     targetValue.regex = sourceValue.regex;
                     targetValue.regexMessage = sourceValue.regexMessage;
-                    targetValue.validateScript = sourceValue.validateScript ? sourceValue.validateScript : "";
-                    targetValue.enumList = [];
+                    targetValue.validateScript = sourceValue.validateScript;
                     if(sourceValue.enumList && sourceValue.enumList.length){
+                        targetValue.enumList = [];
                         sourceValue.enumList.forEach(value => {
                             targetValue.enumList.push({
                                 ...value
                             });
                         })
                     }
+ */
                 }
             },
             resetRequest(){
@@ -264,9 +315,9 @@
                 for(let k in this.Constant.DataModelAttributeDataTypeEnum){
                     let dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum[k];
                     request[dataTypeEnum.value] = {
-                        isEnum:false,
+                        isEnum:null,
                         enumList:[],
-                        isRequired:false,
+                        isRequired:null,
                         minValue:null,
                         maxValue:null,
                         length:null,

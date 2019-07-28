@@ -66,6 +66,7 @@
                                             </template>
                                         </el-table-column>
                                         <el-table-column label="显示标题">
+                                            <template slot="header" slot-scope="scope"><span :class="{'is-required':true}">显示标题</span></template>
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'propertyList.' + $index + '.comment'" :rules="validRule.property.comment">
                                                     <el-input v-model="row.comment" />
@@ -113,6 +114,7 @@
                                     </el-table-column>
                                     <el-table-column label="数据设置" align="center">
                                         <el-table-column label="属性名称">
+                                            <template slot="header" slot-scope="scope"><span :class="{'is-required':true}">属性名称</span></template>
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'propertyList.' + $index + '.name'" :rules="buildPropertyNameValidator(row, item, validRule.property.name)">
                                                     <el-input :readonly="row.isPrimary" v-model="row.name" />
@@ -125,6 +127,7 @@
                                             </template>
                                         </el-table-column>
                                         <el-table-column label="数据类型" width="140">
+                                            <template slot="header" slot-scope="scope"><span :class="{'is-required':true}">数据类型</span></template>
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item v-if="!row.isPrimary" :prop="'propertyList.' + $index + '.dataType'" :rules="validRule.property.dataType">
                                                     <el-select v-model="row.dataType" @change="changeDataType(item, row, $index)">
@@ -154,7 +157,7 @@
                                                     <el-input v-model.number="row.defaultValue" />
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'propertyList.' + $index + '.defaultValue'" :rules="validRule.property.defaultValue">
-                                                    <el-input v-if="!row.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="row.defaultValue" />
+                                                    <el-input v-if="!row.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value] || !row.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="row.defaultValue" />
                                                     <el-select v-else v-model="row.defaultValue">
                                                         <el-option v-for="enumItem in row.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                     </el-select>
@@ -213,6 +216,7 @@
                                             </template>
                                         </el-table-column>
                                         <el-table-column label="显示标题">
+                                            <template slot="header" slot-scope="scope"><span :class="{'is-required':true}">显示标题</span></template>
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'fieldList.' + $index + '.comment'" :rules="validRule.field.comment">
                                                     <el-input v-model="row.comment" />
@@ -260,6 +264,7 @@
                                     </el-table-column>
                                     <el-table-column label="数据设置" align="center">
                                         <el-table-column label="字段名称">
+                                            <template slot="header" slot-scope="scope"><span :class="{'is-required':true}">字段名称</span></template>
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'fieldList.' + $index + '.name'" :rules="buildFieldNameValidator(row, item, validRule.field.name)">
                                                     <el-input v-model="row.name" />
@@ -272,6 +277,7 @@
                                             </template>
                                         </el-table-column>
                                         <el-table-column label="数据类型" width="140">
+                                            <template slot="header" slot-scope="scope"><span :class="{'is-required':true}">数据类型</span></template>
                                             <template slot-scope="{ row, column, $index }">
                                                 <el-form-item :prop="'fieldList.' + $index + '.dataType'" :rules="validRule.field.dataType">
                                                     <el-select v-model="row.dataType" @change="changeDataType(item, row, $index)">
@@ -299,7 +305,7 @@
                                                     <el-input v-model.number="row.defaultValue" />
                                                 </el-form-item>
                                                 <el-form-item v-else-if="row.dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'fieldList.' + $index + '.defaultValue'" :rules="validRule.field.defaultValue">
-                                                    <el-input v-if="!row.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="row.defaultValue" />
+                                                    <el-input v-if="!row.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value] || !row.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="row.defaultValue" />
                                                     <el-select v-else v-model="row.defaultValue">
                                                         <el-option v-for="enumItem in row.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                                     </el-select>
@@ -496,9 +502,9 @@
                 for(let k in this.Constant.DataModelAttributeDataTypeEnum){
                     let dataTypeEnum = this.Constant.DataModelAttributeDataTypeEnum[k];
                     dataValidatorMap[dataTypeEnum.value] = {
-                        isEnum:false,
-                        enumList:[],
-                        isRequired:false,
+                        isEnum:null,
+                        enumList:null,
+                        isRequired:null,
                         minValue:null,
                         maxValue:null,
                         length:null,
@@ -506,14 +512,15 @@
                         maxLength:null,
                         regex:null,
                         regexMessage:null,
-                        validateScript:""
+                        validateScript:null
                     }
                 }
                 return dataValidatorMap;
             },
             create(){
                 let stringTypeValue = this.Constant.DataModelAttributeDataTypeEnum.STRING.value;
-                let buildDataValidatorMap = this.buildDataValidatorMap();
+                let buildDataValidatorMap = {};//this.buildDataValidatorMap();
+                buildDataValidatorMap[stringTypeValue] = {};
                 buildDataValidatorMap[stringTypeValue].isRequired = true;
                 let id = this.incrementer.next();
                 let model = {
@@ -667,7 +674,7 @@
                     displayType:this.Constant.DataModelAttributeDisplayTypeEnum.DISPLAY_DEFAULT.value,
                     dataType:null,//this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
                     defaultValue:null,
-                    dataValidatorMap:this.buildDataValidatorMap(),
+                    dataValidatorMap:{}//this.buildDataValidatorMap(),
                 });
             },
             removeProperty(item, property, index){
@@ -680,7 +687,7 @@
                     displayType:this.Constant.DataModelAttributeDisplayTypeEnum.DISPLAY_DEFAULT.value,
                     dataType:null,//this.Constant.DataModelAttributeDataTypeEnum.STRING.value,
                     defaultValue:null,
-                    dataValidatorMap:this.buildDataValidatorMap(),
+                    dataValidatorMap:{}//this.buildDataValidatorMap(),
                 });
             },
             removeField(item, field, index){
@@ -823,6 +830,9 @@
         .property-table .el-form-item,.field-table .el-form-item,
         .property-table .el-form-item__content,.field-table .el-form-item__content{
             width: 100%;
+        }
+        .is-required{
+            color: #f56c6c;
         }
     }
 </style>
