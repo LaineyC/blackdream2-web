@@ -47,6 +47,7 @@
                                         <el-button size="mini" type="primary" @click="showGeneratorUpdateModal(item)">编辑</el-button>
                                         <el-button :disabled="item.status!==Constant.GeneratorStatusEnum.DEVELOP.value" size="mini" type="primary" @click="release(item)">发布</el-button>
                                         <el-button size="mini" type="success" @click="showDataModelCreateFromModal(item)">复制</el-button>
+                                        <el-button size="mini" type="danger" @click="deleteItem(item)">删除</el-button>
                                     </el-button-group>
                                     <el-button-group style="margin-left: 5px;">
                                         <el-button size="mini" type="success" @click="linkToDataModelManage(item)">模型</el-button>
@@ -139,10 +140,13 @@
                 })
             },
             release(item){
-                this.Api.Generator.release({id:item.id}).then((data) => {
-                    item.status = this.Constant.GeneratorStatusEnum.RELEASE.value;
-                    this.$message({type: 'success', message: '发布成功！'});
-                });
+                this.$confirm('确定发布所选？', {type: 'warning'})
+                    .then(() => {
+                        this.Api.Generator.release({id:item.id}).then((data) => {
+                            item.status = this.Constant.GeneratorStatusEnum.RELEASE.value;
+                            this.$message({type: 'success', message: '发布成功！'});
+                        });
+                    });
             },
             search(){
                 this.Api.Generator.infoSearch(this.searchRequest).then((data) => {
@@ -163,6 +167,15 @@
             },
             linkToGeneratorDetail(item){
                 this.$router.push({ name: 'generatorDetail', params: { generatorId: item.id }});
+            },
+            deleteItem(item){
+                this.$confirm('确定删除所选？', {type: 'warning'})
+                    .then(() => {
+                        this.Api.Generator.delete({id:item.id}).then((data) => {
+                            this.$message({type: 'success', message: '删除成功！'});
+                            this.search();
+                        });
+                    });
             }
         },
         mounted(){

@@ -103,6 +103,7 @@
                 .then(() => {
                     this.Api.GeneratorInstance.delete({id:item.id}).then((data) => {
                         this.$message({type: 'success', message: '删除成功！'});
+                        this.search();
                     });
                 });
             }

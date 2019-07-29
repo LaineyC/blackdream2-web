@@ -112,6 +112,7 @@ export default Vue.prototype.Api = {
     },
     Generator: {
         create: doPost('/generator/generator/create'),
+        delete: doPost('/generator/generator/delete'),
         update: doPost('/generator/generator/update'),
         get: doPost('/generator/generator/get'),
         query: doPost('/generator/generator/query'),
