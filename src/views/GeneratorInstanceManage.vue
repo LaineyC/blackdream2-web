@@ -27,7 +27,7 @@
                         <el-card shadow="hover">
                             <div slot="header" class="card-header-flex">
                                 <div>
-                                    <el-button type="text" size="mini" @click="linkToGeneratorDataManage(item)"><strong>{{item.name}}</strong></el-button>
+                                    <el-link type="primary" @click="linkToGeneratorDataManage(item)"><strong>{{item.name}}</strong></el-link>
                                 </div>
                                 <el-button-group>
                                     <el-button size="mini" type="primary" @click="showGeneratorInstanceUpdateModal(item)">编辑</el-button>
@@ -36,7 +36,7 @@
                                 </el-button-group>
                             </div>
                             <p>{{item.description}}</p>
-                            <p>所属生成器 <el-button type="text" size="mini" @click="linkToGeneratorDetail(item)">{{item.generator.name}}</el-button></p>
+                            <p>所属生成器  <el-link type="primary" @click="linkToGeneratorDetail(item)"><strong>{{item.generator.name}}</strong></el-link></p>
                             <p>最后更新 <Time :time="item.updateTime" :interval="60"/></p>
                         </el-card>
                     </el-col>

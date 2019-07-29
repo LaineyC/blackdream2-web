@@ -37,7 +37,7 @@
                         <el-card shadow="hover">
                             <div slot="header" class="card-header-flex">
                                 <div>
-                                    <el-button type="text" size="mini" @click="linkToGeneratorDetail(item)"><strong>{{item.name}}</strong></el-button>
+                                    <el-link type="primary" @click="linkToGeneratorDetail(item)"><strong>{{item.name}}</strong></el-link>
                                 </div>
                             </div>
                             <p>{{item.description}}</p>

@@ -5,9 +5,9 @@
                 <el-card shadow="hover">
                     <div slot="header" class="card-header-flex">
                         <div>
-                            <el-button type="text" size="mini" @click="linkToGeneratorDeveloperHome(generator)"><strong>{{generator.user.username}}</strong></el-button>
+                            <el-link type="primary" @click="linkToGeneratorDeveloperHome(generator)"><strong>{{generator.user.username}}</strong></el-link>
                             <span> / </span>
-                            <el-button type="text" size="mini">{{generator.name}}</el-button>
+                            <el-link :underline="false"><strong>{{generator.name}}</strong></el-link>
                         </div>
                         <el-button-group v-if="Auth.body.id === generator.user.id">
                             <el-button size="mini" type="primary" @click="showGeneratorUpdateModal">编辑</el-button>

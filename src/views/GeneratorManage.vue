@@ -40,12 +40,13 @@
                         <el-card shadow="hover">
                             <div slot="header" class="card-header-flex">
                                 <div>
-                                    <el-button type="text" size="mini" @click="linkToGeneratorDetail(item)"><strong>{{item.name}}</strong></el-button>
+                                    <el-link :type="item.status!==Constant.GeneratorStatusEnum.DEVELOP.value?'primary':'info'" @click="linkToGeneratorDetail(item)"><strong>{{item.name}}</strong></el-link>
                                 </div>
                                 <div>
                                     <el-button-group>
                                         <el-button size="mini" type="primary" @click="showGeneratorUpdateModal(item)">编辑</el-button>
                                         <el-button :disabled="item.status!==Constant.GeneratorStatusEnum.DEVELOP.value" size="mini" type="primary" @click="release(item)">发布</el-button>
+                                        <el-button size="mini" type="success" @click="showDataModelCreateFromModal(item)">复制</el-button>
                                     </el-button-group>
                                     <el-button-group style="margin-left: 5px;">
                                         <el-button size="mini" type="success" @click="linkToDataModelManage(item)">模型</el-button>
@@ -78,6 +79,7 @@
         <GeneratorCreateModal ref="generatorCreateModal" @on-success="handleGeneratorCreateSuccess"/>
         <GeneratorUpdateModal ref="generatorUpdateModal" @on-success="handleGeneratorUpdateSuccess"/>
         <GeneratorInstanceCreateModal ref="generatorInstanceCreateModal" @on-success="handleGeneratorInstanceCreateSuccess"/>
+        <GeneratorCreateFromModal ref="generatorCreateFromModal" @on-success="handleGeneratorCreateFromSuccess"/>
     </div>
 </template>
 
@@ -87,7 +89,8 @@
         components:{
             GeneratorCreateModal:() => import('@/components/GeneratorCreateModal.vue'),
             GeneratorUpdateModal:() => import('@/components/GeneratorUpdateModal.vue'),
-            GeneratorInstanceCreateModal:() => import('@/components/GeneratorInstanceCreateModal.vue')
+            GeneratorInstanceCreateModal:() => import('@/components/GeneratorInstanceCreateModal.vue'),
+            GeneratorCreateFromModal:() => import('@/components/GeneratorCreateFromModal.vue')
         },
         data () {
             return {
@@ -114,6 +117,9 @@
             handleGeneratorInstanceCreateSuccess(){
                 this.$router.push({ name: 'generatorInstanceManage'});
             },
+            handleGeneratorCreateFromSuccess() {
+                this.search();
+            },
             showGeneratorInstanceCreateModal(item){
                 this.$refs.generatorInstanceCreateModal.open({
                     generatorId:item.id
@@ -126,6 +132,11 @@
                 this.$refs.generatorUpdateModal.open({
                     generatorId:item.id
                 });
+            },
+            showDataModelCreateFromModal(item) {
+                this.$refs.generatorCreateFromModal.open({
+                    generatorId:item.id
+                })
             },
             release(item){
                 this.Api.Generator.release({id:item.id}).then((data) => {
