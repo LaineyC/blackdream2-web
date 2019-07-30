@@ -71,7 +71,12 @@
                 });
             },
             linkToGeneratorDeveloperHome(generator){
-                this.$router.push({ name: 'generatorDeveloperHome', params: { developerId: generator.user.id }});
+                if (this.Auth.body.id !== generator.user.id) {
+                    this.$router.push({ name: 'generatorDeveloperHome', params: { developerId: generator.user.id }});
+                }
+                else {
+                    this.$router.push({ name: 'generatorManage'});
+                }
             },
         },
         mounted(){

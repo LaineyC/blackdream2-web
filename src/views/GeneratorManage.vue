@@ -4,7 +4,7 @@
             <el-col :span="6">
                 <el-card shadow="hover">
                     <p slot="header"><strong>{{Auth.body.nickname}}</strong></p>
-                    <p><img src="@/assets/image/logo.jpg" class="head-img"/></p>
+                    <p><el-avatar :size="175" shape="square"><img src="@/assets/image/avatar.png" class="head-img"/></el-avatar></p>
                     <p>{{Auth.body.username}}</p>
                     <p>{{Auth.body.email}}</p>
                 </el-card>
@@ -191,7 +191,7 @@
         }
         .head-img{
             width: 100%;
-            max-height: 300px;
+            max-height: 1200px;
         }
         .card-header-flex{
             flex: 1;

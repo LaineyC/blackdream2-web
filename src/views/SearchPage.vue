@@ -4,13 +4,14 @@
             <el-col :span="6">
                 <el-card shadow="hover">
                     <div slot="header">
-                        <strong>排行</strong>
+                        <strong>TOP 10</strong>
                     </div>
-                    <CellGroup>
-                        <Cell v-for="generator in generatorList" :title="generator.name" :key="generator.id">
-                            <!--<Badge :count="10" slot="extra" />-->
-                        </Cell>
-                    </CellGroup>
+                    <div v-for="generator in generatorList" :key="generator.id">
+                        <el-link type="primary" @click="linkToGeneratorDeveloperHome(generator)"><strong>{{generator.user.username}}</strong></el-link>
+                        <span> / </span>
+                        <el-link type="primary" @click="linkToGeneratorDetail(generator)"><strong>{{generator.name}}</strong></el-link>
+                        <el-divider></el-divider>
+                    </div>
                 </el-card>
             </el-col>
             <el-col :span="18">
@@ -41,7 +42,7 @@
                                     <el-link type="primary" @click="linkToGeneratorDetail(item)"><strong>{{item.name}}</strong></el-link>
                                 </div>
                                 <el-button-group v-if="Auth.isCertified">
-                                    <el-button v-if="Auth.isCertified && Auth.body.type === Constant.UserTypeEnum.DEVELOPER.value" size="mini" type="success" @click="showDataModelCreateFromModal(item)">复制</el-button>
+                                    <el-button v-if="Auth.body.type === Constant.UserTypeEnum.DEVELOPER.value" size="mini" type="success" @click="showDataModelCreateFromModal(item)">复制</el-button>
                                     <el-button size="mini" type="success" @click="showGeneratorInstanceCreateModal(item)">创建实例</el-button>
                                 </el-button-group>
                             </div>
@@ -114,7 +115,12 @@
                 });
             },
             linkToGeneratorDeveloperHome(item){
-                this.$router.push({ name: 'generatorDeveloperHome', params: { developerId: item.user.id }});
+                if (this.Auth.body.id !== item.user.id) {
+                    this.$router.push({ name: 'generatorDeveloperHome', params: { developerId: item.user.id }});
+                }
+                else{
+                    this.$router.push({ name: 'generatorManage'});
+                }
             },
             linkToGeneratorDetail(item){
                 this.$router.push({ name: 'generatorDetail', params: { generatorId: item.id }});
@@ -130,9 +136,7 @@
             this.searchRequest.name = this.$route.query.keyword;
             this.search();
 
-            this.Api.Generator.query({
-                status: this.Constant.GeneratorStatusEnum.RELEASE.value,
-            }).then((data) => {
+            this.Api.Generator.queryTop({}).then((data) => {
                 this.generatorList = data;
             });
         }
