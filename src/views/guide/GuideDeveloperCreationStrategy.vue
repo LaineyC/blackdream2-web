@@ -19,13 +19,13 @@
                            <p>有以下全局变量：</p>
                            <pre style="background-color:inherit;">
 <span class="text-success">//工具类</span>
-<strong class="text-warning">$tool</strong> <span class="text-success">CreationStrategyScriptTool类型</span>
+<strong class="text-warning">tool</strong> <span class="text-success">CreationStrategyScriptTool类型</span>
 
 <span class="text-success">//构建时的全局变量</span>
-<strong class="text-warning">$global</strong> <span class="text-success">Global类型</span>
+<strong class="text-warning">global</strong> <span class="text-success">Global类型</span>
 
 <span class="text-success">//用户数据</span>
-<strong class="text-warning">$dataTree</strong> <span class="text-success">TemplateFileContextData类型的树结构，List&lt;TemplateFileContextData&gt;</span>
+<strong class="text-warning">dataTree</strong> <span class="text-success">TemplateFileContextData类型的树结构，List&lt;TemplateFileContextData&gt;</span>
                            </pre>
                        </el-card>
                    </div>

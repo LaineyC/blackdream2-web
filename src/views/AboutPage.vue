@@ -29,6 +29,16 @@
               272874065@qq.com
           </div>
       </el-card>
+      <el-card class="box-card">
+          <div slot="header" class="clearfix">
+              <h3>捐赠项目</h3>
+          </div>
+          <div>
+              <img style="width:300px" src="@/assets/image/contribute-zhifubao.jpg"/>
+              <el-divider direction="vertical"></el-divider>
+              <img style="width:300px" src="@/assets/image/contribute-weixin.jpg"/>
+          </div>
+      </el-card>
   </div>
 </template>
 

@@ -570,7 +570,7 @@
                         comment:"名称",
                         displayType:this.Constant.DataModelAttributeDisplayTypeEnum.DISPLAY_ONLY.value,
                         dataType:stringTypeValue,
-                        displayWidth:100,
+                        displayWidth:200,
                         defaultValue:null,
                         dataValidatorMap:buildDataValidatorMap
                     }],

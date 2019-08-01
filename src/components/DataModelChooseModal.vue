@@ -50,7 +50,8 @@
                 });
             },
             reset(){
-                this.treeData = [];
+                //不需要重置 选择树结构的展开状态保持上一次的状态
+                //this.treeData = [];
             },
             close(){
                 this.reset();

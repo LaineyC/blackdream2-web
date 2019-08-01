@@ -43,7 +43,7 @@
                                     </template>
                                 </el-form-item>
                                 <el-form-item v-else-if="model.properties[property.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'properties.' + property.name + '.value'" :rules="buildAttributeValidator(property, model.properties[property.name], model.properties, model)">
-                                    <el-input v-if="!property.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="model.properties[property.name].value" :placeholder="property.placeholder" @change="cascadeFunction(property.cascadeFunction, model.properties[property.name], model.properties, model)"/>
+                                    <el-input v-if="!property.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value]||!property.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="model.properties[property.name].value" :placeholder="property.placeholder" @change="cascadeFunction(property.cascadeFunction, model.properties[property.name], model.properties, model)"/>
                                     <el-select v-else v-model="model.properties[property.name].value" :placeholder="property.placeholder" @change="cascadeFunction(property.cascadeFunction, model.properties[property.name], model.properties, model)">
                                         <el-option v-for="enumItem in property.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                     </el-select>
@@ -122,7 +122,7 @@
                                 </template>
                             </el-form-item>
                             <el-form-item v-else-if="model.properties[group.model.name].dataType===Constant.DataModelAttributeDataTypeEnum.STRING.value" :prop="'properties.' + group.model.name + '.value'" :rules="buildAttributeValidator(group.model, model.properties[group.model.name], model.properties, model)">
-                                <el-input v-if="!group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="model.properties[group.model.name].value" :placeholder="group.model.placeholder" @change="cascadeFunction(group.model.cascadeFunction, model.properties[group.model.name], model.properties, model)"/>
+                                <el-input v-if="!group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value]||!group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].isEnum" v-model="model.properties[group.model.name].value" :placeholder="group.model.placeholder" @change="cascadeFunction(group.model.cascadeFunction, model.properties[group.model.name], model.properties, model)"/>
                                 <el-select v-else v-model="model.properties[group.model.name].value" :placeholder="group.model.placeholder" @change="cascadeFunction(group.model.cascadeFunction, model.properties[group.model.name], model.properties, model)">
                                     <el-option v-for="enumItem in group.model.dataValidatorMap[Constant.DataModelAttributeDataTypeEnum.STRING.value].enumList" :value="enumItem.value" :key="enumItem.value" :label="enumItem.label"></el-option>
                                 </el-select>
@@ -204,6 +204,7 @@
                         this.model.name = this.model.properties[this.dataModel.primaryProperty.name].value;
                         this.Api.GeneratorData.create(this.model).then((data) => {
                             this.model.id = data.id;
+                            this.model.dataModel = this.dataModel;
                             this.$emit('on-success', this.model, this.parent);
                             this.close();
                             this.$message({type: 'success', message: '创建成功！'});
