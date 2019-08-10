@@ -2,7 +2,7 @@
   <div id="about" class="container">
       <el-card class="box-card">
           <div slot="header" class="clearfix">
-              <h3>里程碑事件</h3>
+              <h3>里程碑</h3>
           </div>
           <div>
               <el-timeline>
@@ -23,20 +23,10 @@
       </el-card>
       <el-card class="box-card">
           <div slot="header" class="clearfix">
-              <h3>反馈邮箱</h3>
+              <h3>联系我们</h3>
           </div>
           <div>
-              272874065@qq.com
-          </div>
-      </el-card>
-      <el-card class="box-card">
-          <div slot="header" class="clearfix">
-              <h3>捐赠项目</h3>
-          </div>
-          <div>
-              <img style="width:300px" src="@/assets/image/contribute-zhifubao.jpg"/>
-              <el-divider direction="vertical"></el-divider>
-              <img style="width:300px" src="@/assets/image/contribute-weixin.jpg"/>
+              通过邮箱<a href="mailto:272874065@qq.com" target="_blank">272874065@qq.com</a>联系我。
           </div>
       </el-card>
   </div>
@@ -53,9 +43,7 @@
           }
         },
         methods:{
-            linkToGuide(){
-                this.$router.push({ name: 'guideUserGenerator'});
-            },
+
         }
     }
 </script>

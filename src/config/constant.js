@@ -30,7 +30,9 @@ class TemplateEngineTypeEnum extends Enum{
     constructor(){
         super();
         this.VELOCITY = new EnumItem(1, "Velocity");
+        this.VELOCITY.suffix = "vm";
         this.FREEMARKER = new EnumItem(2, "FreeMarker");
+        this.FREEMARKER.suffix = "ftl";
     }
 }
 

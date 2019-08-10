@@ -23,6 +23,11 @@ let router = new Router({
             component: () => import('../views/AboutPage.vue')
         },
         {
+            path: '/contribute',
+            name: 'contribute',
+            component: () => import('../views/ContributePage.vue')
+        },
+        {
             path: '/creation-strategy-manage/:generatorId',
             name: 'creationStrategyManage',
             meta: { isRequiredAuth: true, isDeveloper: true },

@@ -47,7 +47,8 @@
                                     </el-input>
                                 </el-form-item>
                                 <el-form-item label="code">
-                                    <el-input readonly v-model="item.model.code" placeholder="" />
+                                    <el-col :span="20"><el-input readonly v-model="item.model.code" placeholder="" /></el-col>
+                                    <el-col :span="4">.{{Constant.TemplateEngineTypeEnum.of(item.model.engineType).suffix}}</el-col>
                                 </el-form-item>
                             <el-card shadow="hover">
                                 <el-button-group slot="header">

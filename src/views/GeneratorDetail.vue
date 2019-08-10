@@ -15,7 +15,7 @@
                     </div>
                     <p>{{generator.description}}</p>
                     <p>模板引擎 {{generator.engineType | enumFormat(Constant.TemplateEngineTypeEnum)}}</p>
-                    <p>最后更新 <Time :time="generator.updateTime" :interval="1"/></p>
+                    <p>最后更新 <Time v-if="generator.updateTime" :time="generator.updateTime" :interval="1"/></p>
                 </el-card>
             </el-col>
         </el-row>

@@ -11,6 +11,7 @@
                     </el-menu-item>
                     <el-menu-item index="3-1" @click="linkToGeneratorManage" v-if="Auth.isCertified && Auth.body.type === Constant.UserTypeEnum.DEVELOPER.value">我的生成器</el-menu-item>
                     <el-menu-item index="3-2" @click="linkToGeneratorInstanceManage" v-if="Auth.isCertified">我的实例</el-menu-item>
+                    <el-menu-item index="9" style="float: right;" @click="linkToContribute">捐赠</el-menu-item>
                     <el-menu-item index="7" style="float: right;" @click="linkToAbout">关于</el-menu-item>
                     <el-menu-item index="8" style="float: right;" @click="linkToGuide">指南</el-menu-item>
                     <el-submenu index="4" style="float: right;" v-if="Auth.isCertified">
@@ -63,6 +64,9 @@
             },
             linkToAbout(){
                 this.$router.push({ name: 'about'});
+            },
+            linkToContribute(){
+                this.$router.push({ name: 'contribute'});
             },
             linkToGuide(){
                 this.$router.push({ name: 'guideUserGenerator'});
